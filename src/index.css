@@ -1,0 +1,664 @@
+/* Inter font is loaded via index.html */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --scrollbar-thumb: #3a3a3a;
+  --scrollbar-track: #1d1d1f;
+
+  /* Dark Theme — Brutalist Dark */
+  --color-primary: #0b0b0b;
+  --color-secondary: #080808;
+  --color-surface: #111111;
+  --color-accent: #ffffff;
+  --color-muted: #888888;
+  --color-light: #dddddd;
+  --color-red: #ff3333;
+
+  /* Border */
+  --color-border: rgba(255, 255, 255, 0.25);
+  --color-border-strong: rgba(255, 255, 255, 0.4);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+
+  /* Header Theme */
+  --header-bg: rgba(10, 10, 10, 0.95);
+  --header-nav-bg: rgba(255, 255, 255, 0.05);
+  --header-nav-active: rgba(255, 255, 255, 0.15);
+
+  /* Brutalist Shadows & Corners */
+  --shadow-card: 6px 6px 0px rgba(255, 255, 255, 0.25);
+  --shadow-sm: 4px 4px 0px rgba(255, 255, 255, 0.25);
+  --radius-card: 0px;
+  --radius-sm: 0px;
+}
+
+.light {
+  --scrollbar-thumb: #c7c7cc;
+  --scrollbar-track: #f5f5f7;
+
+  /* Light Theme — Brutalist Light */
+  --color-primary: #f0f0f0;
+  --color-secondary: #ffffff;
+  --color-surface: #e5e5ea;
+  --color-accent: #000000;
+  --color-muted: #555555;
+  --color-light: #222222;
+
+  /* Border */
+  --color-border: rgba(0, 0, 0, 0.8);
+  --color-border-strong: rgba(0, 0, 0, 1);
+  --color-border-subtle: rgba(0, 0, 0, 0.4);
+
+  /* Header Theme */
+  --header-bg: rgba(240, 240, 240, 0.95);
+  --header-nav-bg: rgba(0, 0, 0, 0.05);
+  --header-nav-active: rgba(0, 0, 0, 0.15);
+
+  /* Brutalist Shadows & Corners */
+  --shadow-card: 6px 6px 0px rgba(0, 0, 0, 1);
+  --shadow-sm: 4px 4px 0px rgba(0, 0, 0, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+body {
+  background-color: var(--color-primary);
+  color: var(--color-accent);
+  /* Stark, highly legible font stack */
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Add a very subtle brutalist grid background */
+  background-image: linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ─── Brutalist utility classes ─── */
+
+/* Hard solid card — Neo-Brutalism */
+.neo-card {
+  background: var(--color-secondary);
+  border-radius: var(--radius-card);
+  border: 2px solid var(--color-border-strong);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.neo-card:hover {
+  border-color: var(--color-red);
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px var(--color-red);
+}
+
+/* Hard glass surface (if transparency is strictly needed) */
+.neo-glass {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border-strong);
+}
+
+.light .neo-glass {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+.glassmorphism-no-border {
+  /* Copy all properties from your glassmorphism class except border-related ones */
+  background: rgba(255, 255, 255, 0.1);
+  /* example background */
+  backdrop-filter: blur(10px);
+  border: none !important;
+  box-shadow: none;
+  /* If the border effect comes from box-shadow */
+}
+
+/* ─── Nothing-inspired tech styles ─── */
+.nothing-card {
+  background: var(--color-secondary);
+  border: 2px solid var(--color-border-strong);
+  border-radius: 0px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.nothing-card:hover {
+  border-color: var(--color-red);
+  transform: translate(-4px, -4px);
+  box-shadow: 8px 8px 0px var(--color-red);
+}
+
+.nothing-card::before,
+.nothing-card::after {
+  content: '+';
+  position: absolute;
+  top: 8px;
+  color: var(--color-muted);
+  opacity: 0.6;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.nothing-card::before {
+  left: 8px;
+}
+
+.nothing-card::after {
+  right: 8px;
+}
+
+/* Bottom crosshairs for Nothing card inner wrap */
+.nothing-corner-bottom::before,
+.nothing-corner-bottom::after {
+  content: '+';
+  position: absolute;
+  bottom: 8px;
+  color: var(--color-muted);
+  opacity: 0.6;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.nothing-corner-bottom::before {
+  left: 8px;
+}
+
+.nothing-corner-bottom::after {
+  right: 8px;
+}
+
+/* Nothing-inspired dotted text */
+.dotted-text {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.dotted-text .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
+/* Nothing-inspired aesthetics */
+.nothing-headline {
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+
+/* --- Custom Brutalist Scrollbar --- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-primary);
+  border-left: 1px solid var(--color-border-strong);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border: 2px solid var(--color-primary);
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-red);
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .btn {
+    @apply px-6 py-2 rounded-sm font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-primary border border-accent hover:bg-transparent hover:text-accent transition-all duration-300;
+  }
+
+  .btn-outline {
+    @apply border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-muted;
+  }
+
+  /* Nothing-inspired button */
+  .nothing-btn {
+    @apply inline-flex items-center px-5 py-2 border border-accent border-opacity-20 text-accent bg-transparent hover:bg-accent hover:text-primary transition-all duration-300 font-mono text-sm tracking-wider;
+  }
+
+  .social-icon {
+    @apply w-6 h-6 text-muted hover:text-accent transition-colors duration-300;
+  }
+
+  .grain-bg {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Custom cursor bubble follows the system cursor */
+
+/* ═══════════════════════════════════════════
+   GLITCH HOVER EFFECT
+   ═══════════════════════════════════════════ */
+.glitch-hover {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-hover::before,
+.glitch-hover::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch-hover::before {
+  color: #ff0040;
+  z-index: -1;
+}
+
+.glitch-hover::after {
+  color: #00f0ff;
+  z-index: -1;
+}
+
+.glitch-hover:hover::before {
+  opacity: 0.8;
+  animation: glitch-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+.glitch-hover:hover::after {
+  opacity: 0.8;
+  animation: glitch-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+}
+
+@keyframes glitch-1 {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, -1px);
+  }
+
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(1px, 2px);
+  }
+
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-1px, -1px);
+  }
+
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, 1px);
+  }
+
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-1px, 2px);
+  }
+
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes glitch-2 {
+  0% {
+    clip-path: inset(65% 0 8% 0);
+    transform: translate(2px, 1px);
+  }
+
+  20% {
+    clip-path: inset(15% 0 65% 0);
+    transform: translate(-2px, -2px);
+  }
+
+  40% {
+    clip-path: inset(72% 0 9% 0);
+    transform: translate(1px, 2px);
+  }
+
+  60% {
+    clip-path: inset(5% 0 78% 0);
+    transform: translate(-1px, -1px);
+  }
+
+  80% {
+    clip-path: inset(31% 0 49% 0);
+    transform: translate(2px, -2px);
+  }
+
+  100% {
+    clip-path: inset(12% 0 69% 0);
+    transform: translate(0);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SMOOTH SECTION REVEAL
+   ═══════════════════════════════════════════ */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   MAGNETIC BUTTON HOVER
+   ═══════════════════════════════════════════ */
+.magnetic-btn {
+  transition: transform 0.3s ease;
+}
+
+.magnetic-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ═══════════════════════════════════════════
+   CLICK GLITCH FEEDBACK 
+   ═══════════════════════════════════════════ */
+.glitch-click {
+  position: relative;
+  transition: all 0.1s ease;
+  overflow: hidden;
+}
+
+.glitch-click:active {
+  animation: glitch-anim 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: var(--color-red) !important;
+}
+
+.glitch-click:active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20px;
+  right: -20px;
+  bottom: 0;
+  background: var(--color-red);
+  opacity: 0.3;
+  mix-blend-mode: exclusion;
+  z-index: 10;
+  pointer-events: none;
+  animation: slice-anim 0.2s linear infinite;
+}
+
+@keyframes glitch-anim {
+  0% {
+    transform: translate(0) skew(0deg);
+  }
+
+  25% {
+    transform: translate(-6px, 3px) skew(-12deg);
+    filter: invert(0.3);
+  }
+
+  50% {
+    transform: translate(6px, -3px) skew(12deg);
+    filter: contrast(200%);
+  }
+
+  75% {
+    transform: translate(-3px, 6px) skew(-6deg);
+    filter: hue-rotate(90deg);
+  }
+
+  100% {
+    transform: translate(3px, -6px) skew(6deg);
+  }
+}
+
+@keyframes slice-anim {
+  0% {
+    clip-path: inset(10% 0 80% 0);
+    transform: translateX(-10px);
+  }
+
+  25% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translateX(10px);
+  }
+
+  50% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translateX(-5px);
+  }
+
+  75% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translateX(5px);
+  }
+
+  100% {
+    clip-path: inset(5% 0 70% 0);
+    transform: translateX(0);
+  }
+}
+
+/* Helper to hide shadow during click/submit */
+.hidden-shadow {
+  box-shadow: none !important;
+  transform: translate(0px, 0px) !important;
+}
+
+/* ═══════════════════════════════════════════
+   GLITCH TEXT REVEAL (Chromatic Aberration)
+   ═══════════════════════════════════════════ */
+.glitch-text-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text-wrapper::before,
+.glitch-text-wrapper::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.glitch-text-wrapper::before {
+  color: #ff0040;
+  z-index: 0;
+}
+
+.glitch-text-wrapper::after {
+  color: #00f0ff;
+  z-index: 0;
+}
+
+.glitch-text-wrapper.glitch-active::before {
+  opacity: 0.7;
+  animation: glitch-reveal-1 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.glitch-text-wrapper.glitch-active::after {
+  opacity: 0.7;
+  animation: glitch-reveal-2 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
+}
+
+@keyframes glitch-reveal-1 {
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-3px, -2px); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(2px, 3px); }
+  40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 1px); }
+  60% { clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+  80% { clip-path: inset(10% 0 80% 0); transform: translate(-1px, 2px); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); opacity: 0; }
+}
+
+@keyframes glitch-reveal-2 {
+  0% { clip-path: inset(65% 0 8% 0); transform: translate(3px, 2px); }
+  20% { clip-path: inset(15% 0 65% 0); transform: translate(-3px, -3px); }
+  40% { clip-path: inset(72% 0 9% 0); transform: translate(2px, 3px); }
+  60% { clip-path: inset(5% 0 78% 0); transform: translate(-2px, -2px); }
+  80% { clip-path: inset(40% 0 20% 0); transform: translate(3px, -3px); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════
+   3D TILT CARD WITH SHINE
+   ═══════════════════════════════════════════ */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.tilt-card .tilt-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    600px circle at var(--shine-x, 50%) var(--shine-y, 50%),
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+.tilt-card:hover .tilt-shine {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   MATRIX DECODE TEXT ANIMATION
+   ═══════════════════════════════════════════ */
+@keyframes decode-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.decode-char {
+  display: inline-block;
+  animation: decode-flicker 0.08s ease-in-out;
+  font-family: 'Courier New', monospace;
+}
+
+/* ═══════════════════════════════════════════
+   SKILLS MARQUEE (ALL filter only)
+   ═══════════════════════════════════════════ */
+@keyframes skill-marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes skill-marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.skill-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 1rem;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .skill-marquee-track {
+    gap: 1.25rem;
+  }
+}
+
+.skill-marquee-track--left {
+  animation-name: skill-marquee-left;
+}
+
+.skill-marquee-track--right {
+  animation-name: skill-marquee-right;
+}
+
+.skill-marquee-row:hover .skill-marquee-track {
+  animation-play-state: paused;
+}
+
+
+
+/* ═══════════════════════════════════════════
+   ACCESSIBILITY: REDUCED MOTION
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

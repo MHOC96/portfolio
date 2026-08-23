@@ -47,8 +47,8 @@ const TypewriterRole = () => {
   }, [displayed, isDeleting, roleIdx]);
 
   return (
-    <span className="inline-flex items-center min-w-[18ch]">
-      <span>{displayed}</span>
+    <span className="inline-flex items-center min-w-0 sm:min-w-[12ch] md:min-w-[18ch] max-w-full">
+      <span className="break-words">{displayed}</span>
       <span
         style={{
           display: 'inline-block',
@@ -112,11 +112,11 @@ const Hero = () => {
         aria-hidden
       >
         <div
-          className="absolute top-[40%] left-[60%] -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-[0.05]"
+          className="absolute top-[40%] left-[60%] -translate-x-1/2 -translate-y-1/2 w-[min(500px,90vw)] h-[min(500px,90vw)] opacity-[0.05]"
           style={{ border: '2px solid var(--color-red)', transform: 'rotate(15deg)' }}
         />
         <div
-          className="absolute top-[60%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] opacity-[0.03]"
+          className="absolute top-[60%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-[min(700px,95vw)] h-[min(700px,95vw)] opacity-[0.03]"
           style={{ border: '2px solid var(--color-accent)', transform: 'rotate(-5deg)' }}
         />
       </motion.div>
@@ -144,7 +144,7 @@ const Hero = () => {
                 </h2>
 
                 {/* Name */}
-                <h1 className="font-mono tracking-tighter text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none">
+                <h1 className="font-mono tracking-tighter text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none break-words">
                   <TextDecode
                     text={PROFILE.firstName}
                     className="glitch-hover"
@@ -156,7 +156,7 @@ const Hero = () => {
 
                 {/* Typewriter cycling role — fixed height prevents bio text below from jumping */}
                 <div
-                  className="flex items-center gap-0 font-mono text-xl md:text-3xl lg:text-4xl font-semibold mb-5 tracking-tight whitespace-nowrap min-h-[1.75rem] md:min-h-[2.25rem] lg:min-h-[2.75rem]"
+                  className="flex items-center justify-center lg:justify-start gap-0 font-mono text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold mb-5 tracking-tight whitespace-normal sm:whitespace-nowrap min-h-[1.75rem] md:min-h-[2.25rem] lg:min-h-[2.75rem] max-w-full"
                   style={{ color: 'var(--color-red)' }}
                 >
                   <TypewriterRole />

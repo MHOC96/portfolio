@@ -71,6 +71,8 @@ html {
   scroll-padding-top: 5rem;
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body {
@@ -82,10 +84,28 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: clip;
+  max-width: 100%;
   /* Add a very subtle brutalist grid background */
   background-image: linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+#root,
+#main-portfolio-wrapper,
+main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* ─── Brutalist utility classes ─── */
@@ -248,7 +268,7 @@ body {
 
 @layer components {
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full;
   }
 
   .section-padding {

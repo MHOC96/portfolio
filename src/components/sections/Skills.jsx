@@ -63,7 +63,7 @@ const SkillCard = ({ skill, inMarquee = false }) => {
       <motion.div
         onMouseEnter={startScramble}
         onMouseLeave={stopScramble}
-      className="flex items-center gap-3 bg-primary border-2 px-4 md:px-5 py-3 transition-all duration-200 cursor-default group relative overflow-visible shrink-0"
+      className="flex items-center gap-3 bg-primary border-2 px-4 md:px-5 py-3 transition-all duration-200 cursor-default group relative overflow-hidden shrink-0 max-w-full"
         style={{
           borderColor: isHovered ? skill.color : 'var(--color-border-strong)',
           boxShadow: isHovered 

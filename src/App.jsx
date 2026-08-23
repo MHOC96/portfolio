@@ -82,7 +82,7 @@ const AnimatedRoutes = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-primary text-accent min-h-screen relative z-0"
+                  className="bg-primary text-accent min-h-screen relative z-0 w-full max-w-full overflow-x-clip"
                 >
                   <SmoothScroll />
                   <AnimatedBackground />

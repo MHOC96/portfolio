@@ -7,7 +7,7 @@ const VIEWPORT_HEIGHT_CLASS = 'h-[calc(100vh-4rem)]';
 /**
  * HorizontalScroll — converts vertical scroll into horizontal movement.
  * The container is pinned (sticky) while scrolling through panelCount panels.
- * Each child panel should be 100vw wide.
+ * Each child panel should be 100% of the sticky viewport width.
  */
 const HorizontalScroll = ({ children, panelCount = 3 }) => {
   const containerRef = useRef(null);
@@ -33,10 +33,10 @@ const HorizontalScroll = ({ children, panelCount = 3 }) => {
     <section
       ref={containerRef}
       style={{ height: `${panelCount * 100}vh` }}
-      className="relative"
+      className="relative w-full max-w-full overflow-x-clip"
     >
-      <div className={`sticky ${HEADER_OFFSET_CLASS} ${VIEWPORT_HEIGHT_CLASS} overflow-hidden`}>
-        <motion.div style={{ x }} className="flex h-full">
+      <div className={`sticky ${HEADER_OFFSET_CLASS} ${VIEWPORT_HEIGHT_CLASS} overflow-hidden w-full max-w-full`}>
+        <motion.div style={{ x }} className="flex h-full w-full">
           {children}
         </motion.div>
       </div>

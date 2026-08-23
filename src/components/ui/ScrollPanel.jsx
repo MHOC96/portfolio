@@ -4,7 +4,7 @@
  */
 const ScrollPanel = ({ children, className = '' }) => (
   <div
-    className={`w-screen h-[calc(100vh-4rem)] flex-shrink-0 flex items-center justify-center overflow-hidden ${className}`}
+    className={`flex-[0_0_100%] w-full max-w-full h-[calc(100vh-4rem)] flex-shrink-0 flex items-center justify-center overflow-hidden ${className}`}
   >
     {children}
   </div>

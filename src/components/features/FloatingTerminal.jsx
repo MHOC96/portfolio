@@ -164,7 +164,7 @@ const FloatingTerminal = () => {
 
     const modalVariants = {
         normal: { width: 'min(90vw, 600px)', height: '400px', top: 'auto', left: 'auto', bottom: '20vh', right: '5vw', opacity: 1, scale: 1 },
-        maximized: { width: '100vw', height: '100vh', top: 0, left: 0, bottom: 'auto', right: 'auto', opacity: 1, scale: 1 }
+        maximized: { width: '100%', height: '100dvh', top: 0, left: 0, bottom: 'auto', right: 'auto', opacity: 1, scale: 1 }
     };
 
     return (

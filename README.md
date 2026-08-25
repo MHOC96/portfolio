@@ -84,6 +84,8 @@ VITE_RESUME_URL=/resume.pdf
 
 Place your resume at `public/resume.pdf`, or set `VITE_RESUME_URL` to an external link.
 
+> **Production deploy:** `public/resume.pdf` must be committed to git (it is explicitly allowed in `.gitignore`). If the PDF is only on your machine, Vercel will not have it and `/resume.pdf` will show a 404 page.
+
 ### 4. Run locally
 
 ```bash

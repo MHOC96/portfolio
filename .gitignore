@@ -28,4 +28,5 @@ dist-ssr
 LoaderPreview.jsx
 temp_stitch.html
 *.pdf
+!public/resume.pdf
 mcp_*.txt

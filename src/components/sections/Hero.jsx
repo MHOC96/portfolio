@@ -144,9 +144,9 @@ const Hero = () => {
                 </h2>
 
                 {/* Name */}
-                <h1 className="font-mono tracking-tighter text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none break-words">
+                <h1 className="font-mono tracking-tighter text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 leading-none break-words">
                   <TextDecode
-                    text={PROFILE.firstName}
+                    text={`${PROFILE.firstName} ${PROFILE.lastName}`}
                     className="glitch-hover"
                     style={{ cursor: 'crosshair' }}
                     speed={35}

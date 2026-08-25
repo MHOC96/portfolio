@@ -23,7 +23,7 @@ const Footer = () => {
                   boxShadow: '4px 4px 0px var(--color-border-strong)',
                 }}
               >
-                <span className="text-sm font-black tracking-tight text-white font-mono">OC</span>
+                <span className="text-[9px] font-black tracking-tighter text-white font-mono">MHOC</span>
               </div>
               <span className="font-mono text-[10px] tracking-[0.5em] text-accent uppercase font-bold">DEVELOPER PORTFOLIO</span>
             </div>

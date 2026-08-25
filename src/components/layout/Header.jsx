@@ -60,7 +60,7 @@ const Header = () => {
               transform: 'translate(-2px, -2px)',
             }}
           >
-            <span className="text-sm font-black tracking-tight text-white font-mono">OC</span>
+            <span className="text-[9px] font-black tracking-tighter text-white font-mono">MHOC</span>
           </div>
           <div className="hidden lg:block">
             <span className="font-mono text-[10px] tracking-[0.5em] text-accent uppercase font-bold">

@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /server/
+Crawl-delay: 1
 
-Sitemap: https://yashwanth-portfolio-sigma.vercel.app/sitemap.xml
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /server/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /server/
+
+Sitemap: https://oshadhacanchana.com/sitemap.xml

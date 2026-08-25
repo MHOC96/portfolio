@@ -6,7 +6,7 @@ import ChatMessageContent from './ChatMessageContent';
 const groqApiKey = import.meta.env.VITE_GROQ_API_KEY?.split(',')[0]?.trim();
 const groqModel = import.meta.env.VITE_GROQ_MODEL?.trim() || 'openai/gpt-oss-120b';
 
-const MHOC_ICON = '/naruto-119-svgrepo-com.svg';
+const MHOC_ICON = '/naruto-icon.svg';
 
 const buildGroqMessages = (history) => [
   { role: 'system', content: PORTFOLIO_SYSTEM_INSTRUCTION },

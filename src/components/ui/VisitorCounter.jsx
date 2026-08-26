@@ -4,6 +4,10 @@ const VisitorCounter = () => {
   const [count, setCount] = useState(null);
 
   useEffect(() => {
+    // Skip for bots/crawlers to avoid Search Console resource errors
+    const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck/i.test(navigator.userAgent);
+    if (isBot) return;
+
     // Fetch and increment the counter
     fetch('https://api.counterapi.dev/v1/MHOC96/portfolio/up')
       .then((res) => res.json())

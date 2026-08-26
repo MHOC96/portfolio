@@ -18,6 +18,13 @@ export const useGeolocation = () => {
     let isMounted = true;
 
     const fetchLocation = async () => {
+      // Skip API calls for bots/crawlers to avoid Search Console resource errors
+      const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck/i.test(navigator.userAgent);
+      if (isBot) {
+        if (isMounted) setLoading(false);
+        return;
+      }
+
       // Check cache first
       const cached = sessionStorage.getItem('geo_data');
       if (cached) {

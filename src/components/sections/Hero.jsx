@@ -144,7 +144,7 @@ const Hero = () => {
                 </h2>
 
                 {/* Name */}
-                <h1 className="font-mono tracking-tighter text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 leading-none break-words">
+                <h2 className="font-mono tracking-tighter text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 leading-none break-words">
                   <TextDecode
                     text={`${PROFILE.firstName} ${PROFILE.lastName}`}
                     className="glitch-hover"
@@ -152,7 +152,7 @@ const Hero = () => {
                     speed={35}
                     stagger={2}
                   />
-                </h1>
+                </h2>
 
                 {/* Typewriter cycling role — fixed height prevents bio text below from jumping */}
                 <div

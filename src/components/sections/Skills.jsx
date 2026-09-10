@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '../ui/ScrollReveal';
 import TextReveal from '../ui/TextReveal';
 import MagneticWrapper from '../ui/MagneticWrapper';
 import { SKILLS_META } from '../../data/skillsMeta';
 
-const SkillCard = ({ skill, inMarquee = false }) => {
+const SkillCard = ({ skill, inMarquee = false, disableEntrance = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [displayText, setDisplayText] = useState(skill.name);
   const [isMobile, setIsMobile] = useState(false);
@@ -71,8 +71,8 @@ const SkillCard = ({ skill, inMarquee = false }) => {
             : `4px 4px 0px ${skill.color}`,
           transform: isHovered && !isMobile ? 'translate(-2px, -2px)' : 'none',
         }}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={disableEntrance ? false : { opacity: 0, scale: 0.9 }}
+        animate={disableEntrance ? undefined : { opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
       >
         {/* Subtle color glow backplate */}
@@ -193,6 +193,35 @@ const SKILLS_DATA = [
   { name: "MATPLOTLIB", color: "#11557c", level: 3, category: "DATA LIBRARY", status: "INTERMEDIATE", group: "ML", icon: DOT_ICON },
   { name: "SEABORN", color: "#2a6f9b", level: 3, category: "DATA LIBRARY", status: "INTERMEDIATE", group: "ML", icon: DOT_ICON },
 
+  // Data & Analytics
+  {
+    name: "POWER BI",
+    color: "#f2c811",
+    level: 3,
+    category: "BI TOOL",
+    status: "INTERMEDIATE",
+    group: "ANALYTICS",
+    viewBox: "0 0 24 24",
+    icon: (
+      <path d="M3 3h4v18H3V3zm7 8h4v10h-4V11zm7-5h4v15h-4V6z" />
+    ),
+  },
+  {
+    name: "RAPIDMINER STUDIO",
+    color: "#e8750a",
+    level: 3,
+    category: "ANALYTICS PLATFORM",
+    status: "INTERMEDIATE",
+    group: "ANALYTICS",
+    viewBox: "0 0 24 24",
+    icon: (
+      <path
+        d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.5L18 8v8l-6 3.5L6 16V8l6-3.5zM11 9v6l5-2.5V11.5L11 9z"
+        fill="currentColor"
+      />
+    ),
+  },
+
   // DevOps, Cloud & Databases
   { name: "VERCEL", color: "#ffffff", level: 3, category: "DEPLOYMENT", status: "INTERMEDIATE", group: "DEVOPS", viewBox: "0 0 256 222", icon: <path d="M128 0L256 221.705H0z" /> },
   { name: "RAILWAY", color: "#c6a0ff", level: 3, category: "DEPLOYMENT", status: "INTERMEDIATE", group: "DEVOPS", icon: DOT_ICON },
@@ -207,7 +236,23 @@ const SKILLS_DATA = [
   { name: "JAVASCRIPT", color: "#f7df1e", level: 3, category: "LANGUAGE", status: "INTERMEDIATE", group: "FRONTEND", icon: <path d="M4 2h16v20l-8-4.5L4 22V2zm3.2 12.4l1.8 1.1c.4.7.7 1.3 1.5 1.3.8 0 1.3-.3 1.3-1.5V9.2h2.2v6.2c0 2.3-1.2 3.3-3 3.3-1.6 0-2.5-.8-3.2-1.8zm8.3 2.1c.8.8 1.7 1.4 3.4 1.4 1.4 0 2.3-.7 2.3-1.7 0-1.2-.9-1.6-2.4-2.3l-.8-.4c-2.4-1-4-2.3-4-5 0-2.5 1.9-4.4 4.9-4.4 2.1 0 3.6.7 4.7 2.6l-2.6 1.7c-.6-.9-1.2-1.3-2.1-1.3-.9 0-1.5.6-1.5 1.3 0 .9 1.1 1.3 2.9 1.9l1 .4c2.8 1.2 4.4 2.4 4.4 5.2 0 3-2.4 4.7-5.7 4.7-3.2 0-5.3-1.5-6.3-3.4l2.6-1.8z" /> },
 ];
 
-const FILTERS = ["ALL", "LANGUAGES", "FRAMEWORKS", "AI ENGINEERING", "ML & DATA", "DEVOPS & DB", "FRONTEND"];
+const FILTERS = ["ALL", "LANGUAGES", "FRAMEWORKS", "AI ENGINEERING", "ML & DATA", "DATA & ANALYTICS", "DEVOPS & DB", "FRONTEND"];
+
+const FILTER_TRANSITION = { duration: 0.4, ease: [0.22, 1, 0.36, 1] };
+
+const filterGridVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.05 },
+  },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const filterItemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: FILTER_TRANSITION },
+};
 
 const Skills = () => {
   const ref = useRef(null);
@@ -220,6 +265,7 @@ const Skills = () => {
     if (activeFilter === "FRAMEWORKS") return skill.group === "FRAMEWORK";
     if (activeFilter === "AI ENGINEERING") return skill.group === "AI";
     if (activeFilter === "ML & DATA") return skill.group === "ML";
+    if (activeFilter === "DATA & ANALYTICS") return skill.group === "ANALYTICS";
     if (activeFilter === "DEVOPS & DB") return ["DEVOPS", "DATABASE"].includes(skill.group);
     if (activeFilter === "FRONTEND") return skill.group === "FRONTEND";
     return true;
@@ -240,7 +286,7 @@ const Skills = () => {
   }, []);
 
   return (
-    <section id="skills" className="section-padding bg-transparent relative overflow-hidden py-24">
+    <section id="skills" className="section-padding bg-transparent relative overflow-hidden">
       {/* Subtle Dot-Grid Background Overlay */}
       <div
         className="absolute inset-0 z-[-1] opacity-30 pointer-events-none"
@@ -289,33 +335,51 @@ const Skills = () => {
           ))}
         </div>
 
-        {activeFilter === "ALL" ? (
-          <div className="flex flex-col gap-4 md:gap-5 mt-4 min-h-[220px]">
-            {skillRows.map((row, rowIndex) => (
-              <SkillMarqueeRow
-                key={`all-${rowIndex}`}
-                skills={row}
-                rowIndex={rowIndex}
-                direction={rowIndex % 2 === 0 ? 'right' : 'left'}
-                speed={28 + rowIndex * 6}
-              />
-            ))}
-          </div>
-        ) : (
-        <motion.div 
-            key={activeFilter}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className={`flex flex-wrap justify-center gap-4 md:gap-5 mt-4 content-start ${
-              filteredSkills.length === 4 ? 'min-h-0' : 'min-h-[220px]'
-            }`}
-          >
-            {filteredSkills.map((skill) => (
-              <SkillCard key={skill.name} skill={skill} />
-            ))}
+        <motion.div
+          layout
+          className="overflow-hidden mt-4"
+          transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {activeFilter === 'ALL' ? (
+              <motion.div
+                key="skills-all"
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={FILTER_TRANSITION}
+                className="flex flex-col gap-4 md:gap-5"
+              >
+                {skillRows.map((row, rowIndex) => (
+                  <SkillMarqueeRow
+                    key={`all-${rowIndex}`}
+                    skills={row}
+                    rowIndex={rowIndex}
+                    direction={rowIndex % 2 === 0 ? 'right' : 'left'}
+                    speed={28 + rowIndex * 6}
+                  />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key={activeFilter}
+                layout
+                variants={filterGridVariants}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+                className="flex flex-wrap justify-center gap-3 md:gap-4 content-start pb-1"
+              >
+                {filteredSkills.map((skill) => (
+                  <motion.div key={skill.name} variants={filterItemVariants} className="relative">
+                    <SkillCard skill={skill} disableEntrance />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
-        )}
       </div>
     </section>
   );

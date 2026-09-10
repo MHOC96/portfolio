@@ -186,7 +186,8 @@ const ProjectPanel = ({ project, idx, showDiagram = false }) => (
           <img
             src={project.image}
             alt={project.title}
-            loading="lazy"
+            loading={idx === 0 ? 'eager' : 'lazy'}
+            fetchPriority={idx === 0 ? 'high' : 'auto'}
             decoding="async"
             className="w-full h-full max-w-full grayscale group-hover:grayscale-0 transition-all duration-700 object-contain opacity-95 group-hover:opacity-100 [image-rendering:auto]"
           />

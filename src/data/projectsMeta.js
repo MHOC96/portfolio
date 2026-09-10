@@ -1,7 +1,7 @@
 export const PROJECTS_META = [
   {
     title: 'Active Research Assistant',
-    image: '/Active Research Assistant.png',
+    image: '/Active Research Assistant.webp',
     tech: ['Python', 'FastAPI', 'Groq', 'Gemini', 'Hybrid RAG', 'ChromaDB'],
     color: 'from-purple-500/20 to-blue-500/20',
     liveLink: '',
@@ -9,7 +9,7 @@ export const PROJECTS_META = [
   },
   {
     title: 'HESHZ FIT Workout Journal',
-    image: '/workout.png',
+    image: '/workout.webp',
     tech: ['Python', 'FastAPI', 'Supabase', 'Gemini', 'JWT', 'Vercel'],
     color: 'from-yellow-500/20 to-amber-500/20',
     liveLink: 'https://workout.journal.heshzfit.lk/',
@@ -17,7 +17,7 @@ export const PROJECTS_META = [
   },
   {
     title: 'AutoMCQ Engine',
-    image: '/AutoMCQ-Engine.png',
+    image: '/AutoMCQ-Engine.webp',
     tech: ['Python', 'Flask', 'Gemini Vision', 'OpenCV', 'Cloudflare R2'],
     color: 'from-emerald-500/20 to-cyan-500/20',
     liveLink: '',
@@ -25,7 +25,7 @@ export const PROJECTS_META = [
   },
   {
     title: 'Institutional Election System',
-    image: '/Executive Member Selection & Election Management Platform.png',
+    image: '/Executive Member Selection & Election Management Platform.webp',
     tech: ['Python', 'Django REST', 'PostgreSQL', 'Redis', 'JWT', 'Cloudinary'],
     color: 'from-blue-500/20 to-indigo-500/20',
     liveLink: 'https://election-systems.vercel.app/',

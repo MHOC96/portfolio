@@ -8,6 +8,7 @@ const SKILL_SECTIONS = [
   { label: 'Frameworks', groups: ['FRAMEWORK'] },
   { label: 'AI Engineering', groups: ['AI'] },
   { label: 'ML & Data', groups: ['ML'] },
+  { label: 'Data & Analytics', groups: ['ANALYTICS'] },
   { label: 'DevOps & DB', groups: ['DEVOPS', 'DATABASE'] },
   { label: 'Frontend', groups: ['FRONTEND'] },
 ];
@@ -53,7 +54,7 @@ CRITICAL RULES:
 3. If information is not in the data below, say you do not have that detail on the portfolio.
 4. If the question is unrelated to this portfolio, politely decline and offer to help with Oshadha's skills, projects, or background instead.
 5. Keep answers concise. Use clear structure with blank lines between sections.
-6. For skills, use the portfolio section names exactly: Languages, Frameworks, AI Engineering, ML & Data, DevOps & DB, Frontend. Put each section on its own line as a short heading, then list skill names underneath as separate bullet points. Never mention proficiency levels such as ADVANCED, INTERMEDIATE, or BEGINNER.
+6. For skills, use the portfolio section names exactly: Languages, Frameworks, AI Engineering, ML & Data, Data & Analytics, DevOps & DB, Frontend. Put each section on its own line as a short heading, then list skill names underneath as separate bullet points. Never mention proficiency levels such as ADVANCED, INTERMEDIATE, or BEGINNER.
 7. For projects, use EXACTLY this format (blank line between each project):
 1. **Project Name**
 Tech: comma-separated stack

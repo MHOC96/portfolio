@@ -88,7 +88,7 @@ const FloatingTerminal = () => {
         } else if (lowerCmd === 'skills') {
             newHistory.push({ 
                 type: 'output', 
-                content: 'OSHADHA\'S SKILLS:\n  [Languages]\n    - Python, Java, C#\n  [Frameworks]\n    - Django, FastAPI, Flask, Spring Boot\n  [AI Engineering]\n    - RAG, MCP, LangChain, LangGraph\n  [ML & Data]\n    - Scikit-Learn, Pandas, NumPy, Matplotlib, Seaborn\n  [DevOps & DB]\n    - Docker, Vercel, Railway, CI/CD, PostgreSQL, MySQL\n  [Frontend]\n    - HTML5, CSS3, JavaScript' 
+                content: 'OSHADHA\'S SKILLS:\n  [Languages]\n    - Python, Java, C#\n  [Frameworks]\n    - Django, FastAPI, Flask, Spring Boot\n  [AI Engineering]\n    - RAG, MCP, LangChain, LangGraph\n  [ML & Data]\n    - Scikit-Learn, Pandas, NumPy, Matplotlib, Seaborn\n  [Data & Analytics]\n    - Power BI, RapidMiner Studio\n  [DevOps & DB]\n    - Docker, Vercel, Railway, CI/CD, PostgreSQL, MySQL\n  [Frontend]\n    - HTML5, CSS3, JavaScript' 
             });
         } else if (lowerCmd === 'projects') {
             newHistory.push({

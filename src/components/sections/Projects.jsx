@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ScrollReveal from '../ui/ScrollReveal';
 import TextReveal from '../ui/TextReveal';
@@ -168,8 +169,12 @@ const projects = PROJECTS_META.map((meta, index) => ({
 /* Total panels = projects + 1 CTA panel */
 const PANEL_COUNT = projects.length + 1;
 
-const ProjectPanel = ({ project, idx, showDiagram = false }) => (
-  <div className="w-full h-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 px-4 sm:px-6 md:px-16 lg:px-24 py-6 md:py-8 max-w-full overflow-x-clip">
+const ProjectPanel = ({ project, idx, showDiagram = false, compact = false }) => (
+  <div
+    className={`w-full flex flex-col md:flex-row items-stretch md:items-center justify-start md:justify-center max-w-full overflow-x-clip ${
+      compact ? 'gap-4 px-0 py-0' : 'gap-6 md:gap-12 px-4 sm:px-6 md:px-16 lg:px-24 py-4 md:py-8'
+    }`}
+  >
     {/* Image Side */}
     <motion.div
       initial={{ opacity: 0, scale: 0.92 }}
@@ -306,6 +311,18 @@ const ProjectsCta = () => (
 );
 
 const Projects = () => {
+  const [useHorizontalProjects, setUseHorizontalProjects] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setUseHorizontalProjects(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
   return (
     <section id="projects" className="relative overflow-x-clip">
       {/* Section Header — sits above the horizontal scroll area */}
@@ -327,10 +344,10 @@ const Projects = () => {
                 <TextReveal text="FEATURED PROJECTS" delay={0.2} />
               </h2>
               <div className="w-16 h-[4px] mb-6" style={{ backgroundColor: 'var(--color-red)' }} />
-              <p className="text-muted max-w-2xl text-lg hidden md:block">
+              <p className="text-muted max-w-2xl text-lg hidden lg:block">
                 Scroll down to explore — each project slides in horizontally.
               </p>
-              <p className="text-muted max-w-2xl text-sm md:hidden">
+              <p className="text-muted max-w-2xl text-sm lg:hidden">
                 A selection of backend systems, AI tools, and full-stack builds.
               </p>
             </ScrollReveal>
@@ -338,18 +355,18 @@ const Projects = () => {
         </div>
       </div>
 
-      {/* Mobile: vertical stack (no horizontal scroll) */}
-      <div className="md:hidden container-custom pb-16 space-y-16 overflow-x-clip">
-        {projects.map((project, idx) => (
-          <div key={idx} className="w-full max-w-full">
-            <ProjectPanel project={project} idx={idx} />
+      {!useHorizontalProjects ? (
+        <div className="container-custom pb-12 flex flex-col gap-10 lg:gap-12 overflow-x-clip">
+          {projects.map((project, idx) => (
+            <article key={project.title} className="w-full max-w-full border-b border-border-strong/40 pb-10 last:border-b-0 last:pb-0">
+              <ProjectPanel project={project} idx={idx} compact />
+            </article>
+          ))}
+          <div className="pt-2">
+            <ProjectsCta />
           </div>
-        ))}
-        <ProjectsCta />
-      </div>
-
-      {/* Desktop: horizontal scroll */}
-      <div className="hidden md:block">
+        </div>
+      ) : (
       <HorizontalScroll panelCount={PANEL_COUNT}>
         {projects.map((project, idx) => (
           <ScrollPanel key={idx}>
@@ -357,12 +374,11 @@ const Projects = () => {
           </ScrollPanel>
         ))}
 
-        {/* CTA / "More Coming" Panel */}
         <ScrollPanel className="bg-transparent">
           <ProjectsCta />
         </ScrollPanel>
       </HorizontalScroll>
-      </div>
+      )}
     </section>
   );
 };

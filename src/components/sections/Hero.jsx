@@ -103,7 +103,7 @@ const Hero = () => {
     <section
       id="home"
       ref={sectionRef}
-      className="min-h-screen flex items-center relative overflow-hidden bg-transparent pt-16"
+      className="min-h-screen flex items-center relative overflow-hidden bg-transparent pt-[5.25rem] md:pt-16"
     >
       {/* Slow-drifting depth background ring */}
       <motion.div

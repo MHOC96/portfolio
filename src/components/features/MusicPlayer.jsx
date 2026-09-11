@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useDragControls } from 'framer-motion';
 import YouTube from 'react-youtube';
 
 const INITIAL_TRACKS = [
@@ -47,22 +47,17 @@ const MusicPlayer = () => {
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [player, setPlayer] = useState(null);
-  const [isTouch, setIsTouch] = useState(false);
   const [trackError, setTrackError] = useState(null);
 
   const progressBarRef = useRef(null);
+  const dragConstraintsRef = useRef(null);
+  const dragControls = useDragControls();
   const playIntentRef = useRef(false);
   const skipOnErrorRef = useRef(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   const currentVideoId = INITIAL_TRACKS[currentTrack].videoId;
-
-  useEffect(() => {
-    const touch =
-      'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    setIsTouch(touch);
-  }, []);
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
@@ -116,14 +111,28 @@ const MusicPlayer = () => {
     }
   };
 
-  const handleProgressClick = (e) => {
+  const seekToClientX = (clientX) => {
     if (progressBarRef.current && player && duration > 0) {
       const rect = progressBarRef.current.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
+      const pos = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
       const newTime = pos * duration;
       player.seekTo(newTime, true);
       setProgress(newTime);
     }
+  };
+
+  const handleProgressClick = (e) => {
+    seekToClientX(e.clientX);
+  };
+
+  const handleProgressPointerDown = (e) => {
+    e.preventDefault();
+    seekToClientX(e.clientX);
+  };
+
+  const startDrag = (event) => {
+    if (event.target.closest('button')) return;
+    dragControls.start(event);
   };
 
   const formatTime = (time) => {
@@ -200,17 +209,26 @@ const MusicPlayer = () => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <>
+          <div
+            ref={dragConstraintsRef}
+            className="fixed inset-0 z-[9998] pointer-events-none"
+            aria-hidden
+          />
+          <motion.div
           key="music-player"
-          drag={!isTouch}
+          drag
+          dragControls={dragControls}
+          dragListener={false}
           dragMomentum={false}
           dragElastic={0}
+          dragConstraints={dragConstraintsRef}
           style={{ x, y }}
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.92 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="fixed bottom-20 right-4 sm:right-8 z-[9999] w-[min(18rem,calc(100vw-2rem))] max-w-full bg-[#0a0a0a] max-md:backdrop-blur-none backdrop-blur-md border-2 border-[#333] font-mono shadow-[6px_6px_0px_rgba(0,0,0,0.8)] flex flex-col select-none touch-manipulation"
+          className="fixed bottom-20 right-4 sm:right-8 z-[9999] w-[min(18rem,calc(100vw-2rem))] max-w-full bg-[#0a0a0a] max-md:backdrop-blur-none backdrop-blur-md border-2 border-[#333] font-mono shadow-[6px_6px_0px_rgba(0,0,0,0.8)] flex flex-col select-none"
         >
           <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden" aria-hidden>
             <YouTube
@@ -223,7 +241,10 @@ const MusicPlayer = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between px-2 py-1.5 border-b-2 border-[#333] bg-[#111] cursor-move">
+          <div
+            className="flex items-center justify-between px-2 py-1.5 border-b-2 border-[#333] bg-[#111] cursor-move touch-none select-none"
+            onPointerDown={startDrag}
+          >
             <div className="flex items-center gap-2 text-[10px] tracking-widest text-[#aaaaaa] uppercase">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 18V5l12-2v13" />
@@ -235,7 +256,8 @@ const MusicPlayer = () => {
             <button
               type="button"
               onClick={handleClose}
-              className="text-[#aaaaaa] hover:text-[#ff4444] transition-colors focus:outline-none p-1"
+              onPointerDown={(e) => e.stopPropagation()}
+              className="text-[#aaaaaa] hover:text-[#ff4444] transition-colors focus:outline-none p-1 touch-manipulation"
               aria-label="Close music player"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -278,8 +300,9 @@ const MusicPlayer = () => {
             <span className="text-[9px] text-[#888888] shrink-0">{formatTime(progress)}</span>
             <div
               ref={progressBarRef}
-              className="flex-1 h-2 bg-[#111] border border-[#333] cursor-pointer relative min-w-0"
+              className="flex-1 h-2 bg-[#111] border border-[#333] cursor-pointer relative min-w-0 touch-manipulation"
               onClick={handleProgressClick}
+              onPointerDown={handleProgressPointerDown}
               onKeyDown={() => {}}
               role="slider"
               aria-valuemin={0}
@@ -330,6 +353,7 @@ const MusicPlayer = () => {
             </button>
           </div>
         </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

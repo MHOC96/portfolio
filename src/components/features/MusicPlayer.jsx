@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useDragControls } from 'framer-motion';
 import YouTube from 'react-youtube';
 
@@ -39,8 +39,17 @@ const YT_OPTS = {
   },
 };
 
+const MusicNoteIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 18V5l12-2v13" />
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="18" cy="16" r="3" />
+  </svg>
+);
+
 const MusicPlayer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -50,20 +59,27 @@ const MusicPlayer = () => {
   const [trackError, setTrackError] = useState(null);
 
   const progressBarRef = useRef(null);
+  const playerShellRef = useRef(null);
   const dragConstraintsRef = useRef(null);
   const dragControls = useDragControls();
   const playIntentRef = useRef(false);
   const skipOnErrorRef = useRef(false);
+  const miniTapStartRef = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   const currentVideoId = INITIAL_TRACKS[currentTrack].videoId;
 
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true);
+    const handleOpen = () => {
+      x.set(0);
+      y.set(0);
+      setIsOpen(true);
+      setIsMinimized(false);
+    };
     window.addEventListener('open-music-player', handleOpen);
     return () => window.removeEventListener('open-music-player', handleOpen);
-  }, []);
+  }, [x, y]);
 
   useEffect(() => {
     let interval;
@@ -201,9 +217,71 @@ const MusicPlayer = () => {
     }
     setIsPlaying(false);
     playIntentRef.current = false;
+    setIsMinimized(false);
     setIsOpen(false);
-    x.set(0);
-    y.set(0);
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(true);
+  };
+
+  const handleExpand = () => {
+    setIsMinimized(false);
+  };
+
+  const clampShellToViewport = useCallback(() => {
+    const el = playerShellRef.current;
+    if (!el || typeof window === 'undefined') return;
+
+    const rect = el.getBoundingClientRect();
+    const margin = 12;
+    const topLimit = 72;
+
+    let dx = 0;
+    let dy = 0;
+
+    if (rect.top < topLimit) dy += topLimit - rect.top;
+    if (rect.left < margin) dx += margin - rect.left;
+    if (rect.right > window.innerWidth - margin) {
+      dx += window.innerWidth - margin - rect.right;
+    }
+    if (rect.bottom > window.innerHeight - margin) {
+      dy += window.innerHeight - margin - rect.bottom;
+    }
+
+    if (dx !== 0) x.set(x.get() + dx);
+    if (dy !== 0) y.set(y.get() + dy);
+  }, [x, y]);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    clampShellToViewport();
+  }, [isOpen, isMinimized, clampShellToViewport]);
+
+  const shellClass =
+    'fixed bottom-20 right-4 sm:right-8 z-[9999] font-mono select-none';
+
+  const TAP_MOVE_THRESHOLD_PX = 10;
+
+  const handleShellDragEnd = () => {
+    clampShellToViewport();
+  };
+
+  const handleMiniPointerDown = (event) => {
+    if (!isMinimized) return;
+    miniTapStartRef.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handleMiniPointerUp = (event) => {
+    if (!isMinimized || !miniTapStartRef.current) return;
+    const start = miniTapStartRef.current;
+    miniTapStartRef.current = null;
+    const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    if (moved <= TAP_MOVE_THRESHOLD_PX) handleExpand();
+  };
+
+  const handleMiniPointerCancel = () => {
+    miniTapStartRef.current = null;
   };
 
   return (
@@ -215,22 +293,8 @@ const MusicPlayer = () => {
             className="fixed inset-0 z-[9998] pointer-events-none"
             aria-hidden
           />
-          <motion.div
-          key="music-player"
-          drag
-          dragControls={dragControls}
-          dragListener={false}
-          dragMomentum={false}
-          dragElastic={0}
-          dragConstraints={dragConstraintsRef}
-          style={{ x, y }}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.92 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="fixed bottom-20 right-4 sm:right-8 z-[9999] w-[min(18rem,calc(100vw-2rem))] max-w-full bg-[#0a0a0a] max-md:backdrop-blur-none backdrop-blur-md border-2 border-[#333] font-mono shadow-[6px_6px_0px_rgba(0,0,0,0.8)] flex flex-col select-none"
-        >
-          <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden" aria-hidden>
+
+          <div className="fixed left-0 top-0 w-0 h-0 overflow-hidden opacity-0 pointer-events-none" aria-hidden>
             <YouTube
               key={currentVideoId}
               videoId={currentVideoId}
@@ -241,118 +305,181 @@ const MusicPlayer = () => {
             />
           </div>
 
-          <div
-            className="flex items-center justify-between px-2 py-1.5 border-b-2 border-[#333] bg-[#111] cursor-move touch-none select-none"
-            onPointerDown={startDrag}
+          <motion.div
+            key="music-player"
+            ref={playerShellRef}
+            drag
+            dragControls={dragControls}
+            dragListener={isMinimized}
+            dragMomentum={false}
+            dragElastic={0}
+            dragConstraints={dragConstraintsRef}
+            onDragEnd={handleShellDragEnd}
+            onPointerDown={handleMiniPointerDown}
+            onPointerUp={handleMiniPointerUp}
+            onPointerCancel={handleMiniPointerCancel}
+            style={{ x, y }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className={`${shellClass} ${
+              isMinimized
+                ? 'w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-[#0a0a0a] border-2 border-[#333] text-[#ff4444] shadow-[4px_4px_0px_rgba(0,0,0,0.8)] touch-none cursor-grab active:cursor-grabbing hover:border-[#ff4444]'
+                : 'w-[min(18rem,calc(100vw-2rem))] max-w-full bg-[#0a0a0a] max-md:backdrop-blur-none backdrop-blur-md border-2 border-[#333] shadow-[6px_6px_0px_rgba(0,0,0,0.8)] flex flex-col'
+            }`}
+            role={isMinimized ? 'button' : undefined}
+            tabIndex={isMinimized ? 0 : undefined}
+            aria-label={isMinimized ? 'Expand music player' : undefined}
+            title={isMinimized ? 'Drag to move · Tap to open' : undefined}
+            onKeyDown={
+              isMinimized
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleExpand();
+                    }
+                  }
+                : undefined
+            }
           >
-            <div className="flex items-center gap-2 text-[10px] tracking-widest text-[#aaaaaa] uppercase">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18V5l12-2v13" />
-                <circle cx="6" cy="18" r="3" />
-                <circle cx="18" cy="16" r="3" />
-              </svg>
-              MHOC v1.0 {isLoading && <span className="animate-pulse text-[#ff4444]">[NET]</span>}
-            </div>
-            <button
-              type="button"
-              onClick={handleClose}
-              onPointerDown={(e) => e.stopPropagation()}
-              className="text-[#aaaaaa] hover:text-[#ff4444] transition-colors focus:outline-none p-1 touch-manipulation"
-              aria-label="Close music player"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <div className="p-3 border-b-2 border-[#333] bg-[#1a1a1a] relative overflow-hidden">
-            <div className="absolute inset-0 flex items-end justify-between px-2 opacity-10 pointer-events-none">
-              {[...Array(12)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="w-4 bg-[#ff4444]"
-                  animate={{ height: isPlaying && !isLoading ? [10, 24, 10] : 4 }}
-                  transition={{ repeat: Infinity, duration: 0.6 + i * 0.05, ease: 'linear' }}
-                />
-              ))}
-            </div>
-
-            <div className="relative z-10 flex flex-col gap-1 min-w-0">
-              <div className="text-[10px] text-[#ff4444] uppercase font-bold tracking-widest mb-1 truncate">
-                {INITIAL_TRACKS[currentTrack].artist}
-              </div>
-
-              <div className="bg-[#050505] border border-[#333] px-2 py-1 overflow-hidden relative">
-                <div className="text-sm font-bold text-[#e0e0e0] truncate">
-                  {INITIAL_TRACKS[currentTrack].title}
-                  {isLoading ? ' (Buffering...)' : ''}
-                </div>
-                {trackError && (
-                  <div className="text-[9px] text-[#ff4444] mt-1 truncate">{trackError}</div>
+            {isMinimized ? (
+              <div className="relative w-full h-full flex items-center justify-center">
+                <MusicNoteIcon size={22} />
+                {isPlaying && !isLoading && (
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff4444] border border-[#111] animate-pulse pointer-events-none" />
+                )}
+                {isLoading && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] text-[#888888] whitespace-nowrap pointer-events-none">
+                    [NET]
+                  </span>
                 )}
               </div>
-            </div>
-          </div>
-
-          <div className="px-3 py-2 bg-[#0a0a0a] flex items-center gap-3">
-            <span className="text-[9px] text-[#888888] shrink-0">{formatTime(progress)}</span>
-            <div
-              ref={progressBarRef}
-              className="flex-1 h-2 bg-[#111] border border-[#333] cursor-pointer relative min-w-0 touch-manipulation"
-              onClick={handleProgressClick}
-              onPointerDown={handleProgressPointerDown}
-              onKeyDown={() => {}}
-              role="slider"
-              aria-valuemin={0}
-              aria-valuemax={duration}
-              aria-valuenow={progress}
-              tabIndex={0}
-            >
+            ) : (
+              <>
               <div
-                className="absolute top-0 left-0 h-full bg-[#ff4444]"
-                style={{ width: `${duration > 0 ? (progress / duration) * 100 : 0}%` }}
-              />
-            </div>
-            <span className="text-[9px] text-[#888888] shrink-0">{formatTime(duration)}</span>
-          </div>
+                className="flex items-center justify-between px-2 py-1.5 border-b-2 border-[#333] bg-[#111] cursor-move touch-none select-none"
+                onPointerDown={startDrag}
+              >
+                <div className="flex items-center gap-2 text-[10px] tracking-widest text-[#aaaaaa] uppercase">
+                  <MusicNoteIcon size={12} />
+                  MHOC v1.0 {isLoading && <span className="animate-pulse text-[#ff4444]">[NET]</span>}
+                </div>
+                <div className="flex items-center gap-0.5">
+                  <button
+                    type="button"
+                    onClick={handleMinimize}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="text-[#aaaaaa] hover:text-[#e0e0e0] transition-colors focus:outline-none p-1 touch-manipulation"
+                    aria-label="Minimize music player"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="text-[#aaaaaa] hover:text-[#ff4444] transition-colors focus:outline-none p-1 touch-manipulation"
+                    aria-label="Close music player"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
 
-          <div className="flex justify-between items-center px-4 py-3 bg-[#111] border-t-2 border-[#333]">
-            <button type="button" onClick={prevTrack} className="p-2 text-[#888888] hover:text-[#ffffff] transition-colors active:scale-95" aria-label="Previous track">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="19 20 9 12 19 4 19 20" />
-                <line x1="5" y1="19" x2="5" y2="5" />
-              </svg>
-            </button>
+              <div className="p-3 border-b-2 border-[#333] bg-[#1a1a1a] relative overflow-hidden">
+                <div className="absolute inset-0 flex items-end justify-between px-2 opacity-10 pointer-events-none">
+                  {[...Array(12)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-4 bg-[#ff4444]"
+                      animate={{ height: isPlaying && !isLoading ? [10, 24, 10] : 4 }}
+                      transition={{ repeat: Infinity, duration: 0.6 + i * 0.05, ease: 'linear' }}
+                    />
+                  ))}
+                </div>
 
-            <button
-              type="button"
-              onClick={togglePlay}
-              disabled={isLoading && !player}
-              className={`p-3 bg-[#0a0a0a] border-2 border-[#333] text-[#ff4444] hover:border-[#ff4444] transition-all active:scale-95 shadow-[2px_2px_0px_#333] ${isLoading && !player ? 'opacity-50 cursor-not-allowed' : ''}`}
-              aria-label={isPlaying ? 'Pause' : 'Play'}
-            >
-              {isPlaying ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="ml-1">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              )}
-            </button>
+                <div className="relative z-10 flex flex-col gap-1 min-w-0">
+                  <div className="text-[10px] text-[#ff4444] uppercase font-bold tracking-widest mb-1 truncate">
+                    {INITIAL_TRACKS[currentTrack].artist}
+                  </div>
 
-            <button type="button" onClick={nextTrack} className="p-2 text-[#888888] hover:text-[#ffffff] transition-colors active:scale-95" aria-label="Next track">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 4 15 12 5 20 5 4" />
-                <line x1="19" y1="5" x2="19" y2="19" />
-              </svg>
-            </button>
-          </div>
-        </motion.div>
+                  <div className="bg-[#050505] border border-[#333] px-2 py-1 overflow-hidden relative">
+                    <div className="text-sm font-bold text-[#e0e0e0] truncate">
+                      {INITIAL_TRACKS[currentTrack].title}
+                      {isLoading ? ' (Buffering...)' : ''}
+                    </div>
+                    {trackError && (
+                      <div className="text-[9px] text-[#ff4444] mt-1 truncate">{trackError}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-3 py-2 bg-[#0a0a0a] flex items-center gap-3">
+                <span className="text-[9px] text-[#888888] shrink-0">{formatTime(progress)}</span>
+                <div
+                  ref={progressBarRef}
+                  className="flex-1 h-2 bg-[#111] border border-[#333] cursor-pointer relative min-w-0 touch-manipulation"
+                  onClick={handleProgressClick}
+                  onPointerDown={handleProgressPointerDown}
+                  onKeyDown={() => {}}
+                  role="slider"
+                  aria-valuemin={0}
+                  aria-valuemax={duration}
+                  aria-valuenow={progress}
+                  tabIndex={0}
+                >
+                  <div
+                    className="absolute top-0 left-0 h-full bg-[#ff4444]"
+                    style={{ width: `${duration > 0 ? (progress / duration) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="text-[9px] text-[#888888] shrink-0">{formatTime(duration)}</span>
+              </div>
+
+              <div className="flex justify-between items-center px-4 py-3 bg-[#111] border-t-2 border-[#333]">
+                <button type="button" onClick={prevTrack} className="p-2 text-[#888888] hover:text-[#ffffff] transition-colors active:scale-95" aria-label="Previous track">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="19 20 9 12 19 4 19 20" />
+                    <line x1="5" y1="19" x2="5" y2="5" />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  disabled={isLoading && !player}
+                  className={`p-3 bg-[#0a0a0a] border-2 border-[#333] text-[#ff4444] hover:border-[#ff4444] transition-all active:scale-95 shadow-[2px_2px_0px_#333] ${isLoading && !player ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  aria-label={isPlaying ? 'Pause' : 'Play'}
+                >
+                  {isPlaying ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16" />
+                      <rect x="14" y="4" width="4" height="16" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="ml-1">
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                  )}
+                </button>
+
+                <button type="button" onClick={nextTrack} className="p-2 text-[#888888] hover:text-[#ffffff] transition-colors active:scale-95" aria-label="Next track">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 4 15 12 5 20 5 4" />
+                    <line x1="19" y1="5" x2="19" y2="19" />
+                  </svg>
+                </button>
+              </div>
+              </>
+            )}
+          </motion.div>
         </>
       )}
     </AnimatePresence>

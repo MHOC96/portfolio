@@ -1,5 +1,13 @@
 export const PROJECTS_META = [
   {
+    title: 'USJ Incident Management System',
+    image: '/incident_management.webp',
+    tech: ['Django', 'Django REST Framework', 'Railway', 'Supabase', 'Cloudinary', 'JWT Authentication'],
+    color: 'from-rose-500/20 to-orange-500/20',
+    liveLink: 'https://incident-management-sjp.vercel.app/',
+    githubLink: 'https://github.com/MHOC96/incident_management',
+  },
+  {
     title: 'Active Research Assistant',
     image: '/Active Research Assistant.webp',
     tech: ['Python', 'FastAPI', 'Groq', 'Gemini', 'Hybrid RAG', 'ChromaDB'],

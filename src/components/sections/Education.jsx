@@ -19,7 +19,7 @@ const Education = () => {
   const timelineData = TIMELINE;
 
   return (
-    <section id="education" className="section-padding bg-transparent relative">
+    <section id="education" className="section-padding bg-transparent relative" aria-label="Education and Career Journey" itemScope itemType="https://schema.org/ProfilePage">
       <TimelineStyles />
       <div className="container-custom" ref={ref}>
         <motion.div
@@ -76,11 +76,20 @@ const Education = () => {
               />
             </div>
 
-            <StaggerReveal staggerDelay={0.12} direction="left" className="space-y-8">
+            <StaggerReveal staggerDelay={0.12} direction="left" className="space-y-8" role="list" aria-label="Timeline of education and achievements">
               {timelineData.map((item, i) => (
                 <div
                   key={i}
+                  role="listitem"
                   className="relative flex gap-6 md:gap-8 min-h-[80px]"
+                  itemScope
+                  itemType={
+                    item.type === 'education'
+                      ? 'https://schema.org/EducationalOccupationalCredential'
+                      : item.type === 'achievement'
+                      ? 'https://schema.org/Achievement'
+                      : 'https://schema.org/Event'
+                  }
                 >
                   {/* Tactical Node (Crosshair style) */}
                   <div className="relative z-10 flex-shrink-0 mt-1.5 ml-[21px]">
@@ -103,7 +112,7 @@ const Education = () => {
                   {/* Content Card */}
                   <div className="flex-grow pt-0 pb-6 relative" style={{ borderBottom: '2px solid var(--color-border-strong)' }}>
                     <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 mb-3">
-                      <h3 className="text-lg md:text-xl font-bold text-light uppercase tracking-tight">{item.title}</h3>
+                      <h3 className="text-lg md:text-xl font-bold text-light uppercase tracking-tight" itemProp="name">{item.title}</h3>
                       <span className={`inline-block px-2 py-1 text-[10px] font-mono border-2 font-bold uppercase w-fit whitespace-nowrap ${item.type === 'education' ? 'text-blue-400 border-blue-400 bg-blue-400/5' :
                         item.type === 'project' ? 'text-green-400 border-green-400 bg-green-400/5' :
                           item.type === 'achievement' ? 'text-amber-400 border-amber-400 bg-amber-400/5' :
@@ -113,7 +122,7 @@ const Education = () => {
                       </span>
                     </div>
 
-                    <h4 className="text-sm font-mono text-muted mb-3 font-semibold uppercase">{item.subtitle}</h4>
+                    <h4 className="text-sm font-mono text-muted mb-3 font-semibold uppercase" itemProp="description">{item.subtitle}</h4>
                     <p className="text-muted text-sm leading-relaxed max-w-2xl">
                       {item.description}
                     </p>

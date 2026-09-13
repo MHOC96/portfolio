@@ -1,20 +1,33 @@
 {
+  "id": "https://www.oshadhacanchana.com/",
   "name": "Oshadha | Oshadha Canchana Portfolio",
   "short_name": "Oshadha",
-  "description": "Oshadha – Backend & AI Engineer from Sri Lanka",
+  "description": "Portfolio of Oshadha Canchana, Backend & AI Engineer from Sri Lanka. Python, FastAPI, Django, RAG, MCP & scalable REST APIs.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0a0a0a",
   "theme_color": "#e63333",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["portfolio", "technology", "developer"],
   "icons": [
     {
       "src": "/favicon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/favicon-512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]

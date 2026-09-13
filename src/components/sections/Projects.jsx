@@ -207,7 +207,10 @@ const projects = PROJECTS_META.map((meta, index) => ({
 const PANEL_COUNT = projects.length + 1;
 
 const ProjectPanel = ({ project, idx, showDiagram = false, compact = false }) => (
-  <div
+  <article
+    aria-label={`Project: ${project.title}`}
+    itemScope
+    itemType="https://schema.org/SoftwareApplication"
     className={`w-full flex flex-col md:flex-row items-stretch md:items-center justify-start md:justify-center max-w-full overflow-x-clip ${
       compact ? 'gap-4 px-0 py-0' : 'gap-6 md:gap-12 px-4 sm:px-6 md:px-16 lg:px-24 py-4 md:py-8'
     }`}
@@ -253,7 +256,7 @@ const ProjectPanel = ({ project, idx, showDiagram = false, compact = false }) =>
       transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 1, 0.35, 1] }}
       className="w-full md:w-[55%] lg:w-1/2 flex flex-col gap-4 md:gap-5 min-w-0"
     >
-      <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-black uppercase tracking-tight text-accent leading-[1.08] break-words">
+      <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-black uppercase tracking-tight text-accent leading-[1.08] break-words" itemProp="name">
         {project.title}
       </h3>
 
@@ -309,7 +312,7 @@ const ProjectPanel = ({ project, idx, showDiagram = false, compact = false }) =>
         </div>
       )}
     </motion.div>
-  </div>
+  </article>
 );
 
 const ProjectsCta = () => (

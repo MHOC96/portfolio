@@ -286,7 +286,7 @@ const Skills = () => {
   }, []);
 
   return (
-    <section id="skills" className="section-padding bg-transparent relative overflow-hidden">
+    <section id="skills" className="section-padding bg-transparent relative overflow-hidden" aria-label="Technical Skills and Capabilities">
       {/* Subtle Dot-Grid Background Overlay */}
       <div
         className="absolute inset-0 z-[-1] opacity-30 pointer-events-none"
@@ -319,11 +319,12 @@ const Skills = () => {
         </motion.div>
 
         {/* â”€â”€ RETRO BRUTALIST FILTER TABS â”€â”€ */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-12 text-xs font-mono max-w-3xl mx-auto px-4">
+        <nav aria-label="Skills filter" className="flex flex-wrap justify-center gap-2 md:gap-3 mb-12 text-xs font-mono max-w-3xl mx-auto px-4">
           {FILTERS.map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
+              aria-pressed={activeFilter === filter}
               className={`px-3 py-1.5 border-2 border-border-strong uppercase transition-all duration-150 relative ${
                 activeFilter === filter 
                   ? "bg-accent text-primary shadow-[2px_2px_0px_var(--color-red)] -translate-x-[1px] -translate-y-[1px]" 
@@ -333,7 +334,7 @@ const Skills = () => {
               {filter}
             </button>
           ))}
-        </div>
+        </nav>
 
         <motion.div
           layout
@@ -342,9 +343,11 @@ const Skills = () => {
         >
           <AnimatePresence mode="wait" initial={false}>
             {activeFilter === 'ALL' ? (
-              <motion.div
+              <motion.ul
                 key="skills-all"
                 layout
+                role="list"
+                aria-label="All skills"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
@@ -352,19 +355,22 @@ const Skills = () => {
                 className="flex flex-col gap-4 md:gap-5"
               >
                 {skillRows.map((row, rowIndex) => (
-                  <SkillMarqueeRow
-                    key={`all-${rowIndex}`}
-                    skills={row}
-                    rowIndex={rowIndex}
-                    direction={rowIndex % 2 === 0 ? 'right' : 'left'}
-                    speed={28 + rowIndex * 6}
-                  />
+                  <li key={`all-${rowIndex}`}>
+                    <SkillMarqueeRow
+                      skills={row}
+                      rowIndex={rowIndex}
+                      direction={rowIndex % 2 === 0 ? 'right' : 'left'}
+                      speed={28 + rowIndex * 6}
+                    />
+                  </li>
                 ))}
-              </motion.div>
+              </motion.ul>
             ) : (
-              <motion.div
+              <motion.ul
                 key={activeFilter}
                 layout
+                role="list"
+                aria-label={`${activeFilter} skills`}
                 variants={filterGridVariants}
                 initial="hidden"
                 animate="show"
@@ -372,11 +378,11 @@ const Skills = () => {
                 className="flex flex-wrap justify-center gap-3 md:gap-4 content-start pb-1"
               >
                 {filteredSkills.map((skill) => (
-                  <motion.div key={skill.name} variants={filterItemVariants} className="relative">
+                  <motion.li key={skill.name} variants={filterItemVariants} className="relative">
                     <SkillCard skill={skill} disableEntrance />
-                  </motion.div>
+                  </motion.li>
                 ))}
-              </motion.div>
+              </motion.ul>
             )}
           </AnimatePresence>
         </motion.div>

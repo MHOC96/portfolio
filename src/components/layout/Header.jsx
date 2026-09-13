@@ -124,6 +124,7 @@ const Header = () => {
             className="text-muted p-2 focus:outline-none z-[70] border-2 border-border-strong hover:text-accent"
             style={{ boxShadow: '2px 2px 0px var(--color-border-strong)', backgroundColor: 'var(--color-primary)' }}
             title="Music Player"
+            aria-label="Open music player"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
           </button>
@@ -131,6 +132,7 @@ const Header = () => {
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            aria-label="Open terminal"
             className="text-accent p-2 focus:outline-none z-[70] border-2 border-border-strong"
             style={{ boxShadow: '2px 2px 0px var(--color-border-strong)', backgroundColor: 'var(--color-primary)' }}
             onClick={() => window.dispatchEvent(new CustomEvent('open-terminal'))}

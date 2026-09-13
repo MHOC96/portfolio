@@ -19,7 +19,7 @@ const Education = () => {
   const timelineData = TIMELINE;
 
   return (
-    <section id="education" className="section-padding bg-transparent relative" aria-label="Education and Career Journey" itemScope itemType="https://schema.org/ProfilePage">
+    <section id="education" className="section-padding bg-transparent relative" aria-label="Education and Career Journey">
       <TimelineStyles />
       <div className="container-custom" ref={ref}>
         <motion.div
@@ -87,8 +87,8 @@ const Education = () => {
                     item.type === 'education'
                       ? 'https://schema.org/EducationalOccupationalCredential'
                       : item.type === 'achievement'
-                      ? 'https://schema.org/Achievement'
-                      : 'https://schema.org/Event'
+                      ? 'https://schema.org/Award'
+                      : 'https://schema.org/CreativeWork'
                   }
                 >
                   {/* Tactical Node (Crosshair style) */}

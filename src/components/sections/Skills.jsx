@@ -305,10 +305,10 @@ const Skills = () => {
           className="mb-12"
         >
           <ScrollReveal delay={0}>
-            <h4 className="text-sm text-muted mb-2 tracking-widest uppercase flex items-center gap-3">
+            <p className="text-sm text-muted mb-2 tracking-widest uppercase flex items-center gap-3">
               <span className="text-red font-bold">// 01</span>
               <span>&mdash; CAPABILITIES</span>
-            </h4>
+            </p>
             <h2 className="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter" style={{ fontFamily: 'monospace' }}>
               <span className="text-muted/30"></span>
               <TextReveal text="SKILLS" delay={0.2} className="mx-2 inline-flex" />

@@ -378,7 +378,7 @@ const Projects = () => {
             <ScrollReveal delay={0}>
               <div className="flex items-center gap-4 mb-2">
                 <div className="w-8 h-[1px]" style={{ backgroundColor: 'var(--color-red)', opacity: 0.7 }}></div>
-                <h4 className="font-mono text-sm text-muted tracking-widest uppercase"><span className="text-red">// 02</span> &mdash; PORTFOLIO</h4>
+                <p className="font-mono text-sm text-muted tracking-widest uppercase"><span className="text-red">// 02</span> &mdash; PORTFOLIO</p>
               </div>
               <h2 className="text-3xl md:text-5xl font-bold mb-4 text-accent">
                 <TextReveal text="FEATURED PROJECTS" delay={0.2} />

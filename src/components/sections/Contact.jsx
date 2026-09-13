@@ -131,7 +131,7 @@ const Contact = () => {
           className="mb-12"
         >
           <ScrollReveal delay={0}>
-            <h4 className="font-mono text-sm text-muted mb-2"><span className="text-red">// 05</span> &mdash; GET IN TOUCH</h4>
+            <p className="font-mono text-sm text-muted mb-2"><span className="text-red">// 05</span> &mdash; GET IN TOUCH</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-accent"><span className="glitch-hover" data-text="CONTACT ME">CONTACT ME</span></h2>
             <div className="w-16 h-[2px]" style={{ backgroundColor: 'var(--color-red)', opacity: 0.6 }}></div>
           </ScrollReveal>

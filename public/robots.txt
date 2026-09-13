@@ -39,4 +39,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://www.oshadhacanchana.com/sitemap.xml
-LLMs: https://www.oshadhacanchana.com/llms.txt
+# LLM manifest: https://www.oshadhacanchana.com/llms.txt

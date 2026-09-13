@@ -29,7 +29,7 @@ const Education = () => {
           className="mb-12 md:mb-16"
         >
           <ScrollReveal delay={0}>
-            <h4 className="font-mono text-sm text-muted mb-2 tracking-widest uppercase"><span className="text-red">// 04</span> &mdash; EXPERIENCE &amp; EDUCATION</h4>
+            <p className="font-mono text-sm text-muted mb-2 tracking-widest uppercase"><span className="text-red">// 04</span> &mdash; EXPERIENCE &amp; EDUCATION</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-accent">
               <TextReveal text="MY JOURNEY" delay={0.2} />
             </h2>
@@ -76,11 +76,10 @@ const Education = () => {
               />
             </div>
 
-            <StaggerReveal staggerDelay={0.12} direction="left" className="space-y-8" role="list" aria-label="Timeline of education and achievements">
+            <StaggerReveal staggerDelay={0.12} direction="left" className="space-y-8" role="list" aria-label="Timeline of education and achievements" itemRole="listitem">
               {timelineData.map((item, i) => (
                 <div
                   key={i}
-                  role="listitem"
                   className="relative flex gap-6 md:gap-8 min-h-[80px]"
                   itemScope
                   itemType={
@@ -122,7 +121,7 @@ const Education = () => {
                       </span>
                     </div>
 
-                    <h4 className="text-sm font-mono text-muted mb-3 font-semibold uppercase" itemProp="description">{item.subtitle}</h4>
+                    <p className="text-sm font-mono text-muted mb-3 font-semibold uppercase" itemProp="description">{item.subtitle}</p>
                     <p className="text-muted text-sm leading-relaxed max-w-2xl">
                       {item.description}
                     </p>

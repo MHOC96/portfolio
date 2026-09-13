@@ -60,6 +60,9 @@ const StaggerReveal = ({
     direction = 'up',
     className = '',
     once = true,
+    role,
+    'aria-label': ariaLabel,
+    itemRole,
 }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once, amount: 0.15 });
@@ -71,15 +74,17 @@ const StaggerReveal = ({
             variants={containerVariants(staggerDelay)}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
+            role={role}
+            aria-label={ariaLabel}
         >
             {Array.isArray(children) ? (
                 children.map((child, i) => (
-                    <motion.div key={i} variants={itemVariants(direction)}>
+                    <motion.div key={i} variants={itemVariants(direction)} role={itemRole}>
                         {child}
                     </motion.div>
                 ))
             ) : (
-                <motion.div variants={itemVariants(direction)}>
+                <motion.div variants={itemVariants(direction)} role={itemRole}>
                     {children}
                 </motion.div>
             )}

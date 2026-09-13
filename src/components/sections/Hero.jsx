@@ -136,15 +136,15 @@ const Hero = () => {
               viewport={{ once: true, amount: 0.3 }}
             >
               <motion.div variants={childVariants} className="mb-8">
-                <h2
+                <p
                   className="font-mono text-[11px] tracking-[0.5em] mb-6"
                   style={{ color: 'var(--color-red)', opacity: 0.7 }}
                 >
                   // SYSTEM.INIT
-                </h2>
+                </p>
 
                 {/* Name */}
-                <h2 className="font-mono tracking-tighter text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 leading-none break-words">
+                <h1 className="font-mono tracking-tighter text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-3 leading-none break-words">
                   <TextDecode
                     text={`${PROFILE.firstName} ${PROFILE.lastName}`}
                     className="glitch-hover"
@@ -152,7 +152,7 @@ const Hero = () => {
                     speed={35}
                     stagger={2}
                   />
-                </h2>
+                </h1>
 
                 {/* Typewriter cycling role — fixed height prevents bio text below from jumping */}
                 <div

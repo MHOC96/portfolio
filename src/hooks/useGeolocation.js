@@ -48,35 +48,19 @@ export const useGeolocation = () => {
           };
 
           try {
-            // Primary Attempt: freeipapi.com
-            const res = await fetch('https://freeipapi.com/api/json');
+            // Primary: ipapi.co — CORS-enabled, works from browser
+            const res = await fetch('https://ipapi.co/json/');
             if (res.ok) {
               const result = await res.json();
-              data.city = result.cityName ? result.cityName.toUpperCase().substring(0, 3) : 'UNK';
-              data.countryCode = result.countryCode || 'UNK';
+              data.city = result.city ? result.city.toUpperCase().substring(0, 3) : 'UNK';
+              data.countryCode = result.country_code || 'UNK';
               data.lat = result.latitude || 0;
               data.lon = result.longitude || 0;
-              data.fullLocation = [result.cityName, result.regionName, result.countryName].filter(Boolean).join(', ') || 'Unknown';
-              data.ip = result.ipAddress || 'Unknown';
-            } else {
-              throw new Error('Primary failed');
+              data.fullLocation = [result.city, result.region, result.country_name].filter(Boolean).join(', ') || 'Unknown';
+              data.ip = result.ip || 'Unknown';
             }
           } catch (err) {
-            try {
-              // Fallback: ipapi.co
-              const res = await fetch('https://ipapi.co/json/');
-              if (res.ok) {
-                const result = await res.json();
-                data.city = result.city ? result.city.toUpperCase().substring(0, 3) : 'UNK';
-                data.countryCode = result.country_code || 'UNK';
-                data.lat = result.latitude || 0;
-                data.lon = result.longitude || 0;
-                data.fullLocation = [result.city, result.region, result.country_name].filter(Boolean).join(', ') || 'Unknown';
-                data.ip = result.ip || 'Unknown';
-              }
-            } catch (e) {
-              console.error('Geolocation failed:', e);
-            }
+            // Silent fallback — defaults are already set above
           }
           return data;
         })();

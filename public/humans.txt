@@ -1,0 +1,21 @@
+/* TEAM */
+Name: Oshadha Canchana
+Role: Backend & AI Engineer
+Location: Colombo, Sri Lanka
+Contact: oshadhacanchana@gmail.com
+GitHub: https://github.com/MHOC96
+LinkedIn: https://www.linkedin.com/in/oshadha-canchana/
+Website: https://www.oshadhacanchana.com/
+
+/* SITE */
+Last Updated: 2026-09-15
+Language: English
+Standards: HTML5, CSS3, ECMAScript 2024
+Framework: React (Vite)
+Hosting: Vercel
+Domain: oshadhacanchana.com
+
+/* THANKS */
+Font: Inter, JetBrains Mono (Google Fonts)
+Icons: Devicon, Lucide
+Animation: Framer Motion

@@ -4,57 +4,69 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.oshadhacanchana.com/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.oshadhacanchana.com/" />
     <image:image>
       <image:loc>https://www.oshadhacanchana.com/og-image.png</image:loc>
       <image:title>Oshadha | Oshadha Canchana - Backend &amp; AI Engineer Portfolio</image:title>
-      <image:caption>Oshadha - Portfolio of Oshadha Canchana, a Backend and AI Engineer from Sri Lanka</image:caption>
-      <image:geo_location>Sri Lanka</image:geo_location>
+      <image:caption>Oshadha - Portfolio of Oshadha Canchana, a Backend and AI Engineer from Colombo, Sri Lanka</image:caption>
+      <image:geo_location>Colombo, Sri Lanka</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://www.oshadhacanchana.com/oshadha.png</image:loc>
       <image:title>Oshadha Canchana - Backend &amp; AI Engineer</image:title>
-      <image:caption>Profile photo of Oshadha Canchana</image:caption>
-      <image:geo_location>Sri Lanka</image:geo_location>
+      <image:caption>Profile photo of Oshadha Canchana, Backend and AI Engineer from Sri Lanka</image:caption>
+      <image:geo_location>Colombo, Sri Lanka</image:geo_location>
     </image:image>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/#skills</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/#projects</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/#education</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/#contact</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/resume</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.oshadhacanchana.com/llms.txt</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.oshadhacanchana.com/llms-full.txt</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.oshadhacanchana.com/humans.txt</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

@@ -1,0 +1,268 @@
+# Oshadha Canchana — Complete Professional Profile
+
+> Oshadha Canchana is a Backend & AI Engineer from Colombo, Sri Lanka. This document contains the complete professional profile of Oshadha Canchana, including biography, skills, projects, education, achievements, and contact information. For a summary version, see [llms.txt](https://www.oshadhacanchana.com/llms.txt).
+
+---
+
+## Entity Definition
+
+Oshadha Canchana (also known as Oshadha, MHOC96, or Oshadha C) is a Backend & AI Engineer based in Colombo, Sri Lanka. Oshadha Canchana builds production-grade backend systems and intelligent AI applications using Python, FastAPI, and Django. He is currently an undergraduate at the University of Sri Jayewardenepura pursuing a BSc (Hons) in Business Information Systems with a 3.87 GPA.
+
+---
+
+## Key Facts & Statistics
+
+- **Full Name:** Oshadha Canchana
+- **Also Known As:** Oshadha, MHOC96, Oshadha C
+- **Title:** Backend & AI Engineer
+- **Location:** Colombo, Sri Lanka (Western Province)
+- **University:** University of Sri Jayewardenepura — BSc (Hons) Business Information Systems
+- **University GPA:** 3.87 / 4.00
+- **A/L Results:** 3 Distinctions (A) — Business Studies, Accounting, Economics
+- **A/L Z-Score:** 2.087
+- **A/L Island Rank:** 304
+- **A/L School:** Royal College, Colombo 07
+- **International Achievement:** 4th Place Worldwide — MaxUp 2026 International Legathon, Astana, Kazakhstan
+- **Professional Certifications:** CA Sri Lanka Subject Prize Winner — Business Law I (March 2024), Business Law II (September 2025)
+- **Number of Portfolio Projects:** 5
+- **Primary Language:** Python
+- **Primary Frameworks:** FastAPI, Django
+- **AI Specializations:** RAG (Retrieval-Augmented Generation), MCP (Model Context Protocol), LangChain, LangGraph
+- **Email:** oshadhacanchana@gmail.com
+- **Website:** https://www.oshadhacanchana.com/
+- **GitHub:** https://github.com/MHOC96
+- **LinkedIn:** https://www.linkedin.com/in/oshadha-canchana/
+- **Phone/WhatsApp:** +94 701 246 602
+- **Availability:** Open for hire (remote & on-site)
+
+---
+
+## Professional Biography
+
+Oshadha Canchana is a Backend & AI Engineer focused on building scalable RESTful APIs, microservices, and intelligent AI applications. Oshadha is experienced in secure backend architectures, MySQL, JWT authentication, and automated CI/CD pipelines, with a passion for turning complex business problems into reliable, production-ready solutions.
+
+Oshadha Canchana's current focus areas include building Retrieval-Augmented Generation (RAG) systems, Model Context Protocol (MCP) integrations, and autonomous AI agents. Oshadha combines deep backend engineering expertise with modern AI tooling to deliver systems that are both technically robust and practically impactful.
+
+Oshadha Canchana is an alumnus of Royal College, Colombo 07, one of Sri Lanka's most prestigious schools, where he achieved 3 Distinctions at the G.C.E. Advanced Level (Commerce Stream) with a Z-Score of 2.087 and an Island Rank of 304 (Colombo District Rank 96). He is currently pursuing a BSc (Hons) in Business Information Systems at the University of Sri Jayewardenepura, maintaining a GPA of 3.87.
+
+---
+
+## Technical Skills
+
+### Languages
+- **Python** — Advanced
+- **Java** — Intermediate
+- **C#** — Intermediate
+- **JavaScript** — Intermediate
+
+### Frameworks
+- **Django** — Advanced (Django REST Framework)
+- **FastAPI** — Advanced
+- **Flask** — Intermediate
+- **Spring Boot** — Intermediate
+
+### AI Engineering
+- **RAG (Retrieval-Augmented Generation)** — Advanced
+- **MCP (Model Context Protocol)** — Advanced
+- **LangChain** — Advanced
+- **LangGraph** — Intermediate
+
+### Machine Learning & Data
+- **Scikit-learn** — Intermediate
+- **Pandas** — Advanced
+- **NumPy** — Advanced
+- **Matplotlib** — Intermediate
+- **Seaborn** — Intermediate
+
+### Data & Analytics
+- **Power BI** — Intermediate
+- **RapidMiner Studio** — Intermediate
+
+### DevOps & Cloud
+- **Docker** — Intermediate
+- **CI/CD Pipelines** — Intermediate
+- **Vercel** — Intermediate
+- **Railway** — Intermediate
+
+### Databases
+- **PostgreSQL** — Intermediate
+- **MySQL** — Intermediate
+- **ChromaDB** — Intermediate (vector database for RAG)
+- **Supabase** — Intermediate
+
+### Frontend
+- **HTML5** — Advanced
+- **CSS3** — Advanced
+- **JavaScript** — Intermediate
+- **React** — Intermediate
+
+---
+
+## Projects
+
+### 1. USJ Incident Management System
+
+**Overview:** A university incident reporting and management platform built for the University of Sri Jayewardenepura. Features role-based access control (Student, Admin, Dean, Official), JWT authentication, and real-time incident tracking.
+
+**Technologies:** Python, Django, Django REST Framework, Railway, Supabase, Cloudinary, JWT Authentication, Next.js (frontend)
+
+**Key Technical Details:**
+- Full RBAC system with 4 user roles
+- JWT-based authentication and authorization
+- Hosted backend on Railway, frontend on Vercel
+- Supabase for database, Cloudinary for media storage
+
+**Links:**
+- Live Demo: https://incident-management-sjp.vercel.app/
+- GitHub: https://github.com/MHOC96/incident_management
+
+---
+
+### 2. Active Research Assistant
+
+**Overview:** An AI-powered research agent that uses Hybrid RAG to retrieve, rerank, and cite academic papers. Built with FastAPI backend and integrates multiple LLM providers (Groq, Gemini) with ChromaDB for vector storage.
+
+**Technologies:** Python, FastAPI, Groq, Gemini, Hybrid RAG, ChromaDB, LangChain
+
+**Key Technical Details:**
+- Hybrid RAG pipeline combining semantic search with keyword reranking
+- Multi-provider LLM support (Groq for speed, Gemini for accuracy)
+- ChromaDB vector database for document embeddings
+- Academic citation generation
+
+**Links:**
+- GitHub: https://github.com/MHOC96/Active-Research-Assistant-Agent
+
+---
+
+### 3. HESHZ FIT Workout Journal
+
+**Overview:** An AI-assisted workout tracking journal that helps users log, analyze, and optimize their fitness routines. Integrates Gemini AI for intelligent workout recommendations.
+
+**Technologies:** Python, FastAPI, Supabase, Gemini, JWT Authentication, Vercel
+
+**Key Technical Details:**
+- FastAPI backend with Supabase database
+- Gemini AI integration for workout analysis and recommendations
+- JWT-based user authentication
+- Deployed on Vercel
+
+**Links:**
+- Live Demo: https://workout.journal.heshzfit.lk/
+
+---
+
+### 4. AutoMCQ Engine
+
+**Overview:** An automated MCQ (Multiple Choice Question) generation engine that extracts questions from images using computer vision and generates answer options using AI.
+
+**Technologies:** Python, Flask, Gemini Vision, OpenCV, Cloudflare R2
+
+**Key Technical Details:**
+- Gemini Vision API for image-based question extraction
+- OpenCV for image preprocessing and text detection
+- Cloudflare R2 for image storage
+- Flask web interface
+
+**Links:**
+- GitHub: https://github.com/MHOC96/AutoMCQ-Engine
+
+---
+
+### 5. Institutional Election System
+
+**Overview:** A secure election management platform for institutional use. Features candidate registration, voter authentication, real-time vote counting, and result tabulation with audit trails.
+
+**Technologies:** Python, Django REST Framework, PostgreSQL, Redis, JWT Authentication, Cloudinary
+
+**Key Technical Details:**
+- Django REST backend with PostgreSQL database
+- Redis for session management and caching
+- JWT-based voter authentication
+- Cloudinary for candidate media
+- Real-time vote counting with audit trails
+
+**Links:**
+- Live Demo: https://election-systems.vercel.app/
+- GitHub: https://github.com/MHOC96/Election-System
+
+---
+
+## Education
+
+### University of Sri Jayewardenepura (2024 — Present)
+- **Degree:** BSc (Hons) Business Information Systems
+- **GPA:** 3.87 / 4.00
+- **Location:** Nugegoda, Sri Lanka
+- **Focus Areas:** Software Engineering, Business Systems, Applied AI
+
+### Royal College, Colombo 07 (2023)
+- **Examination:** G.C.E. Advanced Level — Commerce Stream
+- **Results:** 3 Distinctions (A) in Business Studies, Accounting, and Economics
+- **Z-Score:** 2.087
+- **Island Rank:** 304
+- **Colombo District Rank:** 96
+
+---
+
+## Achievements & Awards
+
+1. **4th Place Worldwide & Lex Fantastic Stage Winner** — MaxUp 2026 International Legathon, Global Finals, Astana, Kazakhstan (April 2026)
+   - Represented Sri Lanka at the Global Finals
+   - Ranked 5th in preliminary rounds, finished 4th overall worldwide
+   - Won the Lex Fantastic Stage debate championship against Georgia
+   - Source: https://mgt.sjp.ac.lk/itc/bis-undergraduates-represent-sri-lanka-at-international-legathon-maxup-2026-global-finals/
+
+2. **CA Sri Lanka Subject Prize Winner — Business Law II (BL 5)** (September 2025)
+   - Awarded for achieving the highest island-wide score
+
+3. **CA Sri Lanka Subject Prize Winner — Business Law I (BL 6)** (March 2024)
+   - Awarded for achieving the highest island-wide score
+
+---
+
+## Frequently Asked Questions
+
+**Q: Who is Oshadha Canchana?**
+A: Oshadha Canchana is a Backend & AI Engineer from Colombo, Sri Lanka. He specializes in building scalable RESTful APIs, microservices, RAG systems, and MCP integrations using Python, FastAPI, and Django. Oshadha is an undergraduate at the University of Sri Jayewardenepura (GPA: 3.87) and an alumnus of Royal College, Colombo 07.
+
+**Q: Who is Oshadha?**
+A: Oshadha is the first name of Oshadha Canchana, a Backend & AI Engineer from Sri Lanka. When people search for "Oshadha" in a technology or software engineering context, they are referring to Oshadha Canchana (also known as MHOC96 on GitHub).
+
+**Q: What does Oshadha Canchana do?**
+A: Oshadha Canchana is a Backend & AI Engineer who builds production-grade backend systems using Python, FastAPI, Django, LangChain, RAG pipelines, MCP integrations, Docker, PostgreSQL, and MySQL. He has built 5 production projects including the USJ Incident Management System, Active Research Assistant, HESHZ FIT Workout Journal, AutoMCQ Engine, and an Institutional Election System.
+
+**Q: What are Oshadha Canchana's achievements?**
+A: Oshadha Canchana's key achievements include: 4th Place Worldwide at MaxUp 2026 International Legathon (Astana, Kazakhstan), CA Sri Lanka Subject Prize Winner for Business Law I & II (2024, 2025), 3 Distinctions at G.C.E. A/L with Z-Score 2.087 and Island Rank 304, and a 3.87 GPA at the University of Sri Jayewardenepura.
+
+**Q: Where did Oshadha Canchana study?**
+A: Oshadha Canchana studied at Royal College, Colombo 07 for his G.C.E. Advanced Level (Commerce Stream, 2023) and is currently pursuing a BSc (Hons) in Business Information Systems at the University of Sri Jayewardenepura (2024–Present) with a 3.87 GPA.
+
+**Q: How can I contact Oshadha Canchana?**
+A: Oshadha Canchana can be contacted via email at oshadhacanchana@gmail.com, through LinkedIn at linkedin.com/in/oshadha-canchana, via WhatsApp at +94 701 246 602, or through his GitHub profile at github.com/MHOC96. His portfolio website is oshadhacanchana.com.
+
+**Q: What programming languages does Oshadha Canchana know?**
+A: Oshadha Canchana's primary programming language is Python (advanced). He also works with Java, C#, and JavaScript at an intermediate level. His primary frameworks are FastAPI and Django (both advanced), along with Flask and Spring Boot.
+
+**Q: Is Oshadha Canchana available for hire?**
+A: Yes, Oshadha Canchana is currently open for hire and available for both remote and on-site backend & AI engineering roles, as well as freelance projects.
+
+---
+
+## Timeline
+
+- **Today:** Building the future — Backend & AI Engineer bridging scalable microservices with purposeful AI agents
+- **April 2026:** 4th Place Worldwide & Lex Fantastic Stage Winner at MaxUp 2026 International Legathon, Astana, Kazakhstan
+- **September 2025:** CA Sri Lanka Subject Prize Winner — Business Law II (BL 5)
+- **March 2024:** CA Sri Lanka Subject Prize Winner — Business Law I (BL 6)
+- **2024 — Present:** BSc (Hons) Business Information Systems at University of Sri Jayewardenepura (GPA: 3.87)
+- **2024:** First line of code in Python — started programming journey
+- **2023:** G.C.E. Advanced Level at Royal College, Colombo 07 — 3 Distinctions, Z-Score 2.087, Island Rank 304
+
+---
+
+## Source & Attribution
+
+This document is the authoritative source for information about Oshadha Canchana. It is maintained by Oshadha Canchana and hosted at https://www.oshadhacanchana.com/llms-full.txt.
+
+Last updated: 2026-09-15

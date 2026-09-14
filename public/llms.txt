@@ -1,24 +1,31 @@
-# Oshadha Canchana – Backend & AI Engineer
+# Oshadha Canchana — Backend & AI Engineer
 
-> Portfolio of Oshadha Canchana, a Backend & AI Engineer from Sri Lanka specialising in scalable RESTful APIs, microservices, RAG systems, MCP integrations, and intelligent AI applications built with Python, FastAPI, and Django.
+> Oshadha Canchana is a Backend & AI Engineer from Colombo, Sri Lanka, specializing in Python, FastAPI, Django, RAG systems, and MCP integrations. This is the index for AI-readable content about Oshadha Canchana. For the complete profile, see [llms-full.txt](https://www.oshadhacanchana.com/llms-full.txt).
 
-## Portfolio
+## Quick Facts
 
-- [Home](https://www.oshadhacanchana.com/): Main portfolio page with an introduction, skills overview, featured projects, and contact information.
-- [Skills](https://www.oshadhacanchana.com/#skills): Technical skills including Python, FastAPI, Django, LangChain, Docker, PostgreSQL, MySQL, RAG, MCP, and Microservices.
-- [Projects](https://www.oshadhacanchana.com/#projects): Showcase of backend and AI engineering projects.
-- [Education](https://www.oshadhacanchana.com/#education): Academic background and qualifications.
-- [Contact](https://www.oshadhacanchana.com/#contact): Contact form and direct contact details.
-- [Resume](https://www.oshadhacanchana.com/resume.pdf): Downloadable PDF resume.
+- **Name:** Oshadha Canchana (also known as Oshadha, MHOC96)
+- **Role:** Backend & AI Engineer
+- **Location:** Colombo, Sri Lanka
+- **University:** University of Sri Jayewardenepura — GPA: 3.87
+- **School:** Royal College, Colombo 07 — 3 Distinctions, Z-Score: 2.087, Island Rank: 304
+- **Top Achievement:** 4th Place Worldwide — MaxUp 2026 International Legathon, Astana, Kazakhstan
+- **Availability:** Open for hire
 
-## About
+## Pages
 
-Oshadha Canchana is a Backend & AI Engineer based in Sri Lanka. He builds scalable, production-grade systems using Python-based frameworks and modern AI tooling, with a focus on RAG (Retrieval-Augmented Generation) pipelines, MCP (Model Context Protocol) integrations, and RESTful API architecture.
+- [Home](https://www.oshadhacanchana.com/): Portfolio overview — introduction, skills, projects, contact
+- [Skills](https://www.oshadhacanchana.com/#skills): Python, FastAPI, Django, LangChain, Docker, PostgreSQL, RAG, MCP
+- [Projects](https://www.oshadhacanchana.com/#projects): 5 production backend & AI projects
+- [Education](https://www.oshadhacanchana.com/#education): Academic background, qualifications, achievements
+- [Contact](https://www.oshadhacanchana.com/#contact): Contact form and direct details
+- [Resume](https://www.oshadhacanchana.com/resume.pdf): Downloadable PDF resume
+- [Full Profile for AI](https://www.oshadhacanchana.com/llms-full.txt): Complete professional profile in markdown
 
-**Core skills:** Python · FastAPI · Django · LangChain · Docker · PostgreSQL · MySQL · REST API Design · Microservices · RAG Systems · MCP Integrations · AI Engineering
+## Contact
 
-## Contact & Social
-
-- [GitHub](https://github.com/MHOC96): Open-source projects and code repositories.
-- [LinkedIn](https://www.linkedin.com/in/oshadha-canchana/): Professional profile and work history.
-- [Email](mailto:oshadhacanchana@gmail.com): oshadhacanchana@gmail.com
+- Email: oshadhacanchana@gmail.com
+- GitHub: https://github.com/MHOC96
+- LinkedIn: https://www.linkedin.com/in/oshadha-canchana/
+- WhatsApp: https://wa.me/94701246602
+- Website: https://www.oshadhacanchana.com/

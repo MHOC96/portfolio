@@ -14,6 +14,21 @@ Allow: /
 Disallow: /api/
 Disallow: /server/
 
+User-agent: Yandex
+Allow: /
+Disallow: /api/
+Disallow: /server/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+Disallow: /server/
+
+User-agent: Baiduspider
+Allow: /
+Disallow: /api/
+Disallow: /server/
+
 # LLM / AI crawlers
 User-agent: GPTBot
 Allow: /
@@ -38,5 +53,13 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 Sitemap: https://www.oshadhacanchana.com/sitemap.xml
-# LLM manifest: https://www.oshadhacanchana.com/llms.txt
+# LLM index: https://www.oshadhacanchana.com/llms.txt
+# LLM full content: https://www.oshadhacanchana.com/llms-full.txt
+# Authorship: https://www.oshadhacanchana.com/humans.txt

@@ -138,6 +138,23 @@ svg {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.light [data-mhoc-tab] {
+  border-color: var(--color-red);
+  box-shadow: -4px 4px 0px var(--color-red);
+}
+
+.light [data-mhoc-tab]:hover {
+  box-shadow: -8px 4px 0px var(--color-red);
+}
+
+.light [data-mhoc-tab] .mhoc-tab-icon {
+  display: none;
+}
+
+.light [data-mhoc-tab] .mhoc-tab-icon-light {
+  display: block;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

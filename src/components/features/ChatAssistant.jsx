@@ -231,6 +231,7 @@ export default function ChatAssistant() {
           setIsOpen(!isOpen);
           setShowTooltip(false);
         }}
+        data-mhoc-tab
         className={`absolute top-1/2 -translate-y-1/2 right-0 bg-primary border-y-2 border-l-2 border-border-strong flex flex-col items-center justify-center py-4 md:py-6 px-2 md:px-3 transition-all duration-300 z-40 hover:bg-red group pointer-events-auto ${isOpen ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100 shadow-[-4px_4px_0px_var(--color-border-strong)] hover:-translate-x-1 hover:shadow-[-8px_4px_0px_var(--color-border-strong)]'}`}
         title="Ask MHOC"
       >
@@ -238,7 +239,21 @@ export default function ChatAssistant() {
           <img
             src={MHOC_ICON}
             alt="MHOC"
-            className="w-full h-full object-contain brightness-0 invert opacity-90"
+            className="mhoc-tab-icon w-full h-full object-contain brightness-0 invert opacity-90"
+          />
+          <span
+            aria-hidden="true"
+            className="mhoc-tab-icon-light hidden w-full h-full bg-red opacity-90 group-hover:bg-white"
+            style={{
+              WebkitMaskImage: `url(${MHOC_ICON})`,
+              maskImage: `url(${MHOC_ICON})`,
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+            }}
           />
         </div>
         <div 

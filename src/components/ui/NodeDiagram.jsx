@@ -60,7 +60,14 @@ const NodeDiagram = ({ nodes = [], lines = [] }) => {
   };
 
   return (
-    <div className="relative w-full p-4 bg-primary/50 border border-border-strong/30 rounded-sm shadow-inner" ref={containerRef}>
+    <div
+      className="relative w-full p-4 bg-secondary"
+      ref={containerRef}
+      style={{
+        border: '2px solid var(--color-border-strong)',
+        boxShadow: '4px 4px 0px var(--color-border-strong)',
+      }}
+    >
       <motion.div 
         className="relative min-h-[220px] w-full max-w-[500px] mx-auto flex items-center justify-center"
         variants={containerVariants}
@@ -81,7 +88,7 @@ const NodeDiagram = ({ nodes = [], lines = [] }) => {
                 y1={start.y}
                 x2={`${(end.x / 450) * 100}%`}
                 y2={end.y}
-                stroke={isActive ? "var(--color-accent)" : "var(--color-red)"}
+                stroke={isActive ? "var(--color-red)" : "var(--color-border-strong)"}
                 strokeWidth={isActive ? "3" : "2"}
                 strokeDasharray="4 4"
                 variants={pathVariants}
@@ -111,16 +118,19 @@ const NodeDiagram = ({ nodes = [], lines = [] }) => {
               >
                 <motion.div
                   variants={nodeVariants}
-                  className="flex flex-col items-center justify-center p-3 bg-black border-2 cursor-pointer transition-all duration-300 min-w-[88px]"
+                  className="flex flex-col items-center justify-center p-3 bg-primary cursor-pointer transition-all duration-300 min-w-[88px]"
                   style={{
-                    borderColor: isHovered ? 'var(--color-accent)' : 'var(--color-border-strong)',
-                    boxShadow: isHovered ? '4px 4px 0px var(--color-accent)' : '2px 2px 0px var(--color-red)',
+                    border: '2px solid var(--color-border-strong)',
+                    borderColor: isHovered ? 'var(--color-red)' : 'var(--color-border-strong)',
+                    boxShadow: isHovered
+                      ? '4px 4px 0px var(--color-red)'
+                      : '2px 2px 0px var(--color-border-strong)',
                     transform: isHovered ? 'translate(-2px, -2px)' : 'none',
-                    color: isHovered ? 'var(--color-accent)' : 'currentColor'
+                    color: isHovered ? 'var(--color-red)' : 'var(--color-light)'
                   }}
                 >
                   <span className="mb-2">{node.icon}</span>
-                  <span className="text-[10px] font-mono text-center leading-tight uppercase tracking-wider" style={{ color: isHovered ? 'var(--color-accent)' : 'var(--color-muted)' }}>
+                  <span className="text-[10px] font-mono text-center leading-tight uppercase tracking-wider" style={{ color: isHovered ? 'var(--color-red)' : 'var(--color-light)' }}>
                     {node.label}
                   </span>
                 </motion.div>
@@ -130,7 +140,13 @@ const NodeDiagram = ({ nodes = [], lines = [] }) => {
         </div>
       </motion.div>
 
-      <div className="relative z-20 mt-3 min-h-[3rem] px-3 py-2 flex items-center justify-center border border-border-strong/30 bg-black/90">
+      <div
+        className="relative z-20 mt-3 min-h-[3rem] px-3 py-2 flex items-center justify-center bg-primary"
+        style={{
+          border: '2px solid var(--color-border-strong)',
+          boxShadow: '2px 2px 0px var(--color-border-strong)',
+        }}
+      >
         <AnimatePresence mode="wait">
           {activeNode ? (
             <motion.p

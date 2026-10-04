@@ -398,7 +398,7 @@ const Projects = () => {
       {!useHorizontalProjects ? (
         <div className="container-custom pb-12 flex flex-col gap-10 lg:gap-12 overflow-x-clip">
           {projects.map((project, idx) => (
-            <article key={project.title} className="w-full max-w-full border-b border-border-strong/40 pb-10 last:border-b-0 last:pb-0">
+            <article key={project.title} className="w-full max-w-full border-b pb-10 last:border-b-0 last:pb-0" style={{ borderColor: 'var(--color-border)' }}>
               <ProjectPanel project={project} idx={idx} compact />
             </article>
           ))}

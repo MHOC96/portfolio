@@ -89,7 +89,6 @@ export default function ChatAssistant() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [requestCount, setRequestCount] = useState(0);
   const messagesContainerRef = useRef(null);
 
   const SUGGESTIONS = [
@@ -153,16 +152,10 @@ export default function ChatAssistant() {
     const userMsg = forcedInput || input;
     if (!userMsg.trim()) return;
 
-    if (requestCount >= 4) {
-      setMessages(prev => [...prev, { role: 'bot', text: "SYSTEM LIMIT REACHED: You've exhausted your requests (4/4). Let me rest." }]);
-      return;
-    }
-
     const nextMessages = [...messages, { role: 'user', text: userMsg }];
     setInput('');
     setMessages(nextMessages);
     setIsTyping(true);
-    setRequestCount(prev => prev + 1);
 
     if (!groqApiKey) {
       setTimeout(() => {
@@ -342,7 +335,7 @@ export default function ChatAssistant() {
               )}
             </div>
 
-            {requestCount < 4 && messages.length < 4 && !isTyping && (
+            {messages.length < 4 && !isTyping && (
               <div className="flex flex-wrap gap-2 px-4 pb-4 font-mono text-[10px] relative z-10 mt-auto">
                 {SUGGESTIONS.map((s, i) => (
                   <button 

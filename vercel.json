@@ -30,6 +30,10 @@
           "value": "camera=(), microphone=(), geolocation=()"
         },
         {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
           "key": "Link",
           "value": "</llms.txt>; rel=\"alternate\"; type=\"text/markdown\"; title=\"LLM Summary\", </llms-full.txt>; rel=\"alternate\"; type=\"text/markdown\"; title=\"LLM Full Content\""
         }

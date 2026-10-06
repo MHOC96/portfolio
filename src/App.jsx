@@ -19,7 +19,7 @@ import CursorBubble from './components/effects/CursorBubble.jsx';
 import SmoothScroll from './components/effects/SmoothScroll.jsx';
 import SoundEffects from './components/effects/SoundEffects.jsx';
 import SectionDivider from './components/ui/SectionDivider.jsx';
-import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import NotFound from './components/sections/NotFound.jsx';
 
 /* ── Error Boundary ── */
@@ -50,9 +50,14 @@ class ErrorBoundary extends Component {
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof navigator !== 'undefined') {
+      const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck/i.test(navigator.userAgent);
+      if (isBot) return false;
+    }
+    return true;
+  });
   const [isMobile, setIsMobile] = useState(false);
-  const { isLowPerf } = useTheme();
 
   useEffect(() => {
     const checkMobile = () => {

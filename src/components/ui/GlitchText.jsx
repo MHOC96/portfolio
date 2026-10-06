@@ -6,14 +6,15 @@ import { motion, useInView } from 'framer-motion';
  * glitch animation when it scrolls into view or when hovered.
  * Uses CSS pseudo-elements for the RGB split effect.
  */
-const GlitchText = ({
-    children,
-    as: Tag = 'span',
-    className = '',
-    style = {},
-    enableHover = true,
-    enableReveal = true,
-}) => {
+const GlitchText = (props) => {
+    const {
+        children,
+        as: Tag = 'span',
+        className = '',
+        style = {},
+        enableHover = true,
+        enableReveal = true,
+    } = props;
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.5 });
     const [isGlitching, setIsGlitching] = useState(false);

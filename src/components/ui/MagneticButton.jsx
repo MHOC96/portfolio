@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
@@ -7,7 +7,6 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
  */
 const MagneticButton = ({ children, className = '', strength = 30 }) => {
   const ref = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
   
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -27,13 +26,8 @@ const MagneticButton = ({ children, className = '', strength = 30 }) => {
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
     x.set(0);
     y.set(0);
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
   };
 
   return (
@@ -41,7 +35,6 @@ const MagneticButton = ({ children, className = '', strength = 30 }) => {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
       style={{ x: smoothX, y: smoothY }}
       className={`relative inline-flex ${className}`}
     >

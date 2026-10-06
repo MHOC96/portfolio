@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import useIdle from '../../hooks/useIdle';
 
 const SoundEffects = () => {
     const audioContextRef = useRef(null);

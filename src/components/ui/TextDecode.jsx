@@ -3,6 +3,11 @@ import { useInView } from 'framer-motion';
 
 const CHARS = '01!@#$%^&*><{}[]ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+const isCrawler = typeof navigator !== 'undefined' && (
+    /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck/i.test(navigator.userAgent) ||
+    (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+);
+
 /**
  * TextDecode — Text starts as random garbled characters and rapidly
  * "decrypts" into the real text when it scrolls into view.
@@ -17,14 +22,15 @@ const TextDecode = ({
 }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.5 });
-    const [displayText, setDisplayText] = useState(
-        text.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]).join('')
-    );
-    const [decoded, setDecoded] = useState(false);
+    const [displayText, setDisplayText] = useState(() => {
+        if (isCrawler) return text;
+        return text.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
+    });
+    const [decoded, setDecoded] = useState(isCrawler);
     const iterationRef = useRef(0);
 
     useEffect(() => {
-        if (!triggerOnView || !isInView || decoded) return;
+        if (isCrawler || !triggerOnView || !isInView || decoded) return;
 
         iterationRef.current = 0;
 
@@ -79,22 +85,25 @@ const TextDecode = ({
             ref={ref}
             className={className}
             style={style}
+            aria-label={text}
             onMouseEnter={handleMouseEnter}
         >
-            {displayText.split('').map((char, i) => (
-                <span
-                    key={i}
-                    style={{
-                        color: char !== text[i] && char !== ' '
-                            ? 'var(--color-red)'
-                            : undefined,
-                        opacity: char !== text[i] && char !== ' ' ? 0.6 : 1,
-                        transition: 'color 0.1s, opacity 0.1s',
-                    }}
-                >
-                    {char}
-                </span>
-            ))}
+            <span aria-hidden="true">
+                {displayText.split('').map((char, i) => (
+                    <span
+                        key={i}
+                        style={{
+                            color: char !== text[i] && char !== ' '
+                                ? 'var(--color-red)'
+                                : undefined,
+                            opacity: char !== text[i] && char !== ' ' ? 0.6 : 1,
+                            transition: 'color 0.1s, opacity 0.1s',
+                        }}
+                    >
+                        {char}
+                    </span>
+                ))}
+            </span>
         </span>
     );
 };

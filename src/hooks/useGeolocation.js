@@ -5,11 +5,11 @@ let fetchPromise = null;
 
 export const useGeolocation = () => {
   const [locData, setLocData] = useState({
-    city: 'HYD',
-    countryCode: 'IND',
-    lat: 17.3850,
-    lon: 78.4867,
-    fullLocation: 'Hyderabad, Telangana, India',
+    city: 'CMB',
+    countryCode: 'LK',
+    lat: 6.9271,
+    lon: 79.8612,
+    fullLocation: 'Colombo, Western Province, Sri Lanka',
     ip: 'Unknown'
   });
   const [loading, setLoading] = useState(true);
@@ -39,11 +39,11 @@ export const useGeolocation = () => {
       if (!fetchPromise) {
         fetchPromise = (async () => {
           let data = {
-            city: 'HYD',
-            countryCode: 'IND',
-            lat: 17.3850,
-            lon: 78.4867,
-            fullLocation: 'Unknown',
+            city: 'CMB',
+            countryCode: 'LK',
+            lat: 6.9271,
+            lon: 79.8612,
+            fullLocation: 'Colombo, Western Province, Sri Lanka',
             ip: 'Unknown'
           };
 
@@ -59,7 +59,7 @@ export const useGeolocation = () => {
               data.fullLocation = [result.city, result.region, result.country_name].filter(Boolean).join(', ') || 'Unknown';
               data.ip = result.ip || 'Unknown';
             }
-          } catch (err) {
+          } catch {
             // Silent fallback — defaults are already set above
           }
           return data;
@@ -73,7 +73,7 @@ export const useGeolocation = () => {
           setLocData(data);
           setLoading(false);
         }
-      } catch (e) {
+      } catch {
         if (isMounted) setLoading(false);
       }
     };

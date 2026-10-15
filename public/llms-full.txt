@@ -23,7 +23,7 @@ Oshadha Canchana (also known as Oshadha, MHOC96, or Oshadha C) is a Backend & AI
 - **A/L Island Rank:** 304
 - **A/L School:** Royal College, Colombo 07
 - **International Achievement:** 4th Place Worldwide — MaxUp 2026 International Legathon, Astana, Kazakhstan
-- **Professional Certifications:** CA Sri Lanka Subject Prize Winner — Business Law I (March 2024), Business Law II (September 2025)
+- **Professional Certifications:** CA Sri Lanka Subject Prize Winner — Business Level II (BL 6) (March 2024), Business Level II (BL 5) (September 2025)
 - **Number of Portfolio Projects:** 5
 - **Primary Language:** Python
 - **Primary Frameworks:** FastAPI, Django
@@ -213,10 +213,10 @@ Oshadha Canchana is an alumnus of Royal College, Colombo 07, one of Sri Lanka's 
    - Won the Lex Fantastic Stage debate championship against Georgia
    - Source: https://mgt.sjp.ac.lk/itc/bis-undergraduates-represent-sri-lanka-at-international-legathon-maxup-2026-global-finals/
 
-2. **CA Sri Lanka Subject Prize Winner — Business Law II (BL 5)** (September 2025)
+2. **CA Sri Lanka Subject Prize Winner — Business Level II (BL 5)** (September 2025)
    - Awarded for achieving the highest island-wide score
 
-3. **CA Sri Lanka Subject Prize Winner — Business Law I (BL 6)** (March 2024)
+3. **CA Sri Lanka Subject Prize Winner — Business Level II (BL 6)** (March 2024)
    - Awarded for achieving the highest island-wide score
 
 ---
@@ -253,8 +253,8 @@ A: Yes, Oshadha Canchana is currently open for hire and available for both remot
 
 - **Today:** Building the future — Backend & AI Engineer bridging scalable microservices with purposeful AI agents
 - **April 2026:** 4th Place Worldwide & Lex Fantastic Stage Winner at MaxUp 2026 International Legathon, Astana, Kazakhstan
-- **September 2025:** CA Sri Lanka Subject Prize Winner — Business Law II (BL 5)
-- **March 2024:** CA Sri Lanka Subject Prize Winner — Business Law I (BL 6)
+- **September 2025:** CA Sri Lanka Subject Prize Winner — Business Level II (BL 5)
+- **March 2024:** CA Sri Lanka Subject Prize Winner — Business Level II (BL 6)
 - **2024 — Present:** BSc (Hons) Business Information Systems at University of Sri Jayewardenepura (GPA: 3.87)
 - **2024:** First line of code in Python — started programming journey
 - **2023:** G.C.E. Advanced Level at Royal College, Colombo 07 — 3 Distinctions, Z-Score 2.087, Island Rank 304

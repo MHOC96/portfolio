@@ -20,14 +20,14 @@ export const TIMELINE = [
   {
     year: 'Sep 2025',
     title: 'CA Sri Lanka Subject Prize Winner',
-    subtitle: 'Business Law II (BL 5)',
+    subtitle: 'Business Level II (BL 5)',
     description: 'Awarded for achieving the highest island-wide score in the September 2025 Examination.',
     type: 'achievement',
   },
   {
     year: 'Mar 2024',
     title: 'CA Sri Lanka Subject Prize Winner',
-    subtitle: 'Business Law I (BL 6)',
+    subtitle: 'Business Level II (BL 6)',
     description: 'Awarded for achieving the highest island-wide score in the March 2024 Examination.',
     type: 'achievement',
   },

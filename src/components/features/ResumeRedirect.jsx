@@ -1,16 +1,19 @@
-import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import ResumePicker from './ResumePicker';
 
 export default function ResumeRedirect() {
-  useEffect(() => {
-    const resumeUrl = import.meta.env.VITE_RESUME_URL || "/resume.pdf";
-    window.location.href = resumeUrl;
-  }, []);
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary text-accent">
-      <div className="text-center">
-        <p className="text-lg">Redirecting to resume...</p>
-      </div>
-    </div>
+    <ResumePicker
+      forceOpen
+      onClose={() => {
+        if (window.history.length > 1) {
+          navigate(-1);
+        } else {
+          navigate('/', { replace: true });
+        }
+      }}
+    />
   );
 }

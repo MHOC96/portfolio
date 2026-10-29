@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ThemeToggle from '../ui/ThemeToggle.jsx';
 import MagneticWrapper from '../ui/MagneticWrapper.jsx';
+import { openResumePicker } from '../features/ResumePicker.jsx';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -20,8 +21,6 @@ const Header = () => {
     initial: { y: -100 },
     animate: { y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } },
   };
-
-  const resumeUrl = import.meta.env.VITE_RESUME_URL || '/resume.pdf';
 
   return (
     <motion.header
@@ -94,14 +93,13 @@ const Header = () => {
 
           {/* Separate Resume Button */}
           <MagneticWrapper strength={0.4}>
-            <motion.a
-              href={resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <motion.button
+              type="button"
+              onClick={openResumePicker}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="px-3 lg:px-4 py-1.5 bg-red text-white font-mono text-[9px] lg:text-[10px] font-bold tracking-widest uppercase border-2 border-accent hover:translate-y-[-2px] hover:shadow-[4px 4px 0px_var(--color-accent)] transition-all duration-200"
+              className="px-3 lg:px-4 py-1.5 bg-red text-white font-mono text-[9px] lg:text-[10px] font-bold tracking-widest uppercase border-2 border-accent hover:translate-y-[-2px] hover:shadow-[4px_4px_0px_var(--color-accent)] transition-all duration-200"
               style={{
                 backgroundColor: 'var(--color-red)',
                 borderColor: 'var(--color-accent)',
@@ -109,7 +107,7 @@ const Header = () => {
               }}
             >
               RESUME
-            </motion.a>
+            </motion.button>
           </MagneticWrapper>
 
           <ThemeToggle />

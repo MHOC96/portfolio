@@ -88,8 +88,7 @@ const TerminalFeature = () => {
             window.dispatchEvent(new CustomEvent('open-floating-terminal'));
             setIsOpen(false);
         } else if (cmdId === 'resume') {
-            const resumeUrl = '/resume.pdf';
-            window.open(resumeUrl, '_blank');
+            window.dispatchEvent(new CustomEvent('open-resume-picker'));
             setIsOpen(false);
         } else if (cmdId === 'theme') {
             const nextAccent = accentColor === 'red' ? 'green' : 'red';

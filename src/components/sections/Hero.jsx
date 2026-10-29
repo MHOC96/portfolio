@@ -7,6 +7,7 @@ import VisitorCounter from '../ui/VisitorCounter';
 import TextReveal from '../ui/TextReveal';
 import MagneticButton from '../ui/MagneticButton';
 import { PROFILE } from '../../data/profile';
+import { openResumePicker } from '../features/ResumePicker.jsx';
 
 
 const ROLES = PROFILE.roles;
@@ -226,9 +227,9 @@ const Hero = () => {
                   </a>
                 </MagneticButton>
                 <MagneticButton strength={20}>
-                  <a href={import.meta.env.VITE_RESUME_URL || '/resume.pdf'}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={openResumePicker}
                     className="glitch-click group flex items-center justify-center font-bold text-xs tracking-widest uppercase transition-all duration-200 text-red bg-primary border-2 border-red mt-2 sm:mt-0"
                     style={{
                       padding: '1rem 2rem',
@@ -238,7 +239,7 @@ const Hero = () => {
                     onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '0px 0px 0px var(--color-red)'; }}
                     onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(-2px, -2px)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-red)'; }}>
                     VIEW_RESUME
-                  </a>
+                  </button>
                 </MagneticButton>
               </motion.div>
 

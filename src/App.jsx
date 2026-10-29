@@ -11,6 +11,7 @@ import ChatAssistant from './components/features/ChatAssistant.jsx';
 import Skills from './components/sections/Skills.jsx';
 import Education from './components/sections/Education.jsx';
 import MusicPlayer from './components/features/MusicPlayer.jsx';
+import ResumePicker from './components/features/ResumePicker.jsx';
 import Contact from './components/sections/Contact.jsx';
 import Footer from './components/layout/Footer.jsx';
 import Loader from './components/features/Loader.jsx';
@@ -108,6 +109,7 @@ const AnimatedRoutes = () => {
                   <FloatingTerminal />
                   {!isMobile && <ChatAssistant />}
                   <MusicPlayer />
+                  <ResumePicker />
 
                   <CursorBubble />
                   <SoundEffects />

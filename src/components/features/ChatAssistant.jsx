@@ -38,7 +38,7 @@ const streamGroqChat = async (history, onChunk) => {
       model: groqModel,
       messages: buildGroqMessages(history),
       temperature: 0.3,
-      max_completion_tokens: 400,
+      max_completion_tokens: 1200,
       stream: true,
       reasoning_effort: 'low',
     }),
@@ -301,12 +301,12 @@ export default function ChatAssistant() {
             <div
               ref={messagesContainerRef}
               data-lenis-prevent
-              className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 flex flex-col gap-4 font-mono text-xs relative z-10"
+              className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 flex flex-col gap-4 font-mono text-xs relative z-10 [font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto_Sans_Sinhala','Iskoola_Pota','Nirmala_UI',monospace]"
             >
               {messages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div 
-                    className={`max-w-[85%] p-3 ${
+                    className={`max-w-[92%] sm:max-w-[88%] p-3 min-w-0 ${
                       msg.role === 'user' 
                         ? 'bg-accent text-primary' 
                         : 'bg-red/10 border-l-2 border-red text-light shadow-[4px_4px_0px_var(--color-border-strong)]'

@@ -39,9 +39,14 @@ const renderInline = (text, keyPrefix = '') => {
 const normalizeMessage = (text) =>
   text
     .replace(/\r\n/g, '\n')
-    .replace(/([^\n])\s+•\s+/g, '$1\n• ')
-    .replace(/\s*\*\*([^*]+)\*\*\s*/g, '\n**$1**\n')
-    .replace(/\n{3,}/g, '\n\n');
+    .replace(/[\u200B\u00A0]/g, ' ')
+    .replace(/^#{1,6}\s+(.+)$/gm, '**$1**')
+    .replace(/([^\n])[ \t]+•[ \t]+/g, '$1\n• ')
+    .replace(/^([•›\-*]|\d+\.)[ \t]*\n+(?=\S)/gm, '$1 ')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 
 const parseBlocks = (text) => {
   const lines = normalizeMessage(text)
@@ -51,6 +56,7 @@ const parseBlocks = (text) => {
 
   const blocks = [];
   let currentList = null;
+  let numberCounter = 0;
 
   const flushList = () => {
     if (!currentList) return;
@@ -60,12 +66,13 @@ const parseBlocks = (text) => {
 
   for (const line of lines) {
     const headingMatch = line.match(/^\*\*([^*]+)\*\*$/);
-    const bulletMatch = line.match(/^[•\-*]\s+(.+)$/);
+    const bulletMatch = line.match(/^[•›\-*]\s+(.+)$/);
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     const labelMatch = line.match(/^(Tech|Links):\s*(.*)$/i);
 
     if (headingMatch) {
       flushList();
+      numberCounter = 0;
       blocks.push({ type: 'heading', text: headingMatch[1] });
       continue;
     }
@@ -94,11 +101,9 @@ const parseBlocks = (text) => {
     }
 
     if (numberedMatch) {
-      if (!currentList || currentList.type !== 'ol') {
-        flushList();
-        currentList = { type: 'ol', items: [] };
-      }
-      currentList.items.push(numberedMatch[2]);
+      flushList();
+      numberCounter += 1;
+      blocks.push({ type: 'numbered', number: numberCounter, text: numberedMatch[2] });
       continue;
     }
 
@@ -113,11 +118,7 @@ const parseBlocks = (text) => {
     }
 
     flushList();
-
-    if (line.includes(',') && line.length < 120 && !line.includes('http') && line.split(',').length > 2) {
-      blocks.push({ type: 'tags', items: splitCommaList(line) });
-      continue;
-    }
+    numberCounter = 0;
 
     blocks.push({ type: 'paragraph', text: line });
   }
@@ -134,7 +135,7 @@ export default function ChatMessageContent({ text }) {
   }
 
   return (
-    <div className="space-y-3 leading-relaxed break-words">
+    <div className="space-y-2 leading-relaxed break-words [overflow-wrap:anywhere]">
       {blocks.map((block, index) => {
         if (block.type === 'heading') {
           return (
@@ -155,9 +156,18 @@ export default function ChatMessageContent({ text }) {
           );
         }
 
+        if (block.type === 'numbered') {
+          return (
+            <p key={index} className="flex gap-2 pt-2 text-light/90 font-semibold">
+              <span className="text-red font-bold shrink-0">{block.number}.</span>
+              <span>{renderInline(block.text, `n-${index}`)}</span>
+            </p>
+          );
+        }
+
         if (block.type === 'label') {
           return (
-            <p key={index} className="text-[11px] text-muted">
+            <p key={index} className="text-[11px] text-muted pl-5">
               <span className="font-bold uppercase tracking-wider text-light/80">{block.label}:</span>{' '}
               <span className="text-light/90">{renderInline(block.text, `label-${index}`)}</span>
             </p>

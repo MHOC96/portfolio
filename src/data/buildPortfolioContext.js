@@ -1,7 +1,7 @@
-import { PROFILE } from './profile';
-import { TIMELINE } from './timeline';
-import { PROJECTS_META } from './projectsMeta';
-import { SKILLS_META } from './skillsMeta';
+import { PROFILE } from './profile.js';
+import { TIMELINE } from './timeline.js';
+import { PROJECTS_META } from './projectsMeta.js';
+import { SKILLS_META } from './skillsMeta.js';
 
 const SKILL_SECTIONS = [
   { label: 'Languages', groups: ['LANGUAGE'] },

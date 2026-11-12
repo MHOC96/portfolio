@@ -3,49 +3,35 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PORTFOLIO_SYSTEM_INSTRUCTION } from '../../data/buildPortfolioContext';
 import ChatMessageContent from './ChatMessageContent';
 
-const groqApiKey = import.meta.env.VITE_GROQ_API_KEY?.split(',')[0]?.trim();
-const groqModel = import.meta.env.VITE_GROQ_MODEL?.trim() || 'openai/gpt-oss-120b';
-
 const MHOC_ICON = '/naruto-icon.svg';
 
-const buildGroqMessages = (history) => [
-  { role: 'system', content: PORTFOLIO_SYSTEM_INSTRUCTION },
-  ...history
+const buildChatMessages = (history) =>
+  history
     .filter((msg) => !msg.text.startsWith('ERROR:'))
     .map((msg) => ({
       role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.text,
-    })),
-];
+    }));
 
-const parseGroqError = async (response) => {
+const parseApiError = async (response) => {
   try {
     const data = await response.json();
-    return data?.error?.message || JSON.stringify(data);
+    return data?.error || JSON.stringify(data);
   } catch {
     return response.statusText || 'Unknown error';
   }
 };
 
-const streamGroqChat = async (history, onChunk) => {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+// Chat requests go through our own /api/chat proxy; the provider (Groq/Gemini) is chosen server-side.
+const streamChat = async (history, onChunk) => {
+  const response = await fetch('/api/chat', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${groqApiKey}`,
-    },
-    body: JSON.stringify({
-      model: groqModel,
-      messages: buildGroqMessages(history),
-      temperature: 0.3,
-      max_completion_tokens: 1200,
-      stream: true,
-      reasoning_effort: 'low',
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: buildChatMessages(history) }),
   });
 
   if (!response.ok) {
-    throw new Error(await parseGroqError(response));
+    throw new Error(await parseApiError(response));
   }
 
   const reader = response.body?.getReader();
@@ -54,33 +40,14 @@ const streamGroqChat = async (history, onChunk) => {
   }
 
   const decoder = new TextDecoder();
-  let buffer = '';
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
-
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-
-      const data = line.slice(6).trim();
-      if (!data || data === '[DONE]') continue;
-
-      try {
-        const parsed = JSON.parse(data);
-        const content = parsed.choices?.[0]?.delta?.content;
-        if (content) onChunk(content);
-      } catch {
-        // Ignore malformed stream chunks.
-      }
-    }
+    const text = decoder.decode(value, { stream: true });
+    if (text) onChunk(text);
   }
 };
-
 export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -157,18 +124,10 @@ export default function ChatAssistant() {
     setMessages(nextMessages);
     setIsTyping(true);
 
-    if (!groqApiKey) {
-      setTimeout(() => {
-        setMessages(prev => [...prev, { role: 'bot', text: "ERROR: Missing VITE_GROQ_API_KEY in .env file. I am operating without true intelligence right now." }]);
-        setIsTyping(false);
-      }, 1000);
-      return;
-    }
-
     try {
       let botStarted = false;
 
-      await streamGroqChat(nextMessages, (chunk) => {
+      await streamChat(nextMessages, (chunk) => {
         if (!botStarted) {
           botStarted = true;
           setIsTyping(false);
@@ -186,7 +145,7 @@ export default function ChatAssistant() {
       });
 
       if (!botStarted) {
-        setMessages((prev) => [...prev, { role: 'bot', text: 'ERROR: Empty response from Groq.' }]);
+        setMessages((prev) => [...prev, { role: 'bot', text: 'ERROR: Empty response from the AI service.' }]);
       }
     } catch (error) {
       console.error('AI Error:', error);

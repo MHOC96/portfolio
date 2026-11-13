@@ -58,18 +58,26 @@ export default async function handler(req, res) {
   if (process.env.LLM_FALLBACK?.trim().toLowerCase() !== 'false') {
     order.push(...Object.keys(PROVIDERS).filter((name) => name !== primary));
   }
-  const candidates = order.filter((name) => configs[name].apiKey);
-  if (!candidates.length) {
-    return sendJson(res, 500, { error: 'No LLM API key configured on the server.' });
+  // Attempt plan: for each provider (primary first) -> each model -> first keys.
+  const attempts = [];
+  for (const name of order) {
+    const { apiKeys, models } = configs[name];
+    for (const model of models) {
+      apiKeys.slice(0, 2).forEach((apiKey) => attempts.push({ name, model, apiKey }));
+    }
+  }
+  if (!attempts.length) {
+    console.error('[chat] No LLM API key configured on the server.');
+    return sendJson(res, 503, { error: 'unavailable' });
   }
 
   const request = { system: PORTFOLIO_SYSTEM_INSTRUCTION, messages, maxTokens: MAX_TOKENS };
   let lastError;
 
-  for (const name of candidates) {
+  for (const { name, model, apiKey } of attempts) {
     let started = false;
     try {
-      for await (const text of PROVIDERS[name](configs[name], request)) {
+      for await (const text of PROVIDERS[name]({ apiKey, model }, request)) {
         if (!started) {
           started = true;
           res.statusCode = 200;
@@ -80,14 +88,16 @@ export default async function handler(req, res) {
         res.write(text);
       }
       if (started) return res.end();
-      lastError = new Error(`${name} returned an empty response`);
+      lastError = new Error(`${name}/${model} returned an empty response`);
     } catch (error) {
-      console.error(`[chat] ${name} failed:`, error.message);
+      console.error(`[chat] ${name}/${model} failed:`, error.message);
       lastError = error;
       // Once text has been streamed we can't switch providers; end what we have.
       if (started) return res.end();
     }
   }
 
-  return sendJson(res, 502, { error: lastError?.message || 'All providers failed' });
+  // Details stay in server logs; the client only gets a generic code.
+  console.error('[chat] all providers failed:', lastError?.message);
+  return sendJson(res, 503, { error: 'unavailable' });
 }

@@ -1,20 +1,27 @@
 // LLM provider adapters. Each adapter returns an async generator of plain-text chunks,
 // so the rest of the app never depends on a vendor-specific response format.
 
-const pickKey = (value) => {
+// Returns all configured keys in random order (simple rotation; the rest act as backups).
+const pickKeys = (value) => {
   const keys = (value || '').split(',').map((k) => k.trim()).filter(Boolean);
-  if (!keys.length) return '';
-  return keys[Math.floor(Math.random() * keys.length)]; // simple key rotation
+  for (let i = keys.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [keys[i], keys[j]] = [keys[j], keys[i]];
+  }
+  return keys;
 };
 
+const pickModels = (...values) => [...new Set(values.map((v) => v?.trim()).filter(Boolean))];
+
+// Each provider has a list of keys and a list of models (primary first, then backups).
 export const getProviderConfig = (env) => ({
   groq: {
-    apiKey: pickKey(env.GROQ_API_KEY),
-    model: env.GROQ_MODEL?.trim() || 'openai/gpt-oss-120b',
+    apiKeys: pickKeys(env.GROQ_API_KEY),
+    models: pickModels(env.GROQ_MODEL || 'openai/gpt-oss-120b', env.GROQ_FALLBACK_MODEL || 'llama-3.3-70b-versatile'),
   },
   gemini: {
-    apiKey: pickKey(env.GEMINI_API_KEY),
-    model: env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash',
+    apiKeys: pickKeys(env.GEMINI_API_KEY),
+    models: pickModels(env.GEMINI_MODEL || 'gemini-2.5-flash', env.GEMINI_FALLBACK_MODEL || 'gemini-2.5-flash-lite'),
   },
 });
 

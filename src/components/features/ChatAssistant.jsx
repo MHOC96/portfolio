@@ -5,9 +5,11 @@ import ChatMessageContent from './ChatMessageContent';
 
 const MHOC_ICON = '/naruto-icon.svg';
 
+const FRIENDLY_ERROR = "I'm having trouble responding right now. Please try again in a moment.";
+
 const buildChatMessages = (history) =>
   history
-    .filter((msg) => !msg.text.startsWith('ERROR:'))
+    .filter((msg) => !msg.text.startsWith('ERROR:') && msg.text !== FRIENDLY_ERROR)
     .map((msg) => ({
       role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.text,
@@ -145,14 +147,13 @@ export default function ChatAssistant() {
       });
 
       if (!botStarted) {
-        setMessages((prev) => [...prev, { role: 'bot', text: 'ERROR: Empty response from the AI service.' }]);
+        setMessages((prev) => [...prev, { role: 'bot', text: FRIENDLY_ERROR }]);
       }
     } catch (error) {
       console.error('AI Error:', error);
-      const detail = error?.message || 'Unknown error';
       setMessages(prev => [...prev, {
         role: 'bot',
-        text: `ERROR: Communication link severed. (${detail})`
+        text: FRIENDLY_ERROR
       }]);
     } finally {
       setIsTyping(false);

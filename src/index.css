@@ -138,20 +138,25 @@ svg {
   background: rgba(255, 255, 255, 0.4);
 }
 
-.light [data-mhoc-tab] {
+.light [data-mhoc-tab],
+.light [data-mhoc-mobile-pill] {
   border-color: var(--color-red);
   box-shadow: -4px 4px 0px var(--color-red);
 }
 
-.light [data-mhoc-tab]:hover {
+.light [data-mhoc-tab]:hover,
+.light [data-mhoc-mobile-pill]:hover,
+.light [data-mhoc-mobile-pill]:active {
   box-shadow: -8px 4px 0px var(--color-red);
 }
 
-.light [data-mhoc-tab] .mhoc-tab-icon {
+.light [data-mhoc-tab] .mhoc-tab-icon,
+.light [data-mhoc-mobile-pill] .mhoc-tab-icon {
   display: none;
 }
 
-.light [data-mhoc-tab] .mhoc-tab-icon-light {
+.light [data-mhoc-tab] .mhoc-tab-icon-light,
+.light [data-mhoc-mobile-pill] .mhoc-tab-icon-light {
   display: block;
 }
 

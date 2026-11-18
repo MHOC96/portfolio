@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PORTFOLIO_SYSTEM_INSTRUCTION } from '../../data/buildPortfolioContext';
 import ChatMessageContent from './ChatMessageContent';
+import MobileChatMessage from './MobileChatMessage';
 
 const MHOC_ICON = '/naruto-icon.svg';
 
@@ -50,15 +51,26 @@ const streamChat = async (history, onChunk) => {
     if (text) onChunk(text);
   }
 };
+const INITIAL_MESSAGES = [
+  { role: 'bot', text: 'INITIATING SYSTEM... Hello! I am MHOC, Oshadha\'s AI Assistant. How can I help you today?' }
+];
+
 export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'bot', text: 'INITIATING SYSTEM... Hello! I am MHOC, Oshadha\'s AI Assistant. How can I help you today?' }
-  ]);
+  const [isMobileViewport, setIsMobileViewport] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const messagesContainerRef = useRef(null);
+  const isNearBottomRef = useRef(true);
+  const lastScrollTopRef = useRef(0);
+  const prevIsOpenRef = useRef(false);
+
+  const isBusy = isTyping || isStreaming;
 
   const SUGGESTIONS = [
     "What's your tech stack?",
@@ -67,17 +79,81 @@ export default function ChatAssistant() {
     "Are you open to work?"
   ];
 
-  const scrollToBottom = () => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  const handleClear = () => {
+    if (isBusy) return;
+    isNearBottomRef.current = true;
+    setIsStreaming(false);
+    setMessages(INITIAL_MESSAGES);
+    setInput('');
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileViewport) return;
     if (isOpen) {
-      scrollToBottom();
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [messages, isOpen, isTyping]);
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, isMobileViewport]);
+
+  const handleMessagesScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    if (distanceFromBottom < 80) {
+      isNearBottomRef.current = true;
+    } else if (container.scrollTop < lastScrollTopRef.current) {
+      isNearBottomRef.current = false;
+    }
+    lastScrollTopRef.current = container.scrollTop;
+  };
+
+  const scrollToBottom = (behavior = 'smooth') => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior });
+    lastScrollTopRef.current = container.scrollTop;
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      prevIsOpenRef.current = false;
+      return;
+    }
+
+    const justOpened = !prevIsOpenRef.current;
+    prevIsOpenRef.current = true;
+
+    if (!isMobileViewport) {
+      scrollToBottom('smooth');
+      return;
+    }
+
+    const lastMessage = messages[messages.length - 1];
+    const userJustSent = lastMessage?.role === 'user';
+
+    if (justOpened || userJustSent) {
+      isNearBottomRef.current = true;
+      scrollToBottom('smooth');
+      return;
+    }
+
+    if (isNearBottomRef.current) {
+      scrollToBottom(isStreaming ? 'auto' : 'smooth');
+    }
+  }, [messages, isOpen, isTyping, isStreaming, isMobileViewport]);
 
   useEffect(() => {
     const handleOpenMhoc = () => {
@@ -119,12 +195,13 @@ export default function ChatAssistant() {
     if (e) e.preventDefault();
     
     const userMsg = forcedInput || input;
-    if (!userMsg.trim()) return;
+    if (!userMsg.trim() || isBusy) return;
 
     const nextMessages = [...messages, { role: 'user', text: userMsg }];
     setInput('');
     setMessages(nextMessages);
     setIsTyping(true);
+    setIsStreaming(false);
 
     try {
       let botStarted = false;
@@ -133,6 +210,7 @@ export default function ChatAssistant() {
         if (!botStarted) {
           botStarted = true;
           setIsTyping(false);
+          setIsStreaming(true);
           setMessages((prev) => [...prev, { role: 'bot', text: chunk }]);
           return;
         }
@@ -157,8 +235,186 @@ export default function ChatAssistant() {
       }]);
     } finally {
       setIsTyping(false);
+      setIsStreaming(false);
     }
   };
+
+  if (isMobileViewport) {
+    return (
+      <>
+        <AnimatePresence>
+          {!isOpen && (
+            <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] inset-x-0 z-40 flex justify-center pointer-events-none">
+              <motion.button
+                type="button"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 16 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                onClick={() => {
+                  setIsOpen(true);
+                  setShowTooltip(false);
+                }}
+                data-mhoc-mobile-pill
+                aria-label="Ask MHOC"
+                className="flex items-center gap-2.5 rounded-none bg-primary px-4 py-2.5 border-2 border-[var(--color-border-strong)] shadow-[-4px_4px_0px_var(--color-border-strong)] hover:bg-red active:bg-red hover:-translate-x-1 hover:shadow-[-8px_4px_0px_var(--color-border-strong)] active:translate-x-0 active:shadow-[-2px_2px_0px_var(--color-border-strong)] group transition-all duration-300 pointer-events-auto"
+              >
+                <div className="w-5 h-5 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <img
+                    src={MHOC_ICON}
+                    alt=""
+                    aria-hidden="true"
+                    className="mhoc-tab-icon w-full h-full object-contain brightness-0 invert opacity-90"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="mhoc-tab-icon-light hidden w-full h-full bg-red opacity-90 group-hover:bg-white group-active:bg-white"
+                    style={{
+                      WebkitMaskImage: `url(${MHOC_ICON})`,
+                      maskImage: `url(${MHOC_ICON})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold tracking-widest text-accent group-hover:text-white group-active:text-white transition-colors uppercase">
+                  Ask MHOC
+                </span>
+              </motion.button>
+            </div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="MHOC AI Assistant"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="fixed inset-0 z-[9990] h-[100dvh] w-full bg-primary text-accent flex flex-col overflow-hidden pointer-events-auto font-sans"
+            >
+              {/* Minimal Mobile Header (matching reference: Title | Clear + Close) */}
+              <div className="px-4 py-3.5 flex items-center justify-between border-b border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] shrink-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-2 h-2 rounded-full bg-red animate-pulse shrink-0" aria-hidden="true" />
+                  <span className="text-[15px] font-semibold tracking-tight text-accent truncate">
+                    MHOC Assistant
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    disabled={isBusy}
+                    className="px-2.5 py-1.5 text-xs font-medium text-muted hover:text-accent active:text-accent disabled:opacity-40 transition-colors"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close chat"
+                    className="p-1.5 text-muted hover:text-accent active:text-accent transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Clean Editorial Conversation Feed */}
+              <div
+                ref={messagesContainerRef}
+                onScroll={handleMessagesScroll}
+                data-lenis-prevent
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-5 flex flex-col gap-5"
+              >
+                {messages.map((msg, idx) => (
+                  <div key={idx} className="w-full">
+                    {msg.role === 'user' ? (
+                      <div className="text-[15px] text-muted leading-relaxed whitespace-pre-wrap break-words pt-1">
+                        {msg.text}
+                      </div>
+                    ) : (
+                      <div className="text-[15px] text-light">
+                        <MobileChatMessage
+                          text={msg.text}
+                          isStreaming={isStreaming && idx === messages.length - 1}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {isTyping && (
+                  <div className="flex items-center gap-1.5 py-2" aria-label="MHOC is typing">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Suggestions (shown on fresh/cleared chat) */}
+              {messages.length === 1 && !isBusy && (
+                <div className="px-4 pb-3 flex flex-wrap gap-2 shrink-0">
+                  {SUGGESTIONS.map((s, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleSend(null, s)}
+                      className="rounded-lg border border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] bg-[color:color-mix(in_srgb,var(--color-accent)_4%,transparent)] px-3 py-1.5 text-xs text-light/90 active:bg-accent active:text-primary transition-colors text-left"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Pinned Bottom Composer Bar (matching reference: Ask a question... + ↑) */}
+              <form
+                onSubmit={handleSend}
+                className="border-t border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] bg-primary px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center gap-2 shrink-0"
+              >
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask a question..."
+                  className="flex-1 min-w-0 bg-transparent py-1.5 text-[16px] text-accent placeholder:text-muted focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isBusy}
+                  aria-label="Send message"
+                  className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 border transition-all ${
+                    input.trim() && !isBusy
+                      ? 'bg-accent border-accent text-primary active:scale-95'
+                      : 'bg-[color:color-mix(in_srgb,var(--color-accent)_6%,transparent)] border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] text-muted opacity-70 cursor-not-allowed'
+                  }`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5" />
+                    <polyline points="5 12 12 5 19 12" />
+                  </svg>
+                </button>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    );
+  }
 
   return (
     <div className="fixed top-0 right-0 h-screen z-50 pointer-events-none">
@@ -295,7 +551,7 @@ export default function ChatAssistant() {
               )}
             </div>
 
-            {messages.length < 4 && !isTyping && (
+            {messages.length < 4 && !isBusy && (
               <div className="flex flex-wrap gap-2 px-4 pb-4 font-mono text-[10px] relative z-10 mt-auto">
                 {SUGGESTIONS.map((s, i) => (
                   <button 
@@ -319,7 +575,7 @@ export default function ChatAssistant() {
               />
               <button 
                 type="submit"
-                disabled={!input.trim() || isTyping}
+                disabled={!input.trim() || isBusy}
                 className="bg-red text-primary px-5 font-mono text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-light hover:shadow-[4px_4px_0px_var(--color-border-strong)] transition-all border-2 border-transparent hover:border-border-strong"
               >
                 SEND

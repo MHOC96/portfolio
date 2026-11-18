@@ -1,7 +1,7 @@
 import { useState, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ResumeRedirect from './components/features/ResumeRedirect.jsx';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import Header from './components/layout/Header.jsx';
 import Hero from './components/sections/Hero.jsx';
 import Projects from './components/sections/Projects.jsx';
@@ -127,11 +127,13 @@ const AnimatedRoutes = () => {
 
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <AnimatedRoutes />
-      </Router>
-    </ThemeProvider>
+    <MotionConfig reducedMotion="user">
+      <ThemeProvider>
+        <Router>
+          <AnimatedRoutes />
+        </Router>
+      </ThemeProvider>
+    </MotionConfig>
   );
 }
 

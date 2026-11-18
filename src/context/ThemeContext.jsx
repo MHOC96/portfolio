@@ -3,6 +3,16 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
+const updateMetaTag = (name, content) => {
+    let meta = document.querySelector(`meta[name="${name}"]`);
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', content);
+};
+
 export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -33,6 +43,10 @@ export const ThemeProvider = ({ children }) => {
 
             // Update data-theme for CSS variables if needed
             root.setAttribute('data-theme', activeTheme);
+
+            // Sync browser UI theme-color and color-scheme meta tags
+            updateMetaTag('theme-color', activeTheme === 'dark' ? '#0b0b0b' : '#f0f0f0');
+            updateMetaTag('color-scheme', activeTheme);
         };
 
         applyTheme(theme);

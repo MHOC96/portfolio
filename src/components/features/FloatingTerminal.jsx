@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useDragControls } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { PROJECTS_META } from '../../data/projectsMeta';
+import { lockScroll, unlockScroll } from '../../lib/scrollLock';
 
 const formatProjectsOutput = () =>
   PROJECTS_META.map((project, index) => {
@@ -31,8 +32,35 @@ const FloatingTerminal = () => {
     
     const scrollRef = useRef(null);
     const inputRef = useRef(null);
+    const terminalRef = useRef(null);
+    const dragConstraintsRef = useRef(null);
+    const dragControls = useDragControls();
     const x = useMotionValue(0);
     const y = useMotionValue(0);
+
+    const clampToViewport = useCallback(() => {
+        const el = terminalRef.current;
+        if (!el || typeof window === 'undefined' || isMaximized || isMinimized) return;
+
+        const rect = el.getBoundingClientRect();
+        const margin = 12;
+        const topLimit = 12;
+
+        let dx = 0;
+        let dy = 0;
+
+        if (rect.top < topLimit) dy += topLimit - rect.top;
+        if (rect.left < margin) dx += margin - rect.left;
+        if (rect.right > window.innerWidth - margin) {
+            dx += window.innerWidth - margin - rect.right;
+        }
+        if (rect.bottom > window.innerHeight - margin) {
+            dy += window.innerHeight - margin - rect.bottom;
+        }
+
+        if (dx !== 0) x.set(x.get() + dx);
+        if (dy !== 0) y.set(y.get() + dy);
+    }, [isMaximized, isMinimized, x, y]);
 
     useEffect(() => {
         if (isMaximized) {
@@ -41,15 +69,35 @@ const FloatingTerminal = () => {
         }
     }, [isMaximized, x, y]);
 
+    useLayoutEffect(() => {
+        if (!isOpen || isMinimized || isMaximized) return;
+        clampToViewport();
+    }, [isOpen, isMinimized, isMaximized, clampToViewport]);
+
+    useEffect(() => {
+        if (!isOpen || isMinimized || isMaximized) return;
+        const handleResize = () => {
+            requestAnimationFrame(clampToViewport);
+        };
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('orientationchange', handleResize);
+        };
+    }, [isOpen, isMinimized, isMaximized, clampToViewport]);
+
     useEffect(() => {
         const handleOpen = () => {
+            x.set(0);
+            y.set(0);
             setIsOpen(true);
             setIsMinimized(false);
             setTimeout(() => inputRef.current?.focus(), 100);
         };
         window.addEventListener('open-floating-terminal', handleOpen);
         return () => window.removeEventListener('open-floating-terminal', handleOpen);
-    }, []);
+    }, [x, y]);
 
     useEffect(() => {
         if (!isMinimized && isOpen) {
@@ -59,12 +107,12 @@ const FloatingTerminal = () => {
 
     useEffect(() => {
         if (isOpen && !isMinimized) {
-            document.body.style.overflow = 'hidden';
+            lockScroll('floating-terminal');
         } else {
-            document.body.style.overflow = '';
+            unlockScroll('floating-terminal');
         }
         return () => {
-            document.body.style.overflow = '';
+            unlockScroll('floating-terminal');
         };
     }, [isOpen, isMinimized]);
 
@@ -110,6 +158,9 @@ const FloatingTerminal = () => {
                     </div>
                 )
             });
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                setIsMinimized(true);
+            }
         } else if (lowerCmd === 'date') {
             newHistory.push({ type: 'output', content: `CURRENT_SYSTEM_TIME: ${new Date().toLocaleString()}` });
         } else if (lowerCmd === 'status') {
@@ -149,11 +200,12 @@ const FloatingTerminal = () => {
             <motion.div 
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="fixed bottom-4 right-4 z-[9999]"
+                className="fixed bottom-4 right-4 z-[9980]"
             >
                 <button 
+                    type="button"
                     onClick={() => { setIsMinimized(false); setTimeout(() => inputRef.current?.focus(), 100); }}
-                    className="flex items-center gap-2 bg-secondary border-2 border-border-strong px-4 py-2 hover:border-accent transition-colors font-mono shadow-[4px_4px_0px_var(--color-border-strong)]"
+                    className="flex items-center gap-2 bg-secondary border-2 border-border-strong px-4 py-2 hover:border-accent transition-colors font-mono shadow-[4px_4px_0px_var(--color-border-strong)] touch-manipulation"
                 >
                     <span className="text-accent font-bold">&gt;_</span>
                     <span className="text-accent text-sm">Terminal (Running)</span>
@@ -163,47 +215,80 @@ const FloatingTerminal = () => {
     }
 
     const modalVariants = {
-        normal: { width: 'min(90vw, 600px)', height: '400px', top: 'auto', left: 'auto', bottom: '20vh', right: '5vw', opacity: 1, scale: 1 },
+        normal: { width: 'min(92vw, 600px)', height: 'min(400px, calc(100dvh - 6rem))', top: 'auto', left: 'auto', bottom: '20vh', right: '4vw', opacity: 1, scale: 1 },
         maximized: { width: '100%', height: '100dvh', top: 0, left: 0, bottom: 'auto', right: 'auto', opacity: 1, scale: 1 }
+    };
+
+    const startDrag = (event) => {
+        if (isMaximized || event.target.closest('button')) return;
+        dragControls.start(event);
     };
 
     return (
         <AnimatePresence>
+            <div
+                ref={dragConstraintsRef}
+                className="fixed inset-2 z-[9979] pointer-events-none"
+                aria-hidden
+            />
             <motion.div 
+                ref={terminalRef}
                 drag={!isMaximized}
+                dragControls={dragControls}
+                dragListener={false}
                 dragMomentum={false}
-                dragConstraints={{ top: 0, bottom: typeof window !== 'undefined' ? window.innerHeight - 50 : 1000 }}
-                dragElastic={0.1}
+                dragConstraints={dragConstraintsRef}
+                dragElastic={0}
+                onDragEnd={clampToViewport}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={isMaximized ? "maximized" : "normal"}
                 variants={modalVariants}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
                 style={isMaximized ? { position: 'fixed' } : { x, y, position: 'fixed' }}
-                className={`z-[9999] bg-secondary/95 backdrop-blur-md border-2 border-border-strong flex flex-col font-mono shadow-[8px_8px_0px_rgba(0,0,0,0.5)] overflow-hidden ${isMaximized ? 'border-0 rounded-none' : 'rounded-sm'}`}
+                className={`z-[9980] bg-secondary/95 backdrop-blur-md border-2 border-border-strong flex flex-col font-mono shadow-[8px_8px_0px_rgba(0,0,0,0.5)] overflow-hidden ${isMaximized ? 'border-0 rounded-none' : 'rounded-sm'}`}
             >
                 {/* Window Controls Header */}
                 <div 
-                    className="flex items-center justify-between px-3 py-2 border-b-2 border-border-strong bg-primary select-none cursor-move"
+                    onPointerDown={startDrag}
+                    className={`flex items-center justify-between px-3 py-1.5 border-b-2 border-border-strong bg-primary select-none touch-none ${isMaximized ? 'cursor-default' : 'cursor-move'}`}
                 >
                     <div className="flex gap-2">
                         <span className="text-xs text-muted tracking-widest uppercase">MHOC_OS / Terminal</span>
                     </div>
-                    <div className="flex gap-3">
-                        <button onClick={() => setIsMinimized(true)} className="text-muted hover:text-accent focus:outline-none">
+                    <div className="flex items-center gap-1">
+                        <button
+                            type="button"
+                            onClick={() => setIsMinimized(true)}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="p-2 min-w-[36px] min-h-[36px] sm:min-w-[28px] sm:min-h-[28px] sm:p-1.5 flex items-center justify-center text-muted hover:text-accent focus:outline-none touch-manipulation"
+                            aria-label="Minimize terminal"
+                        >
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         </button>
-                        <button onClick={() => setIsMaximized(!isMaximized)} className="text-muted hover:text-green-500 focus:outline-none">
+                        <button
+                            type="button"
+                            onClick={() => setIsMaximized(!isMaximized)}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="p-2 min-w-[36px] min-h-[36px] sm:min-w-[28px] sm:min-h-[28px] sm:p-1.5 flex items-center justify-center text-muted hover:text-green-500 focus:outline-none touch-manipulation"
+                            aria-label={isMaximized ? 'Restore terminal' : 'Maximize terminal'}
+                        >
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
                         </button>
-                        <button onClick={() => setIsOpen(false)} className="text-muted hover:text-red focus:outline-none">
+                        <button
+                            type="button"
+                            onClick={() => setIsOpen(false)}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="p-2 min-w-[36px] min-h-[36px] sm:min-w-[28px] sm:min-h-[28px] sm:p-1.5 flex items-center justify-center text-muted hover:text-red focus:outline-none touch-manipulation"
+                            aria-label="Close terminal"
+                        >
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                     </div>
                 </div>
 
                 {/* Terminal Content */}
-                <div className="flex-1 overflow-y-auto p-4 text-sm scrollbar-hide">
+                <div data-lenis-prevent className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 text-sm scrollbar-hide">
                     {history.map((line, i) => (
                         <div key={i} className="mb-2 break-words">
                             {line.type === 'input' ? (
@@ -222,7 +307,7 @@ const FloatingTerminal = () => {
                         <span className="text-accent font-bold">&gt;</span>
                         <input
                             ref={inputRef}
-                            className="flex-1 bg-transparent border-none outline-none text-accent font-mono caret-accent"
+                            className="flex-1 bg-transparent border-none outline-none text-accent font-mono caret-accent text-[16px] sm:text-sm"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}

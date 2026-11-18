@@ -9,12 +9,19 @@
 
   /* Dark Theme — Brutalist Dark */
   --color-primary: #0b0b0b;
+  --color-primary-rgb: 11 11 11;
   --color-secondary: #080808;
+  --color-secondary-rgb: 8 8 8;
   --color-surface: #111111;
+  --color-surface-rgb: 17 17 17;
   --color-accent: #ffffff;
+  --color-accent-rgb: 255 255 255;
   --color-muted: #888888;
+  --color-muted-rgb: 136 136 136;
   --color-light: #dddddd;
+  --color-light-rgb: 221 221 221;
   --color-red: #ff3333;
+  --color-red-rgb: 255 51 51;
 
   /* Border */
   --color-border: rgba(255, 255, 255, 0.25);
@@ -39,11 +46,19 @@
 
   /* Light Theme — Brutalist Light */
   --color-primary: #f0f0f0;
+  --color-primary-rgb: 240 240 240;
   --color-secondary: #ffffff;
+  --color-secondary-rgb: 255 255 255;
   --color-surface: #e5e5ea;
+  --color-surface-rgb: 229 229 234;
   --color-accent: #000000;
+  --color-accent-rgb: 0 0 0;
   --color-muted: #555555;
+  --color-muted-rgb: 85 85 85;
   --color-light: #222222;
+  --color-light-rgb: 34 34 34;
+  --color-red: #ff3333;
+  --color-red-rgb: 255 51 51;
 
   /* Border */
   --color-border: rgba(0, 0, 0, 0.8);
@@ -58,6 +73,16 @@
   /* Brutalist Shadows & Corners */
   --shadow-card: 6px 6px 0px rgba(0, 0, 0, 1);
   --shadow-sm: 4px 4px 0px rgba(0, 0, 0, 1);
+}
+
+:root[data-accent="green"] {
+  --color-red: #22c55e;
+  --color-red-rgb: 34 197 94;
+}
+
+.light[data-accent="green"] {
+  --color-red: #16a34a;
+  --color-red-rgb: 22 163 74;
 }
 
 * {
@@ -119,10 +144,12 @@ svg {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.neo-card:hover {
-  border-color: var(--color-red);
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0px var(--color-red);
+@media (hover: hover) and (pointer: fine) {
+  .neo-card:hover {
+    border-color: var(--color-red);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--color-red);
+  }
 }
 
 /* Hard glass surface (if transparency is strictly needed) */
@@ -144,8 +171,13 @@ svg {
   box-shadow: -4px 4px 0px var(--color-red);
 }
 
-.light [data-mhoc-tab]:hover,
-.light [data-mhoc-mobile-pill]:hover,
+@media (hover: hover) and (pointer: fine) {
+  .light [data-mhoc-tab]:hover,
+  .light [data-mhoc-mobile-pill]:hover {
+    box-shadow: -8px 4px 0px var(--color-red);
+  }
+}
+
 .light [data-mhoc-mobile-pill]:active {
   box-shadow: -8px 4px 0px var(--color-red);
 }
@@ -158,19 +190,6 @@ svg {
 .light [data-mhoc-tab] .mhoc-tab-icon-light,
 .light [data-mhoc-mobile-pill] .mhoc-tab-icon-light {
   display: block;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 4px;
 }
 
 .glassmorphism-no-border {
@@ -193,10 +212,12 @@ svg {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.nothing-card:hover {
-  border-color: var(--color-red);
-  transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px var(--color-red);
+@media (hover: hover) and (pointer: fine) {
+  .nothing-card:hover {
+    border-color: var(--color-red);
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0px var(--color-red);
+  }
 }
 
 .nothing-card::before,
@@ -284,8 +305,10 @@ svg {
   transition: background 0.2s;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-red);
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-red);
+  }
 }
 
 @layer components {
@@ -359,14 +382,16 @@ svg {
   z-index: -1;
 }
 
-.glitch-hover:hover::before {
-  opacity: 0.8;
-  animation: glitch-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-}
+@media (hover: hover) and (pointer: fine) {
+  .glitch-hover:hover::before {
+    opacity: 0.8;
+    animation: glitch-1 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  }
 
-.glitch-hover:hover::after {
-  opacity: 0.8;
-  animation: glitch-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+  .glitch-hover:hover::after {
+    opacity: 0.8;
+    animation: glitch-2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+  }
 }
 
 @keyframes glitch-1 {
@@ -454,8 +479,10 @@ svg {
   transition: transform 0.3s ease;
 }
 
-.magnetic-btn:hover {
-  transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+  .magnetic-btn:hover {
+    transform: scale(1.05);
+  }
 }
 
 /* ═══════════════════════════════════════════
@@ -630,8 +657,10 @@ svg {
   );
 }
 
-.tilt-card:hover .tilt-shine {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .tilt-card:hover .tilt-shine {
+    opacity: 1;
+  }
 }
 
 /* ═══════════════════════════════════════════
@@ -685,8 +714,10 @@ svg {
   animation-name: skill-marquee-right;
 }
 
-.skill-marquee-row:hover .skill-marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .skill-marquee-row:hover .skill-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 

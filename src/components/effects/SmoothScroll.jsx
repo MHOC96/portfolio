@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { isScrollLocked } from '../../lib/scrollLock';
 
 export default function SmoothScroll() {
   useEffect(() => {
@@ -15,14 +16,31 @@ export default function SmoothScroll() {
       infinite: false,
     });
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+    if (isScrollLocked()) {
+      lenis.stop();
     }
 
-    requestAnimationFrame(raf);
+    const handleScrollLock = (event) => {
+      if (event.detail?.locked) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    };
+
+    window.addEventListener('app:scroll-lock', handleScrollLock);
+
+    let rafId;
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+
+    rafId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('app:scroll-lock', handleScrollLock);
       lenis.destroy();
     };
   }, []);

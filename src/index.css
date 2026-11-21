@@ -179,16 +179,18 @@ svg {
 }
 
 .light [data-mhoc-mobile-pill]:active {
-  box-shadow: -8px 4px 0px var(--color-red);
+  box-shadow: -2px 2px 0px var(--color-red);
 }
 
 .light [data-mhoc-tab] .mhoc-tab-icon,
-.light [data-mhoc-mobile-pill] .mhoc-tab-icon {
+.light [data-mhoc-mobile-pill] .mhoc-tab-icon,
+.light [data-mhoc-mobile-dialog] .mhoc-tab-icon {
   display: none;
 }
 
 .light [data-mhoc-tab] .mhoc-tab-icon-light,
-.light [data-mhoc-mobile-pill] .mhoc-tab-icon-light {
+.light [data-mhoc-mobile-pill] .mhoc-tab-icon-light,
+.light [data-mhoc-mobile-dialog] .mhoc-tab-icon-light {
   display: block;
 }
 

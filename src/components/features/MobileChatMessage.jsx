@@ -1016,25 +1016,11 @@ export default function MobileChatMessage({
   const leadingClass = isSinhala ? 'leading-[1.75]' : 'leading-[1.65]';
   const blocks = parseMobileBlocks(safeText, { isStreaming });
 
-  const containerStyle = isError
-    ? {
-        borderColor: THEME.redBorder,
-        borderLeftColor: 'var(--color-red)',
-        backgroundColor: THEME.redSurfaceSubtle,
-      }
-    : undefined;
-
-  const containerClass = isError
-    ? `space-y-3 text-[15px] ${leadingClass} text-light break-words [overflow-wrap:anywhere] min-w-0 rounded-r-xl border border-l-[3px] px-3.5 py-2.5`
-    : `space-y-3.5 text-[15px] ${leadingClass} text-light break-words [overflow-wrap:anywhere] min-w-0`;
+  const containerClass = `space-y-3 text-[15px] ${leadingClass} text-light break-words [overflow-wrap:anywhere] min-w-0`;
 
   if (!blocks.length) {
     return (
-      <div
-        role={isError ? 'alert' : undefined}
-        style={containerStyle}
-        className={containerClass}
-      >
+      <div role={isError ? 'alert' : undefined} className={containerClass}>
         <p className="text-light whitespace-pre-line break-words [overflow-wrap:anywhere]">
           {safeText}
           {isStreaming && <StreamingCursor />}
@@ -1047,11 +1033,7 @@ export default function MobileChatMessage({
   const cursorHandledInline = isStreaming && supportsInlineCursor(lastBlock);
 
   return (
-    <div
-      role={isError ? 'alert' : undefined}
-      style={containerStyle}
-      className={containerClass}
-    >
+    <div role={isError ? 'alert' : undefined} className={containerClass}>
       <RenderBlocks blocks={blocks} isStreaming={isStreaming} />
 
       {isStreaming && !cursorHandledInline && (

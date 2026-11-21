@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { lockScroll, unlockScroll } from '../../lib/scrollLock';
-import { hasSinhalaScript } from '../../lib/parseMobileChatMessage';
 import ChatMessageContent from './ChatMessageContent';
-import MobileChatMessage from './MobileChatMessage';
 
 const MHOC_ICON = '/naruto-icon.svg';
 const SESSION_STORAGE_KEY = 'mhoc_chat_messages_v1';
@@ -60,18 +58,6 @@ const loadStoredMessages = () => {
     return valid.length > 0 ? valid : createInitialMessages();
   } catch {
     return createInitialMessages();
-  }
-};
-
-const formatMessageTime = (timestamp) => {
-  if (!timestamp) return '';
-  try {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '';
   }
 };
 
@@ -142,24 +128,6 @@ const streamChat = async (history, onChunk, signal) => {
     reader.releaseLock?.();
   }
 };
-
-function MhocAvatarBadge({ size = 'sm' }) {
-  const boxClass = size === 'md' ? 'w-8 h-8 rounded-lg' : 'w-5 h-5 rounded-md';
-  const imgClass = size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5';
-
-  return (
-    <span
-      aria-hidden="true"
-      className={`${boxClass} bg-[#161616] border border-[var(--color-border)] flex items-center justify-center shrink-0`}
-    >
-      <img
-        src={MHOC_ICON}
-        alt=""
-        className={`${imgClass} object-contain brightness-0 invert opacity-95`}
-      />
-    </span>
-  );
-}
 
 export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -294,10 +262,13 @@ export default function ChatAssistant() {
     }
 
     const updateViewport = () => {
-      setViewportMetrics({
-        height: Math.round(vv.height),
-        top: Math.max(0, Math.round(vv.offsetTop)),
-      });
+      const nextHeight = Math.round(vv.height);
+      const nextTop = Math.max(0, Math.round(vv.offsetTop));
+      setViewportMetrics((prev) =>
+        prev && prev.height === nextHeight && prev.top === nextTop
+          ? prev
+          : { height: nextHeight, top: nextTop }
+      );
       if (isNearBottomRef.current) {
         requestAnimationFrame(() => scrollToBottom('auto'));
       }
@@ -720,6 +691,7 @@ export default function ChatAssistant() {
               role="dialog"
               aria-modal="true"
               aria-label="MHOC System Assistant"
+              data-mhoc-mobile-dialog
               data-lenis-prevent
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -733,51 +705,75 @@ export default function ChatAssistant() {
                     }
                   : undefined
               }
-              className="fixed inset-x-0 top-0 z-[10050] h-[100dvh] w-full bg-primary text-accent flex flex-col overflow-hidden overscroll-contain pointer-events-auto font-sans pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]"
+              className="fixed inset-x-0 top-0 z-[10050] h-[100dvh] w-full bg-primary text-accent flex flex-col overflow-hidden overscroll-contain pointer-events-auto font-mono pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]"
             >
+              <div
+                className="absolute inset-0 pointer-events-none opacity-20 z-0"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+                  backgroundSize: '100% 4px, 3px 100%',
+                }}
+              />
+
               {/* Mobile Header */}
-              <header className="px-3.5 py-2.5 flex items-center justify-between gap-2 border-b border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] shrink-0">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <MhocAvatarBadge size="md" />
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h2 className="text-[15px] font-semibold tracking-tight text-accent truncate leading-tight">
-                        MHOC
-                      </h2>
-                      <span
-                        className="w-2 h-2 rounded-full bg-red animate-pulse shrink-0"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <p className="text-[11px] font-mono text-muted truncate leading-tight uppercase tracking-wider">
-                      {isTyping ? 'Thinking...' : isStreaming ? 'Responding...' : 'SYS · ONLINE'}
-                    </p>
-                  </div>
+              <header className="bg-primary text-accent px-4 py-3 flex justify-between items-center gap-2 font-mono text-xs font-bold tracking-widest relative z-10 border-b-2 border-[var(--color-border-strong)] shrink-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-5 h-5 shrink-0 flex items-center justify-center" aria-hidden="true">
+                    <img
+                      src={MHOC_ICON}
+                      alt=""
+                      className="mhoc-tab-icon w-full h-full object-contain brightness-0 invert opacity-90"
+                    />
+                    <span
+                      className="mhoc-tab-icon-light hidden w-full h-full bg-red opacity-90"
+                      style={{
+                        WebkitMaskImage: `url(${MHOC_ICON})`,
+                        maskImage: `url(${MHOC_ICON})`,
+                        WebkitMaskRepeat: 'no-repeat',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskPosition: 'center',
+                        WebkitMaskSize: 'contain',
+                        maskSize: 'contain',
+                      }}
+                    />
+                  </span>
+                  <span
+                    className="w-2 h-2 bg-red rounded-full animate-pulse shadow-[0_0_8px_var(--color-red)] shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">
+                    MHOC // {isTyping ? 'THINKING' : isStreaming ? 'RESPONDING' : 'ONLINE'}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleClear}
-                    className="min-w-[44px] min-h-[44px] px-2.5 inline-flex items-center justify-center rounded-lg text-xs font-medium text-muted active:text-accent active:bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-colors"
-                  >
-                    Clear
-                  </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  {(messages.length > 1 || isBusy) && (
+                    <button
+                      type="button"
+                      onClick={handleClear}
+                      className="min-h-[38px] px-2.5 bg-primary text-muted border-2 border-[var(--color-border-strong)] font-mono text-[11px] font-bold uppercase tracking-wider active:text-accent active:border-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-colors"
+                    >
+                      CLEAR
+                    </button>
+                  )}
                   <button
                     ref={mobileCloseBtnRef}
                     type="button"
                     onClick={closeChat}
                     aria-label="Close chat"
-                    className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center rounded-lg text-muted active:text-accent active:bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-colors"
+                    className="min-h-[38px] flex items-center gap-1.5 bg-red text-white active:bg-primary active:text-accent transition-all px-3 py-1 border-2 border-white font-mono text-xs font-bold shadow-[-2px_2px_0px_white] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red"
                   >
+                    <span>CLOSE</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
+                      width="15"
+                      height="15"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       aria-hidden="true"
@@ -790,7 +786,7 @@ export default function ChatAssistant() {
               </header>
 
               {/* Conversation Feed Wrapper */}
-              <div className="relative flex-1 min-h-0 flex flex-col">
+              <div className="relative flex-1 min-h-0 flex flex-col z-10">
                 <div
                   ref={messagesContainerRef}
                   onScroll={handleMessagesScroll}
@@ -799,211 +795,110 @@ export default function ChatAssistant() {
                   aria-live="polite"
                   aria-busy={isBusy}
                   aria-label="Conversation messages"
-                  className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3.5 py-4 flex flex-col gap-4"
+                  className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 flex flex-col gap-4 font-mono text-xs [font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto_Sans_Sinhala','Iskoola_Pota','Nirmala_UI',monospace]"
                 >
-                  {messages.length === 1 && messages[0].role === 'bot' ? (
-                    <div className="w-full min-w-0 flex flex-col items-start">
-                      <div className="w-full max-w-[94%] border-l-2 border-red bg-[var(--color-surface)] px-3.5 py-3 shadow-[4px_4px_0px_var(--color-border-strong)]">
-                        <div className="flex items-center gap-2 mb-2 pb-1.5 border-b border-[color:color-mix(in_srgb,var(--color-accent)_10%,transparent)]">
-                          <MhocAvatarBadge size="sm" />
-                          <span className="text-xs font-bold tracking-tight text-accent">
-                            MHOC
-                          </span>
-                          <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] text-accent border border-[color:color-mix(in_srgb,var(--color-accent)_16%,transparent)]">
-                            SYS
-                          </span>
+                  {messages.map((msg, idx) => (
+                    <div
+                      key={msg.id || idx}
+                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[92%] p-3 min-w-0 ${
+                          msg.role === 'user'
+                            ? 'bg-accent text-primary'
+                            : 'bg-red/10 border-l-2 border-red text-light shadow-[4px_4px_0px_var(--color-border-strong)]'
+                        }`}
+                      >
+                        <div className="opacity-60 text-[10px] mb-1">
+                          {msg.role === 'user'
+                            ? 'USR_CMD>'
+                            : msg.isError
+                              ? 'MHOC_SYS> [ERR]'
+                              : msg.isInterrupted
+                                ? 'MHOC_SYS> [STOPPED]'
+                                : 'MHOC_SYS>'}
                         </div>
+                        {msg.role === 'bot' ? (
+                          <div role={msg.isError ? 'alert' : undefined}>
+                            <ChatMessageContent text={msg.text} />
+                          </div>
+                        ) : (
+                          <div className="leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
+                            {msg.text}
+                          </div>
+                        )}
 
-                        <p className="text-[15px] leading-relaxed text-light">
-                          <span className="sr-only">MHOC SYS replied: </span>
-                          Hello! I&apos;m MHOC. Ask about Oshadha&apos;s projects, tech stack, experience, or contact details.
-                        </p>
+                        {msg.isError && msg.retryPrompt && (
+                          <div className="mt-3 pt-2 border-t border-[var(--color-border)] flex items-center">
+                            <button
+                              type="button"
+                              onClick={() => handleRetry(msg.id, msg.retryPrompt)}
+                              disabled={isBusy}
+                              className="min-h-[38px] inline-flex items-center gap-1.5 border-2 border-[var(--color-border-strong)] bg-primary px-3 py-1 font-mono text-[11px] font-bold uppercase text-accent active:bg-red active:text-white active:border-red disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-colors"
+                            >
+                              RETRY
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  ) : (
-                    messages.map((msg, idx) => {
-                      const timeLabel = formatMessageTime(msg.timestamp);
-                      if (msg.role === 'user') {
-                        const sinhala = hasSinhalaScript(msg.text);
-                        return (
-                          <div
-                            key={msg.id || idx}
-                            className="w-full min-w-0 flex flex-col items-end gap-1"
-                          >
-                            <div className="flex items-center gap-1.5 px-1 text-[11px] font-medium text-muted">
-                              <span>You</span>
-                              {timeLabel && (
-                                <>
-                                  <span aria-hidden="true">·</span>
-                                  <time dateTime={new Date(msg.timestamp).toISOString()}>
-                                    {timeLabel}
-                                  </time>
-                                </>
-                              )}
-                            </div>
-                            <div
-                              className={`max-w-[85%] min-w-0 rounded-2xl rounded-br-sm bg-accent text-primary px-3.5 py-2.5 shadow-sm text-[15px] whitespace-pre-wrap [overflow-wrap:anywhere] ${
-                                sinhala ? 'leading-[1.75]' : 'leading-relaxed'
-                              }`}
-                            >
-                              <span className="sr-only">You said: </span>
-                              {msg.text}
-                            </div>
-                          </div>
-                        );
-                      }
-
-                      const isMsgStreaming =
-                        isStreaming && idx === messages.length - 1 && !msg.isError;
-                      const statusTag = msg.isError
-                        ? 'Error'
-                        : msg.isInterrupted
-                          ? 'Stopped'
-                          : isMsgStreaming
-                            ? 'Typing...'
-                            : 'SYS';
-
-                      return (
-                        <div
-                          key={msg.id || idx}
-                          className="w-full min-w-0 flex flex-col items-start"
-                        >
-                          <div className="w-full max-w-[94%] min-w-0 border-l-2 border-red bg-[var(--color-surface)] px-3.5 py-3 shadow-[4px_4px_0px_var(--color-border-strong)]">
-                            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-[color:color-mix(in_srgb,var(--color-accent)_10%,transparent)]">
-                              <div className="flex items-center gap-2 min-w-0">
-                                <MhocAvatarBadge size="sm" />
-                                <span className="text-xs font-bold tracking-tight text-accent">
-                                  MHOC
-                                </span>
-                                <span
-                                  className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider ${
-                                    msg.isError
-                                      ? 'bg-[color:color-mix(in_srgb,var(--color-red)_15%,transparent)] text-accent border border-[color:color-mix(in_srgb,var(--color-red)_55%,transparent)]'
-                                      : msg.isInterrupted
-                                        ? 'bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] text-muted border border-[var(--color-border)]'
-                                        : 'bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] text-accent border border-[color:color-mix(in_srgb,var(--color-accent)_16%,transparent)]'
-                                  }`}
-                                >
-                                  {statusTag}
-                                </span>
-                              </div>
-                              {timeLabel && (
-                                <time
-                                  dateTime={new Date(msg.timestamp).toISOString()}
-                                  className="text-[11px] text-muted shrink-0"
-                                >
-                                  {timeLabel}
-                                </time>
-                              )}
-                            </div>
-
-                            <div className="text-[15px] text-light min-w-0">
-                              <span className="sr-only">MHOC SYS replied: </span>
-                              <MobileChatMessage
-                                text={msg.text}
-                                isStreaming={isMsgStreaming}
-                                isError={Boolean(msg.isError)}
-                              />
-                            </div>
-
-                            {msg.isError && msg.retryPrompt && (
-                              <div className="mt-3 pt-2 border-t border-[color:color-mix(in_srgb,var(--color-accent)_10%,transparent)] flex items-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleRetry(msg.id, msg.retryPrompt)}
-                                  disabled={isBusy}
-                                  className="min-h-[40px] inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border-strong)] bg-primary px-3 py-1.5 text-xs font-semibold text-accent active:scale-95 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-transform"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="14"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    aria-hidden="true"
-                                  >
-                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                    <path d="M3 3v5h5" />
-                                  </svg>
-                                  <span>Retry</span>
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
+                  ))}
 
                   {isTyping && (
-                    <div
-                      role="status"
-                      aria-live="polite"
-                      className="w-full min-w-0 flex flex-col items-start"
-                    >
-                      <div className="max-w-[85%] border-l-2 border-red bg-[var(--color-surface)] px-3.5 py-3 shadow-[4px_4px_0px_var(--color-border-strong)]">
-                        <div className="flex items-center gap-2 mb-2">
-                          <MhocAvatarBadge size="sm" />
-                          <span className="text-xs font-bold tracking-tight text-accent">MHOC</span>
-                          <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider bg-[color:color-mix(in_srgb,var(--color-accent)_8%,transparent)] text-muted border border-[color:color-mix(in_srgb,var(--color-accent)_16%,transparent)]">
-                            Typing...
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1.5" aria-hidden="true">
-                            <span
-                              className="w-1.5 h-1.5 rounded-full bg-red animate-bounce"
-                              style={{ animationDelay: '0ms' }}
-                            />
-                            <span
-                              className="w-1.5 h-1.5 rounded-full bg-red animate-bounce"
-                              style={{ animationDelay: '150ms' }}
-                            />
-                            <span
-                              className="w-1.5 h-1.5 rounded-full bg-red animate-bounce"
-                              style={{ animationDelay: '300ms' }}
-                            />
-                          </div>
-                          <span className="text-xs text-muted">Thinking...</span>
+                    <div role="status" className="flex justify-start">
+                      <div className="max-w-[85%] p-3 bg-red/10 border-l-2 border-red text-light shadow-[4px_4px_0px_var(--color-border-strong)]">
+                        <div className="opacity-60 text-[10px] mb-1">{'MHOC_SYS>'}</div>
+                        <span className="sr-only">MHOC is thinking</span>
+                        <div className="flex items-center gap-1 h-4" aria-hidden="true">
+                          <span
+                            className="w-1.5 h-1.5 bg-red animate-bounce rounded-full"
+                            style={{ animationDelay: '0ms' }}
+                          />
+                          <span
+                            className="w-1.5 h-1.5 bg-red animate-bounce rounded-full"
+                            style={{ animationDelay: '150ms' }}
+                          />
+                          <span
+                            className="w-1.5 h-1.5 bg-red animate-bounce rounded-full"
+                            style={{ animationDelay: '300ms' }}
+                          />
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Jump to latest pill when scrolled up */}
+                {/* Jump to latest button when scrolled up */}
                 <AnimatePresence>
                   {showJumpToLatest && (
-                    <motion.button
-                      type="button"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.15 }}
-                      onClick={handleJumpToLatest}
-                      className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 min-h-[40px] inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border-strong)] bg-primary px-3.5 py-1.5 text-xs font-semibold text-accent shadow-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red"
-                    >
-                      <span>Jump to latest</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
+                    <div className="pointer-events-none absolute bottom-3 inset-x-0 z-10 flex justify-center">
+                      <motion.button
+                        type="button"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.15 }}
+                        onClick={handleJumpToLatest}
+                        className="pointer-events-auto min-h-[38px] inline-flex items-center gap-1.5 border-2 border-[var(--color-border-strong)] bg-primary px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-accent shadow-[3px_3px_0px_var(--color-border-strong)] active:bg-red active:text-white active:border-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red"
                       >
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <polyline points="19 12 12 19 5 12" />
-                      </svg>
-                    </motion.button>
+                        <span>Latest</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <polyline points="19 12 12 19 5 12" />
+                        </svg>
+                      </motion.button>
+                    </div>
                   )}
                 </AnimatePresence>
               </div>
@@ -1012,14 +907,14 @@ export default function ChatAssistant() {
               {showMobileSuggestions && (
                 <div
                   aria-label="Suggested prompts"
-                  className="px-3.5 pb-2.5 pt-1 flex flex-wrap gap-2 shrink-0 min-w-0"
+                  className="flex flex-wrap gap-2 px-4 pb-3 pt-1 font-mono text-[11px] relative z-10 shrink-0"
                 >
                   {SUGGESTIONS.map((s) => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => handleSend(null, s)}
-                      className="min-h-[40px] max-w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-accent active:bg-accent active:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-colors text-left"
+                      className="bg-primary border-2 border-[var(--color-border-strong)] text-muted px-2.5 py-2 active:bg-red active:text-white active:border-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-all text-left"
                     >
                       {s}
                     </button>
@@ -1030,79 +925,42 @@ export default function ChatAssistant() {
               {/* Pinned Bottom Composer Bar */}
               <form
                 onSubmit={handleSend}
-                className="border-t border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] bg-primary px-3.5 py-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0"
+                className="border-t-2 border-[var(--color-border-strong)] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-end gap-2 bg-primary relative z-10 shrink-0"
               >
-                <div className="flex items-end gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] pl-3.5 pr-1.5 py-1.5 focus-within:border-red focus-within:ring-1 focus-within:ring-red transition-colors">
-                  <label htmlFor="mhoc-mobile-input" className="sr-only">
-                    Ask MHOC a question
-                  </label>
-                  <textarea
-                    ref={mobileTextareaRef}
-                    id="mhoc-mobile-input"
-                    rows={1}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleTextareaKeyDown}
-                    placeholder="Ask MHOC..."
-                    enterKeyHint="send"
-                    maxLength={MAX_INPUT_LENGTH}
-                    className="flex-1 min-w-0 max-h-[120px] resize-none overflow-y-auto bg-transparent py-2 text-[16px] leading-snug text-accent placeholder:text-muted focus:outline-none"
-                  />
-                  {input.length > 1600 && (
-                    <span
-                      aria-live="polite"
-                      className="text-[10px] font-mono text-muted shrink-0 pb-2.5 px-1"
-                    >
-                      {input.length}/{MAX_INPUT_LENGTH}
-                    </span>
-                  )}
-                  {isBusy ? (
-                    <button
-                      type="button"
-                      onClick={handleStop}
-                      aria-label="Stop generating"
-                      className="min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center shrink-0 border border-[color:color-mix(in_srgb,var(--color-red)_55%,transparent)] bg-[color:color-mix(in_srgb,var(--color-red)_15%,transparent)] text-accent active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-transform"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <rect x="6" y="6" width="12" height="12" rx="2" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <button
-                      type="submit"
-                      disabled={!input.trim()}
-                      aria-label="Send message"
-                      className={`min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center shrink-0 border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red ${
-                        input.trim()
-                          ? 'bg-accent border-accent text-primary active:scale-95'
-                          : 'bg-[color:color-mix(in_srgb,var(--color-accent)_6%,transparent)] border-[color:color-mix(in_srgb,var(--color-accent)_14%,transparent)] text-muted opacity-70 cursor-not-allowed'
-                      }`}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <line x1="12" y1="19" x2="12" y2="5" />
-                        <polyline points="5 12 12 5 19 12" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
+                <label htmlFor="mhoc-mobile-input" className="sr-only">
+                  Ask MHOC a question
+                </label>
+                <textarea
+                  ref={mobileTextareaRef}
+                  id="mhoc-mobile-input"
+                  rows={1}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleTextareaKeyDown}
+                  placeholder="EXECUTE COMMAND..."
+                  enterKeyHint="send"
+                  maxLength={MAX_INPUT_LENGTH}
+                  className="flex-1 min-w-0 max-h-[120px] resize-none overflow-y-auto bg-transparent border-2 border-[var(--color-border-strong)] px-3 py-2.5 font-mono text-[16px] leading-snug text-light placeholder:text-muted focus:outline-none focus:border-red focus:shadow-[2px_2px_0px_var(--color-red)] transition-all"
+                />
+                {isBusy ? (
+                  <button
+                    type="button"
+                    onClick={handleStop}
+                    aria-label="Stop generating"
+                    className="min-h-[46px] bg-primary text-red border-2 border-red px-4 font-mono text-xs font-bold uppercase tracking-wider shrink-0 active:bg-red active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-all"
+                  >
+                    STOP
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={!input.trim()}
+                    aria-label="Send message"
+                    className="min-h-[46px] bg-red text-primary px-5 font-mono text-xs font-bold uppercase tracking-wider shrink-0 disabled:opacity-50 disabled:cursor-not-allowed active:bg-light border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red transition-all"
+                  >
+                    SEND
+                  </button>
+                )}
               </form>
             </motion.div>
           )}

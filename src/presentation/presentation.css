@@ -1,0 +1,1608 @@
+/* ==========================================================================
+   ITC 4671 — Swiss Editorial Academic Presentation Design System
+   Fonts (Crimson Pro, DM Sans, JetBrains Mono) are loaded via non-blocking
+   <link> tags in index.html — ZERO @import url() here so /present never
+   crashes offline on Vite CSS preload.
+
+   All tokens and rules are scoped under .present-root (and .present-print-deck)
+   so portfolio styles never bleed into slides and vice versa.
+   ========================================================================== */
+
+.present-root,
+.present-print-deck {
+  /* ── Surface Tokens (High Projector Lightness Delta, Zero Glare) ── */
+  --pres-shell: #E6E0D4;
+  --pres-canvas: #FAF8F4;
+  --pres-surface: #F1ECE2;
+  --pres-surface-elevated: #FFFFFF;
+  --pres-surface-muted: #E8E1D3;
+
+  /* ── Border & Architectural Hairline Tokens ── */
+  --pres-border: #D9D1C3;
+  --pres-border-strong: #B6AA97;
+  --pres-rule-ink: #141923;
+
+  /* ── Ink Tokens (All WCAG AA+ Verified on Canvas & Surface) ── */
+  --pres-ink: #141923;
+  --pres-ink-secondary: #3D4654;
+  --pres-ink-muted: #555E6D;
+
+  /* ── Domain & Semantic Accent Tokens (All >= 5.5:1 Contrast) ── */
+  --pres-primary: #1B365D;
+  --pres-primary-deep: #132847;
+  --pres-on-primary: #FAF8F4;
+  --pres-on-primary-muted: #CFD9E6;
+  --pres-primary-soft: #E8EEF5;
+
+  --pres-accent: #9A4A0A;
+  --pres-on-accent: #FAF8F4;
+  --pres-accent-soft: #F7EBDC;
+
+  --pres-success: #166534;
+  --pres-on-success: #FAF8F4;
+  --pres-success-soft: #E4F2E9;
+  --pres-success-ink: #14532D;
+
+  --pres-danger: #B42318;
+  --pres-on-danger: #FAF8F4;
+  --pres-danger-soft: #FCEAE8;
+  --pres-danger-ink: #8A1C14;
+
+  --pres-ring: #1B365D;
+
+  /* ── Closing Plate (Normalized Archival Warm-Ivory Editorial Bookend) Tokens ── */
+  --pres-closing-bg: #FAF8F4;
+  --pres-closing-footer: #F1ECE2;
+  --pres-closing-ink: #141923;
+  --pres-closing-muted: #3D4654;
+  --pres-closing-accent: #1B365D;
+  --pres-closing-rule: #D9D1C3;
+  --pres-closing-surface: #FFFFFF;
+
+  /* ── Typography Tokens (Projector-Grade Scale) ── */
+  --pres-font-display: 'Crimson Pro', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --pres-font-sans: 'DM Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --pres-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --pres-text-hero: 42px;
+  --pres-text-title: 32px;
+  --pres-text-h2: 18px;
+  --pres-text-body: 15px;
+  --pres-text-body-sm: 13.5px;
+  --pres-text-meta: 12px;
+  --pres-text-kicker: 11.5px;
+
+  /* ── Diagram, Stroke, Radius & Motion Tokens ── */
+  --pres-stroke-hairline: 1px;
+  --pres-stroke-node: 1.5px;
+  --pres-stroke-emphasis: 2px;
+  --pres-radius-sm: 2px;
+  --pres-radius-md: 4px;
+  --pres-pad-x: 52px;
+  --pres-pad-y: 20px;
+  --pres-transition-fast: 150ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Lightweight Compatibility Aliases (Scoped) ── */
+  --color-canvas: var(--pres-canvas);
+  --color-surface: var(--pres-surface);
+  --color-surface-muted: var(--pres-surface-muted);
+  --color-border: var(--pres-border);
+  --color-border-strong: var(--pres-border-strong);
+  --color-ink: var(--pres-ink);
+  --color-ink-muted: var(--pres-ink-muted);
+  --color-primary: var(--pres-primary);
+  --color-primary-soft: var(--pres-primary-soft);
+  --color-accent: var(--pres-accent);
+  --color-success: var(--pres-success);
+  --color-danger: var(--pres-danger);
+  --font-heading: var(--pres-font-display);
+  --font-body: var(--pres-font-sans);
+  --font-mono: var(--pres-font-mono);
+}
+
+.present-root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--pres-shell);
+  color: var(--pres-ink);
+  color-scheme: light;
+  font-family: var(--pres-font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+/* ── Visually Hidden Screen-Reader Announcer ── */
+
+.present-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Shared Editorial Utility Classes (Consumed by Slides.jsx)
+   ========================================================================== */
+
+.present-root .pres-display,
+.present-print-deck .pres-display,
+.present-root .font-editorial,
+.present-print-deck .font-editorial {
+  font-family: var(--pres-font-display);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+.present-root .pres-mono,
+.present-print-deck .pres-mono {
+  font-family: var(--pres-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-root .pres-measure,
+.present-print-deck .pres-measure {
+  max-inline-size: 64ch;
+}
+
+.present-root .pres-kicker,
+.present-print-deck .pres-kicker,
+.present-root .editorial-kicker,
+.present-print-deck .editorial-kicker {
+  font-family: var(--pres-font-sans);
+  font-size: var(--pres-text-kicker);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--pres-primary);
+}
+
+.present-root .pres-kicker--danger,
+.present-print-deck .pres-kicker--danger {
+  color: var(--pres-danger);
+}
+
+.present-root .pres-kicker--success,
+.present-print-deck .pres-kicker--success {
+  color: var(--pres-success);
+}
+
+.present-root .pres-kicker--accent,
+.present-print-deck .pres-kicker--accent {
+  color: var(--pres-accent);
+}
+
+.present-root .pres-kicker--muted,
+.present-print-deck .pres-kicker--muted {
+  color: var(--pres-ink-muted);
+}
+
+.present-root .pres-rule,
+.present-print-deck .pres-rule,
+.present-root .editorial-rule,
+.present-print-deck .editorial-rule {
+  border-top: var(--pres-stroke-hairline) solid var(--pres-border);
+}
+
+.present-root .pres-rule-strong,
+.present-print-deck .pres-rule-strong,
+.present-root .editorial-rule-strong,
+.present-print-deck .editorial-rule-strong {
+  border-top: var(--pres-stroke-emphasis) solid var(--pres-rule-ink);
+}
+
+/* ── Editorial Callout (Left Structural Rule, Warm Recessed Surface) ── */
+
+.present-root .pres-callout,
+.present-print-deck .pres-callout {
+  background: var(--pres-surface);
+  border: var(--pres-stroke-hairline) solid var(--pres-border);
+  border-left: 3px solid var(--pres-primary);
+  border-radius: var(--pres-radius-sm);
+  padding: 12px 16px;
+}
+
+.present-root .pres-callout--danger,
+.present-print-deck .pres-callout--danger {
+  border-left-color: var(--pres-danger);
+  background: var(--pres-danger-soft);
+  border-color: rgba(180, 35, 24, 0.22);
+}
+
+.present-root .pres-callout--accent,
+.present-print-deck .pres-callout--accent {
+  border-left-color: var(--pres-accent);
+  background: var(--pres-accent-soft);
+  border-color: rgba(154, 74, 10, 0.22);
+}
+
+.present-root .pres-callout--success,
+.present-print-deck .pres-callout--success {
+  border-left-color: var(--pres-success);
+  background: var(--pres-success-soft);
+  border-color: rgba(22, 101, 52, 0.22);
+}
+
+/* ── Elevated Plate (Sparingly Used Crisp White Architectural Card) ── */
+
+.present-root .pres-plate,
+.present-print-deck .pres-plate {
+  background: var(--pres-surface-elevated);
+  border: var(--pres-stroke-hairline) solid var(--pres-border);
+  border-top: 2px solid var(--pres-primary);
+  border-radius: var(--pres-radius-sm);
+  padding: 14px 18px;
+}
+
+.present-root .pres-plate--danger,
+.present-print-deck .pres-plate--danger {
+  border-top-color: var(--pres-danger);
+}
+
+.present-root .pres-plate--success,
+.present-print-deck .pres-plate--success {
+  border-top-color: var(--pres-success);
+}
+
+.present-root .pres-plate--accent,
+.present-print-deck .pres-plate--accent {
+  border-top-color: var(--pres-accent);
+}
+
+/* ── Editorial Metric Numeral ── */
+
+.present-root .pres-stat-num,
+.present-print-deck .pres-stat-num {
+  font-family: var(--pres-font-display);
+  font-optical-sizing: auto;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--pres-primary);
+}
+
+/* ── Crisp Monospace Technical Block (e.g. Task Approval Manifest Schema) ── */
+
+.present-root .pres-code-block,
+.present-print-deck .pres-code-block {
+  font-family: var(--pres-font-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--pres-ink);
+  background: var(--pres-surface-elevated);
+  border: var(--pres-stroke-hairline) solid var(--pres-border-strong);
+  border-left: 3px solid var(--pres-primary);
+  border-radius: var(--pres-radius-sm);
+  padding: 12px 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Flat High-Contrast Micro-Tag (Non-Pill, Architectural) ── */
+
+.present-root .pres-tag,
+.present-print-deck .pres-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--pres-radius-sm);
+  font-family: var(--pres-font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  background: var(--pres-primary-soft);
+  color: var(--pres-primary);
+  border: 1px solid rgba(27, 54, 93, 0.22);
+}
+
+.present-root .pres-tag--success,
+.present-print-deck .pres-tag--success {
+  background: var(--pres-success-soft);
+  color: var(--pres-success-ink);
+  border-color: rgba(22, 101, 52, 0.24);
+}
+
+.present-root .pres-tag--danger,
+.present-print-deck .pres-tag--danger {
+  background: var(--pres-danger-soft);
+  color: var(--pres-danger-ink);
+  border-color: rgba(180, 35, 24, 0.24);
+}
+
+.present-root .pres-tag--accent,
+.present-print-deck .pres-tag--accent {
+  background: var(--pres-accent-soft);
+  color: var(--pres-accent);
+  border-color: rgba(154, 74, 10, 0.24);
+}
+
+.present-root .pres-tag--neutral,
+.present-print-deck .pres-tag--neutral {
+  background: var(--pres-surface);
+  color: var(--pres-ink-secondary);
+  border-color: var(--pres-border-strong);
+}
+
+/* ── Publication Booktabs Table (Projector-Grade >= 13.5px Body) ── */
+
+.present-root .pres-table,
+.present-print-deck .pres-table,
+.present-root .booktabs-table,
+.present-print-deck .booktabs-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--pres-rule-ink);
+  border-bottom: 2px solid var(--pres-rule-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-root .pres-table thead th,
+.present-print-deck .pres-table thead th,
+.present-root .booktabs-table thead th,
+.present-print-deck .booktabs-table thead th {
+  padding: 8px 12px;
+  text-align: left;
+  font-family: var(--pres-font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pres-ink);
+  background: var(--pres-surface-muted);
+  border-bottom: 1.5px solid var(--pres-border-strong);
+  vertical-align: bottom;
+}
+
+.present-root .pres-table tbody td,
+.present-print-deck .pres-table tbody td,
+.present-root .booktabs-table tbody td,
+.present-print-deck .booktabs-table tbody td {
+  padding: 8px 12px;
+  font-size: var(--pres-text-body-sm);
+  line-height: 1.44;
+  color: var(--pres-ink);
+  border-bottom: 1px solid var(--pres-border);
+  vertical-align: top;
+}
+
+.present-root .pres-table tbody tr:last-child td,
+.present-print-deck .pres-table tbody tr:last-child td,
+.present-root .booktabs-table tbody tr:last-child td,
+.present-print-deck .booktabs-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.present-root .pres-table--compact thead th,
+.present-print-deck .pres-table--compact thead th {
+  padding: 6px 10px;
+}
+
+.present-root .pres-table--compact tbody td,
+.present-print-deck .pres-table--compact tbody td {
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+/* ── Editorial Layout Primitives ── */
+
+.present-root .pres-split-asymmetric,
+.present-print-deck .pres-split-asymmetric {
+  display: grid;
+  grid-template-columns: minmax(0, 1.38fr) minmax(0, 1fr);
+  gap: 36px;
+}
+
+.present-root .pres-split-asymmetric-rev,
+.present-print-deck .pres-split-asymmetric-rev {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.38fr);
+  gap: 36px;
+}
+
+.present-root .pres-split-even,
+.present-print-deck .pres-split-even {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+}
+
+.present-root .pres-col-divider,
+.present-print-deck .pres-col-divider {
+  border-left: 1px solid var(--pres-border);
+  padding-left: 32px;
+}
+
+.present-root .pres-rail-3,
+.present-print-deck .pres-rail-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.present-root .pres-rail-4,
+.present-print-deck .pres-rail-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* ==========================================================================
+   Main 16:9 Theater Stage
+   ========================================================================== */
+
+.present-stage {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.present-stage-box {
+  position: relative;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.present-scale-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  transform-origin: top left;
+  will-change: transform;
+}
+
+.present-motion-slot {
+  width: 1280px;
+  height: 720px;
+}
+
+/* ==========================================================================
+   Exact 1280x720 Archival Slide Canvas & SlideFrame Chrome
+   ========================================================================== */
+
+.present-root .slide-canvas,
+.present-print-deck .slide-canvas {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--pres-canvas);
+  color: var(--pres-ink);
+  color-scheme: light;
+  font-family: var(--pres-font-sans);
+  line-height: 1.48;
+  border-radius: 2px;
+  box-shadow:
+    0 18px 44px rgba(20, 25, 35, 0.14),
+    0 0 0 1px var(--pres-border);
+  user-select: text;
+}
+
+.present-root .slide-canvas--cover,
+.present-print-deck .slide-canvas--cover {
+  background-color: var(--pres-canvas);
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(250, 248, 244, 0.94) 0%,
+      rgba(250, 248, 244, 0.88) 48%,
+      rgba(250, 248, 244, 0.18) 66%,
+      rgba(250, 248, 244, 0.04) 100%
+    ),
+    url('/presentation-cover-bg.jpg');
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+
+.present-root .slide-canvas--closing,
+.present-print-deck .slide-canvas--closing {
+  background: var(--pres-closing-bg);
+  color: var(--pres-closing-ink);
+  box-shadow:
+    0 18px 44px rgba(20, 25, 35, 0.14),
+    0 0 0 1px var(--pres-border);
+}
+
+.present-root .slide-canvas h1,
+.present-root .slide-canvas h2,
+.present-root .slide-canvas h3,
+.present-print-deck .slide-canvas h1,
+.present-print-deck .slide-canvas h2,
+.present-print-deck .slide-canvas h3 {
+  text-wrap: balance;
+}
+
+/* Keep SVG specificity at (0,0,1) via :where() so diagram and utility sizing wins cleanly */
+:where(.present-root .slide-canvas, .present-print-deck .slide-canvas) svg {
+  display: block;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+:where(.present-root .slide-canvas, .present-print-deck .slide-canvas) code,
+:where(.present-root .slide-canvas, .present-print-deck .slide-canvas) pre,
+:where(.present-root .slide-canvas, .present-print-deck .slide-canvas) .font-mono {
+  font-family: var(--pres-font-mono);
+}
+
+/* ── Edge Accents (Content Top Bar / Cover Spine / Closing Spine) ── */
+
+.present-root .slide-accent-bar,
+.present-print-deck .slide-accent-bar {
+  width: 100%;
+  height: 3px;
+  flex-shrink: 0;
+  background: var(--pres-primary);
+}
+
+.present-root .slide-cover-spine,
+.present-print-deck .slide-cover-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 38px;
+  width: 10px;
+  background: var(--pres-primary);
+  pointer-events: none;
+}
+
+.present-root .slide-closing-spine,
+.present-print-deck .slide-closing-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 38px;
+  width: 10px;
+  background: var(--pres-closing-accent);
+  pointer-events: none;
+}
+
+/* ── Editorial Content Slide Header ── */
+
+.present-root .slide-header,
+.present-print-deck .slide-header {
+  flex-shrink: 0;
+  padding: 22px var(--pres-pad-x) 0 var(--pres-pad-x);
+}
+
+.present-root .slide-header-inner,
+.present-print-deck .slide-header-inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding-bottom: 13px;
+  border-bottom: 1.5px solid var(--pres-border-strong);
+}
+
+.present-root .slide-header-left,
+.present-print-deck .slide-header-left {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.present-root .slide-eyebrow,
+.present-print-deck .slide-eyebrow {
+  font-family: var(--pres-font-sans);
+  font-size: var(--pres-text-kicker);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pres-primary);
+}
+
+.present-root .slide-title,
+.present-print-deck .slide-title {
+  margin-top: 4px;
+  font-family: var(--pres-font-display);
+  font-optical-sizing: auto;
+  font-size: var(--pres-text-title);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: var(--pres-ink);
+}
+
+.present-root .slide-subtitle,
+.present-print-deck .slide-subtitle {
+  flex-shrink: 0;
+  max-width: 410px;
+  padding-bottom: 2px;
+  margin: 0;
+  color: var(--pres-ink-secondary);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.38;
+  text-align: right;
+  text-wrap: balance;
+}
+
+/* ── Slide Body & Optional Citation Footnote Strip ── */
+
+.present-root .slide-body,
+.present-print-deck .slide-body {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.present-root .slide-body--content,
+.present-print-deck .slide-body--content {
+  padding: 20px var(--pres-pad-x) 20px var(--pres-pad-x);
+}
+
+.present-root .slide-body--cover,
+.present-print-deck .slide-body--cover,
+.present-root .slide-body--closing,
+.present-print-deck .slide-body--closing {
+  padding: 44px var(--pres-pad-x) 38px 62px;
+}
+
+.present-root .slide-body-content,
+.present-print-deck .slide-body-content {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.present-root .slide-footnote,
+.present-print-deck .slide-footnote {
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--pres-border);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--pres-ink-muted);
+}
+
+.present-root .slide-canvas--closing .slide-footnote,
+.present-print-deck .slide-canvas--closing .slide-footnote {
+  border-top-color: var(--pres-closing-rule);
+  color: var(--pres-closing-muted);
+}
+
+/* ── Mandatory Academic Footer (All Slides) ── */
+
+.present-root .slide-footer,
+.present-print-deck .slide-footer {
+  height: 38px;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 var(--pres-pad-x);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  background: var(--pres-surface);
+  border-top: 1px solid var(--pres-border);
+}
+
+.present-root .slide-canvas--closing .slide-footer,
+.present-print-deck .slide-canvas--closing .slide-footer {
+  background: var(--pres-closing-footer);
+  border-top-color: var(--pres-closing-rule);
+}
+
+.present-root .slide-footer-id,
+.present-print-deck .slide-footer-id {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--pres-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--pres-ink);
+  white-space: nowrap;
+}
+
+.present-root .slide-canvas--closing .slide-footer-id,
+.present-print-deck .slide-canvas--closing .slide-footer-id {
+  color: var(--pres-closing-ink);
+}
+
+.present-root .slide-footer-sep,
+.present-print-deck .slide-footer-sep {
+  color: var(--pres-ink-muted);
+  font-weight: 400;
+}
+
+.present-root .slide-canvas--closing .slide-footer-sep,
+.present-print-deck .slide-canvas--closing .slide-footer-sep {
+  color: var(--pres-closing-muted);
+}
+
+.present-root .slide-footer-title,
+.present-print-deck .slide-footer-title {
+  justify-self: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pres-ink-secondary);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.present-root .slide-canvas--closing .slide-footer-title,
+.present-print-deck .slide-canvas--closing .slide-footer-title {
+  color: var(--pres-closing-muted);
+}
+
+.present-root .slide-footer-page,
+.present-print-deck .slide-footer-page {
+  justify-self: end;
+  font-family: var(--pres-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pres-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.present-root .slide-canvas--closing .slide-footer-page,
+.present-print-deck .slide-canvas--closing .slide-footer-page {
+  color: var(--pres-closing-accent);
+}
+
+/* ==========================================================================
+   Collapsible Speaker Notes & Q&A Defense Drawer (N)
+   ========================================================================== */
+
+.present-notes-drawer {
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--pres-surface-muted);
+  border-top: 1.5px solid var(--pres-border-strong);
+  color: var(--pres-ink);
+  overflow: hidden;
+}
+
+.present-notes-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 12px 24px 14px 24px;
+}
+
+.present-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 9px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--pres-border-strong);
+}
+
+.present-notes-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+.present-notes-kicker {
+  font-family: var(--pres-font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pres-primary);
+}
+
+.present-notes-title {
+  font-family: var(--pres-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pres-ink);
+}
+
+.present-notes-pace {
+  font-family: var(--pres-font-mono);
+  font-size: 11.5px;
+  color: var(--pres-ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-notes-pace-track {
+  position: relative;
+  width: 120px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--pres-canvas);
+  border: 1px solid var(--pres-border-strong);
+  overflow: visible;
+  align-self: center;
+}
+
+.present-notes-pace-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: var(--pres-primary);
+  transition: width 220ms ease;
+}
+
+.present-notes-pace-fill--amber {
+  background: var(--pres-accent);
+}
+
+.present-notes-pace-fill--crimson {
+  background: var(--pres-danger);
+}
+
+.present-notes-pace-target {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--pres-ink);
+  transform: translateX(-50%);
+}
+
+.present-notes-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.present-notes-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.present-notes-col-label {
+  font-family: var(--pres-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pres-ink-muted);
+  margin-bottom: 5px;
+}
+
+.present-notes-text {
+  margin: 0;
+  max-height: 132px;
+  overflow-y: auto;
+  color: var(--pres-ink);
+  font-size: 14px;
+  line-height: 1.55;
+  user-select: text;
+  padding-right: 8px;
+}
+
+.present-notes-qa {
+  border-left: 1px solid var(--pres-border-strong);
+  padding-left: 20px;
+}
+
+.present-notes-qa-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 132px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 6px;
+  user-select: text;
+}
+
+.present-notes-qa-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pres-ink);
+}
+
+.present-notes-qa-bullet {
+  font-family: var(--pres-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pres-primary);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Bottom Presenter Toolbar (Auto-Dims Unobtrusively in Fullscreen)
+   ========================================================================== */
+
+.present-toolbar {
+  flex-shrink: 0;
+  height: 48px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  background: var(--pres-surface);
+  border-top: 1px solid var(--pres-border-strong);
+  color: var(--pres-ink);
+  transition: opacity 220ms ease;
+}
+
+.present-toolbar--idle {
+  opacity: 0.12;
+}
+
+.present-toolbar--idle:hover,
+.present-toolbar--idle:focus-within {
+  opacity: 1;
+}
+
+.present-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.present-toolbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.present-toolbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.present-toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--pres-border-strong);
+  flex-shrink: 0;
+}
+
+.present-deck-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--pres-ink-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.present-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 3px;
+  border: 1px solid var(--pres-border-strong);
+  background: var(--pres-canvas);
+  color: var(--pres-ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--pres-transition-fast),
+    border-color var(--pres-transition-fast),
+    color var(--pres-transition-fast);
+  white-space: nowrap;
+}
+
+.present-btn:hover:not(:disabled) {
+  background: var(--pres-primary-soft);
+  border-color: var(--pres-primary);
+  color: var(--pres-primary);
+}
+
+.present-btn:focus-visible {
+  outline: 2px solid var(--pres-ring);
+  outline-offset: 2px;
+}
+
+.present-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.present-btn--icon {
+  width: 32px;
+  padding: 0;
+}
+
+.present-btn--active {
+  background: var(--pres-primary);
+  border-color: var(--pres-primary);
+  color: var(--pres-on-primary);
+}
+
+.present-btn--active:hover:not(:disabled) {
+  background: var(--pres-primary-deep);
+  border-color: var(--pres-primary-deep);
+  color: var(--pres-on-primary);
+}
+
+.present-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 2px;
+  background: var(--pres-surface-muted);
+  border: 1px solid var(--pres-border-strong);
+  color: var(--pres-ink-secondary);
+  font-family: var(--pres-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.present-btn--active .present-kbd {
+  background: rgba(250, 248, 244, 0.16);
+  border-color: rgba(250, 248, 244, 0.38);
+  color: var(--pres-on-primary);
+}
+
+/* ── Minimal Hairline Progress Segments & Slide Counter ── */
+
+.present-progress-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.present-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.present-dot-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.present-dot-bar {
+  width: 10px;
+  height: 2px;
+  background: var(--pres-border-strong);
+  transition: width var(--pres-transition-fast),
+    background-color var(--pres-transition-fast),
+    height var(--pres-transition-fast);
+}
+
+.present-dot-btn:hover .present-dot-bar {
+  background: var(--pres-primary);
+}
+
+.present-dot-btn--visited .present-dot-bar {
+  background: var(--pres-ink-muted);
+}
+
+.present-dot-btn--active {
+  width: 22px;
+}
+
+.present-dot-btn--active .present-dot-bar {
+  width: 18px;
+  height: 3px;
+  background: var(--pres-primary);
+}
+
+.present-dot-btn:focus-visible {
+  outline: 2px solid var(--pres-ring);
+  outline-offset: 2px;
+}
+
+.present-slide-counter {
+  font-family: var(--pres-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pres-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.present-slide-counter-muted {
+  color: var(--pres-ink-muted);
+  font-weight: 400;
+}
+
+/* ── 6:00 Rehearsal Timer (Flat Editorial Monospace) ── */
+
+.present-timer {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  border-radius: 3px;
+  border: 1px solid var(--pres-border-strong);
+  background: var(--pres-canvas);
+  overflow: hidden;
+  transition: background-color var(--pres-transition-fast),
+    border-color var(--pres-transition-fast);
+}
+
+.present-timer--amber {
+  background: var(--pres-accent-soft);
+  border-color: var(--pres-accent);
+}
+
+.present-timer--crimson {
+  background: var(--pres-danger-soft);
+  border-color: var(--pres-danger);
+}
+
+.present-timer-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 10px;
+  background: transparent;
+  border: none;
+  color: var(--pres-ink);
+  font-family: var(--pres-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.present-timer--amber .present-timer-toggle {
+  color: var(--pres-accent);
+}
+
+.present-timer--crimson .present-timer-toggle {
+  color: var(--pres-danger-ink);
+}
+
+.present-timer-toggle:hover {
+  background: var(--pres-surface-muted);
+}
+
+.present-timer-toggle:focus-visible,
+.present-timer-reset:focus-visible {
+  outline: 2px solid var(--pres-ring);
+  outline-offset: -2px;
+}
+
+.present-timer-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--pres-border-strong);
+  flex-shrink: 0;
+}
+
+.present-timer-indicator--running {
+  background: var(--pres-primary);
+}
+
+.present-timer--amber .present-timer-indicator--running {
+  background: var(--pres-accent);
+}
+
+.present-timer--crimson .present-timer-indicator--running {
+  background: var(--pres-danger);
+}
+
+.present-timer-limit {
+  color: var(--pres-ink-muted);
+  font-weight: 400;
+}
+
+.present-timer-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--pres-border);
+  color: var(--pres-ink-secondary);
+  cursor: pointer;
+  transition: background-color var(--pres-transition-fast), color var(--pres-transition-fast);
+}
+
+.present-timer-reset:hover {
+  background: var(--pres-surface-muted);
+  color: var(--pres-ink);
+}
+
+/* ==========================================================================
+   Slide Overview Grid Modal (G) — Swiss Index
+   ========================================================================== */
+
+.present-overview-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(20, 25, 35, 0.56);
+}
+
+.present-overview-modal {
+  width: 100%;
+  max-width: 1140px;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--pres-canvas);
+  border: 1px solid var(--pres-border-strong);
+  border-radius: 3px;
+  box-shadow: 0 24px 56px rgba(20, 25, 35, 0.24);
+  overflow: hidden;
+}
+
+.present-overview-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  background: var(--pres-surface);
+  border-bottom: 1px solid var(--pres-border);
+}
+
+.present-overview-heading {
+  margin: 0;
+  font-family: var(--pres-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--pres-ink);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.present-overview-sub {
+  margin: 3px 0 0 0;
+  font-size: 13px;
+  color: var(--pres-ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-overview-grid {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  background: var(--pres-canvas);
+}
+
+.present-overview-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 116px;
+  padding: 14px 16px;
+  text-align: left;
+  background: var(--pres-surface-elevated);
+  border: 1px solid var(--pres-border);
+  border-top: 2px solid var(--pres-border-strong);
+  border-radius: 3px;
+  color: var(--pres-ink);
+  cursor: pointer;
+  transition: border-color var(--pres-transition-fast),
+    background-color var(--pres-transition-fast);
+}
+
+.present-overview-card:hover {
+  background: var(--pres-primary-soft);
+  border-color: var(--pres-primary);
+  border-top-color: var(--pres-primary);
+}
+
+.present-overview-card:focus-visible {
+  outline: 2px solid var(--pres-ring);
+  outline-offset: 2px;
+}
+
+.present-overview-card--active {
+  background: var(--pres-primary-soft);
+  border-color: var(--pres-primary);
+  border-top: 3px solid var(--pres-primary);
+}
+
+.present-overview-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.present-overview-num {
+  font-family: var(--pres-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pres-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-overview-time {
+  font-family: var(--pres-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--pres-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.present-overview-section {
+  font-family: var(--pres-font-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pres-ink-muted);
+  margin-bottom: 4px;
+}
+
+.present-overview-card--active .present-overview-section {
+  color: var(--pres-primary);
+}
+
+.present-overview-card-title {
+  font-family: var(--pres-font-display);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.24;
+  color: var(--pres-ink);
+  text-wrap: balance;
+}
+
+.present-overview-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 11px 24px;
+  border-top: 1px solid var(--pres-border);
+  background: var(--pres-surface);
+  font-size: 12px;
+  color: var(--pres-ink-secondary);
+}
+
+.present-shortcuts-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.present-shortcut-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── Scoped Minimal Scrollbar Inside Modal / Notes ── */
+
+.present-root .present-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pres-border-strong) transparent;
+}
+
+.present-root .present-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.present-root .present-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.present-root .present-scroll::-webkit-scrollbar-thumb {
+  background: var(--pres-border-strong);
+}
+
+.present-root .present-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--pres-ink-muted);
+}
+
+/* ── Print-Only Full-Deck Container (Hidden on Screen) ── */
+
+.present-print-deck {
+  display: none;
+}
+
+/* ── Reduced Motion Preference ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .present-btn,
+  .present-dot-bar,
+  .present-timer,
+  .present-timer-reset,
+  .present-overview-card,
+  .present-toolbar,
+  .present-notes-pace-fill {
+    transition: none;
+  }
+}
+
+/* ── Responsive Toolbar & Notes Adjustments ── */
+
+@media (max-width: 1080px) {
+  .present-deck-label,
+  .present-toolbar-divider {
+    display: none;
+  }
+
+  .present-overview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .present-notes-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .present-notes-qa {
+    border-left: none;
+    border-top: 1px solid var(--pres-border-strong);
+    padding-left: 0;
+    padding-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .present-toolbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .present-dots,
+  .present-kbd,
+  .present-btn-label-desktop {
+    display: none;
+  }
+
+  .present-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .present-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Full-Deck Print / PDF Stylesheet (Exact 1280x720 Landscape Pages)
+   ========================================================================== */
+
+@page {
+  size: 1280px 720px landscape;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body,
+  #root {
+    width: 1280px !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FAF8F4 !important;
+    background-image: none !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .present-root {
+    position: static !important;
+    width: 1280px !important;
+    height: auto !important;
+    background: #FAF8F4 !important;
+    background-image: none !important;
+    overflow: visible !important;
+  }
+
+  .present-stage,
+  .present-toolbar,
+  .present-notes-drawer,
+  .present-overview-backdrop,
+  .present-sr-only {
+    display: none !important;
+  }
+
+  .present-print-deck {
+    display: block !important;
+    width: 1280px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .present-print-page {
+    width: 1280px !important;
+    height: 720px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .present-print-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .present-print-deck .slide-canvas {
+    width: 1280px !important;
+    height: 720px !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}

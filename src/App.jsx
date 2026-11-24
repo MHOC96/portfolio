@@ -1,4 +1,4 @@
-import { useState, Component } from 'react';
+import { useState, Component, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ResumeRedirect from './components/features/ResumeRedirect.jsx';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
@@ -22,6 +22,8 @@ import SoundEffects from './components/effects/SoundEffects.jsx';
 import SectionDivider from './components/ui/SectionDivider.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import NotFound from './components/sections/NotFound.jsx';
+
+const PresentationPage = lazy(() => import('./presentation/PresentationPage.jsx'));
 
 /* ── Error Boundary ── */
 class ErrorBoundary extends Component {
@@ -63,6 +65,33 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/resume" element={<ResumeRedirect />} />
+        <Route
+          path="/present"
+          element={
+            <Suspense
+              fallback={
+                <div
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#0B1120',
+                    color: '#CBD5E1',
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontSize: '0.875rem',
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  Loading presentation…
+                </div>
+              }
+            >
+              <PresentationPage />
+            </Suspense>
+          }
+        />
         <Route
           path="/"
           element={

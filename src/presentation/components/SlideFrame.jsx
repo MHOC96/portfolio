@@ -1,18 +1,21 @@
 import { DECK_META } from '../slideData.js';
 
 /**
- * SlideFrame — Fixed 1280x720 Editorial Academic slide wrapper.
+ * SlideFrame — Editorial Academic slide wrapper.
+ *
+ * Fixed 1280x720 16:9 canvas on desktop (>= 900px) and @media print, and a
+ * fluid, vertically scrollable editorial sheet below 900px via presentation.css.
  *
  * Consumes canonical --pres-* design tokens scoped under .present-root.
  * Supports three visually distinct architectural variants:
  *   - "cover":   Archival warm-ivory canvas with bold Oxford Navy left spine.
  *   - "content": 3px Oxford Navy top edge, balanced editorial header, generous margins.
- *   - "closing": High-contrast Oxford Navy architectural Q&A plate (bookend).
+ *   - "closing": Archival warm-ivory Q&A bookend plate with Oxford Navy spine.
  *
- * Inner usable content dimensions inside .slide-body-content:
+ * Inner usable content dimensions inside .slide-body-content (1280x720 canvas):
  *   - variant="content": 1176px x 538px (52px horizontal margins, 20px vertical padding)
  *   - variant="cover":   1166px x 596px (62px left spine clearance, 52px right)
- *   - variant="closing": 1166px x 596px (Oxford Navy architectural Q&A plate)
+ *   - variant="closing": 1166px x 596px (62px left spine clearance, 52px right)
  */
 
 const padTwo = (value) => String(value ?? 1).padStart(2, '0');

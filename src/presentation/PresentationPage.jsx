@@ -9,11 +9,39 @@ const SLIDE_WIDTH = 1280;
 const SLIDE_HEIGHT = 720;
 const TOOLBAR_HEIGHT = 48;
 const FULLSCREEN_IDLE_MS = 2500;
+const COMPACT_MEDIA_QUERY = '(max-width: 899px)';
 
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+const getIsCompactViewport = () => {
+  if (typeof window === 'undefined') return false;
+  if (typeof window.matchMedia === 'function') {
+    return window.matchMedia(COMPACT_MEDIA_QUERY).matches;
+  }
+  return window.innerWidth < 900;
+};
+
+const shouldIgnoreSwipe = (target, boundaryEl) => {
+  if (!(target instanceof Element)) return false;
+  if (target.closest('[data-no-swipe="true"]')) return true;
+  let node = target;
+  while (node && node !== boundaryEl) {
+    if (node instanceof HTMLElement) {
+      const overflowX = window.getComputedStyle(node).overflowX;
+      if (
+        (overflowX === 'auto' || overflowX === 'scroll') &&
+        node.scrollWidth > node.clientWidth + 1
+      ) {
+        return true;
+      }
+    }
+    node = node.parentElement;
+  }
+  return false;
+};
 
 const formatMMSS = (totalSeconds) => {
   const safe = Math.max(0, Math.floor(totalSeconds));
@@ -266,12 +294,14 @@ export default function PresentationPage() {
   const touchStartRef = useRef(null);
   const overviewModalRef = useRef(null);
   const overviewTriggerRef = useRef(null);
+  const compactOverviewTriggerRef = useRef(null);
   const lastFocusedBeforeModalRef = useRef(null);
 
   const [navState, setNavState] = useState(() => ({
     index: parseSlideIndexFromHash(totalSlides),
     direction: 1,
   }));
+  const [isCompactViewport, setIsCompactViewport] = useState(getIsCompactViewport);
   const [scale, setScale] = useState(computeInitialScale);
   const [showOverview, setShowOverview] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -333,19 +363,25 @@ export default function PresentationPage() {
 
   const closeOverview = useCallback(() => {
     setShowOverview(false);
-    const restoreTarget = lastFocusedBeforeModalRef.current || overviewTriggerRef.current;
+    const fallbackTrigger = isCompactViewport
+      ? compactOverviewTriggerRef.current
+      : overviewTriggerRef.current;
+    const restoreTarget = lastFocusedBeforeModalRef.current || fallbackTrigger;
     lastFocusedBeforeModalRef.current = null;
     if (restoreTarget && typeof restoreTarget.focus === 'function') {
       window.requestAnimationFrame(() => {
         restoreTarget.focus();
       });
     }
-  }, []);
+  }, [isCompactViewport]);
 
   const toggleOverview = useCallback(() => {
     setShowOverview((prev) => {
       if (prev) {
-        const restoreTarget = lastFocusedBeforeModalRef.current || overviewTriggerRef.current;
+        const fallbackTrigger = isCompactViewport
+          ? compactOverviewTriggerRef.current
+          : overviewTriggerRef.current;
+        const restoreTarget = lastFocusedBeforeModalRef.current || fallbackTrigger;
         lastFocusedBeforeModalRef.current = null;
         if (restoreTarget && typeof restoreTarget.focus === 'function') {
           window.requestAnimationFrame(() => {
@@ -359,7 +395,7 @@ export default function PresentationPage() {
       }
       return true;
     });
-  }, []);
+  }, [isCompactViewport]);
 
   const toggleTimer = useCallback(() => {
     const now = Date.now();
@@ -467,8 +503,40 @@ export default function PresentationPage() {
     };
   }, [isFullscreen, showNotes, showOverview]);
 
-  // Exact 16:9 ResizeObserver scaling on stage container
+  // Sync compact (< 900px) fluid viewport state
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const syncCompact = () => setIsCompactViewport(getIsCompactViewport());
+    syncCompact();
+
+    if (typeof window.matchMedia === 'function') {
+      const mql = window.matchMedia(COMPACT_MEDIA_QUERY);
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', syncCompact);
+        return () => mql.removeEventListener('change', syncCompact);
+      }
+      if (typeof mql.addListener === 'function') {
+        mql.addListener(syncCompact);
+        return () => mql.removeListener(syncCompact);
+      }
+    }
+
+    window.addEventListener('resize', syncCompact);
+    return () => window.removeEventListener('resize', syncCompact);
+  }, []);
+
+  // Reset vertical scroll to top when switching slides on compact mobile/tablet viewports
+  useEffect(() => {
+    if (!isCompactViewport) return;
+    const stageEl = stageRef.current;
+    if (stageEl) {
+      stageEl.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [currentIndex, isCompactViewport]);
+
+  // Exact 16:9 ResizeObserver scaling on stage container (desktop >= 900px only)
+  useEffect(() => {
+    if (isCompactViewport) return undefined;
     const stageEl = stageRef.current;
     if (!stageEl) return undefined;
 
@@ -493,7 +561,7 @@ export default function PresentationPage() {
 
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
-  }, [isFullscreen]);
+  }, [isFullscreen, isCompactViewport]);
 
   // Rehearsal timer tick
   useEffect(() => {
@@ -627,29 +695,39 @@ export default function PresentationPage() {
     totalSlides,
   ]);
 
-  // Touch swipe navigation for mobile/tablet review
-  const handleTouchStart = useCallback((event) => {
-    if (event.touches.length !== 1) return;
-    const touch = event.touches[0];
-    touchStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    };
-  }, []);
+  // Touch swipe navigation for mobile/tablet review (respects [data-no-swipe] & scrollable boxes)
+  const handleTouchStart = useCallback(
+    (event) => {
+      if (showOverview || event.touches.length !== 1) {
+        touchStartRef.current = null;
+        return;
+      }
+      if (shouldIgnoreSwipe(event.target, stageRef.current)) {
+        touchStartRef.current = null;
+        return;
+      }
+      const touch = event.touches[0];
+      touchStartRef.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        time: Date.now(),
+      };
+    },
+    [showOverview]
+  );
 
   const handleTouchEnd = useCallback(
     (event) => {
       const start = touchStartRef.current;
       touchStartRef.current = null;
-      if (!start || event.changedTouches.length !== 1) return;
+      if (!start || showOverview || event.changedTouches.length !== 1) return;
       const touch = event.changedTouches[0];
       const dx = touch.clientX - start.x;
       const dy = touch.clientY - start.y;
       const elapsed = Date.now() - start.time;
 
-      if (elapsed > 800) return;
-      if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy) * 1.25) return;
+      if (elapsed > 650) return;
+      if (Math.abs(dx) < 56 || Math.abs(dx) <= Math.abs(dy) * 1.5) return;
 
       if (dx < 0) {
         goNext();
@@ -657,7 +735,7 @@ export default function PresentationPage() {
         goPrev();
       }
     },
-    [goNext, goPrev]
+    [goNext, goPrev, showOverview]
   );
 
   // Slide metadata & pacing calculations
@@ -753,9 +831,16 @@ export default function PresentationPage() {
       >
         <div
           className="present-stage-box"
-          style={{ width: `${scaledWidth}px`, height: `${scaledHeight}px` }}
+          style={
+            isCompactViewport
+              ? undefined
+              : { width: `${scaledWidth}px`, height: `${scaledHeight}px` }
+          }
         >
-          <div className="present-scale-layer" style={{ transform: `scale(${scale})` }}>
+          <div
+            className="present-scale-layer"
+            style={isCompactViewport ? undefined : { transform: `scale(${scale})` }}
+          >
             <AnimatePresence mode="wait" initial={false} custom={direction}>
               <motion.div
                 key={currentIndex}
@@ -821,15 +906,47 @@ export default function PresentationPage() {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  className="present-btn present-btn--icon"
-                  onClick={() => setShowNotes(false)}
-                  title="Close speaker notes (Esc)"
-                  aria-label="Close speaker notes"
-                >
-                  <IconClose size={14} />
-                </button>
+                <div className="present-notes-header-actions">
+                  <div
+                    className={`${timerStatusClass} present-notes-mobile-timer`}
+                    role="timer"
+                    aria-label="6-minute rehearsal timer"
+                  >
+                    <button
+                      type="button"
+                      className="present-timer-toggle"
+                      onClick={toggleTimer}
+                      aria-label={timerRunning ? 'Pause rehearsal timer' : 'Start rehearsal timer'}
+                    >
+                      <span
+                        className={`present-timer-indicator ${
+                          timerRunning ? 'present-timer-indicator--running' : ''
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span>{formatMMSS(elapsedSeconds)}</span>
+                      <span className="present-timer-limit">/ {formatMMSS(maxTimerSeconds)}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="present-timer-reset"
+                      onClick={resetTimer}
+                      aria-label="Reset rehearsal timer"
+                    >
+                      <IconReset size={13} />
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="present-btn present-btn--icon present-notes-close"
+                    onClick={() => setShowNotes(false)}
+                    title="Close speaker notes (Esc)"
+                    aria-label="Close speaker notes"
+                  >
+                    <IconClose size={15} />
+                  </button>
+                </div>
               </div>
 
               <div
@@ -889,7 +1006,9 @@ export default function PresentationPage() {
           <button
             ref={overviewTriggerRef}
             type="button"
-            className={`present-btn ${showOverview ? 'present-btn--active' : ''}`}
+            className={`present-btn present-overview-trigger ${
+              showOverview ? 'present-btn--active' : ''
+            }`}
             onClick={() => (showOverview ? closeOverview() : openOverview())}
             title="Slide overview grid (G)"
             aria-label="Toggle slide overview grid"
@@ -950,6 +1069,21 @@ export default function PresentationPage() {
           </div>
 
           <button
+            ref={compactOverviewTriggerRef}
+            type="button"
+            className={`present-btn present-slide-counter-btn ${
+              showOverview ? 'present-btn--active' : ''
+            }`}
+            onClick={() => (showOverview ? closeOverview() : openOverview())}
+            aria-label={`Slide ${currentIndex + 1} of ${totalSlides} — open slide overview`}
+            aria-pressed={showOverview}
+          >
+            <span>
+              {currentIndex + 1} <span className="present-slide-counter-muted">/ {totalSlides}</span>
+            </span>
+          </button>
+
+          <button
             type="button"
             className="present-btn present-btn--icon"
             onClick={goNext}
@@ -963,7 +1097,11 @@ export default function PresentationPage() {
 
         {/* Right: 6:00 Rehearsal Timer, Speaker Notes, Print/PDF, Fullscreen */}
         <div className="present-toolbar-right">
-          <div className={timerStatusClass} role="timer" aria-label="6-minute rehearsal timer">
+          <div
+            className={`${timerStatusClass} present-toolbar-timer`}
+            role="timer"
+            aria-label="6-minute rehearsal timer"
+          >
             <button
               type="button"
               className="present-timer-toggle"
@@ -1010,7 +1148,7 @@ export default function PresentationPage() {
 
           <button
             type="button"
-            className="present-btn present-btn--icon"
+            className="present-btn present-btn--icon present-btn-print"
             onClick={triggerPrint}
             title="Export full deck to PDF / Print (P)"
             aria-label="Export full deck to PDF or print"
@@ -1020,7 +1158,7 @@ export default function PresentationPage() {
 
           <button
             type="button"
-            className={`present-btn present-btn--icon ${
+            className={`present-btn present-btn--icon present-btn-fullscreen ${
               isFullscreen ? 'present-btn--active' : ''
             }`}
             onClick={toggleFullscreen}
@@ -1075,7 +1213,7 @@ export default function PresentationPage() {
                 </div>
                 <button
                   type="button"
-                  className="present-btn present-btn--icon"
+                  className="present-btn present-btn--icon present-overview-close"
                   onClick={closeOverview}
                   title="Close overview (Esc)"
                   aria-label="Close slide overview"

@@ -88,9 +88,9 @@ function CoverSlide({ slideNumber, totalSlides }) {
       variant="cover"
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-6 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Institutional Masthead */}
-        <div className="flex items-start justify-between gap-6">
+        <div className="flex flex-wrap items-start justify-between gap-3 min-[900px]:flex-nowrap min-[900px]:gap-6 print:flex-nowrap print:gap-6">
           <div>
             <p className="pres-kicker text-[12px]">
               {DECK_META.university} &nbsp;·&nbsp; {DECK_META.faculty}
@@ -103,9 +103,9 @@ function CoverSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Monograph Title Block — framed cleanly on left 62% beside architectural gateway motif */}
-        <div className="my-auto max-w-[760px] py-4">
+        <div className="my-auto max-w-[760px] py-2 min-[900px]:py-4 print:py-4">
           <div className="mb-5 h-[3px] w-16 bg-[var(--pres-accent)]" aria-hidden="true" />
-          <h1 className="pres-display text-[34px] font-bold leading-[1.16] tracking-[-0.02em] text-[color:var(--pres-ink)]">
+          <h1 className="pres-display pres-cover-title text-[24px] font-bold leading-[1.16] tracking-[-0.02em] text-[color:var(--pres-ink)] min-[600px]:text-[28px] min-[900px]:text-[34px] print:text-[34px]">
             {DECK_META.title}
           </h1>
           <p className="mt-5 text-[15px] font-semibold text-[color:var(--pres-ink-secondary)]">
@@ -114,7 +114,7 @@ function CoverSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Bottom 2-Column Academic Ledger */}
-        <div className="grid max-w-[760px] grid-cols-2 gap-10 border-t-2 border-[color:var(--pres-rule-ink)] pt-5">
+        <div className="grid max-w-[760px] grid-cols-1 gap-4 border-t-2 border-[color:var(--pres-rule-ink)] pt-5 min-[900px]:grid-cols-2 min-[900px]:gap-10 print:grid-cols-2 print:gap-10">
           <div>
             <div className="pres-kicker pres-kicker--muted text-[12px]">Candidate</div>
             <div className="mt-1.5 text-[16px] font-bold text-[color:var(--pres-ink)]">
@@ -125,7 +125,7 @@ function CoverSlide({ slideNumber, totalSlides }) {
             </div>
           </div>
 
-          <div className="border-l border-[color:var(--pres-border)] pl-10">
+          <div className="border-t border-[color:var(--pres-border)] pt-4 min-[900px]:border-t-0 min-[900px]:border-l min-[900px]:pt-0 min-[900px]:pl-10 print:border-t-0 print:border-l print:pt-0 print:pl-10">
             <div className="pres-kicker pres-kicker--muted text-[12px]">Supervisor</div>
             <div className="mt-1.5 text-[16px] font-bold text-[color:var(--pres-ink)]">
               {DECK_META.supervisor}
@@ -156,18 +156,22 @@ function BackgroundUsersSlide({ slideNumber, totalSlides }) {
       subtitle={meta.subtitle}
       meta={DECK_META}
     >
-      <div className="grid h-full grid-cols-[1.12fr_1fr] gap-10">
+      <div className="grid grid-cols-1 gap-6 min-[900px]:h-full min-[900px]:grid-cols-[1.12fr_1fr] min-[900px]:gap-10 print:h-full print:grid-cols-[1.12fr_1fr] print:gap-10">
         {/* Left: Empirical Metric Hero + Project Setting + Motivation */}
-        <div className="flex min-h-0 flex-col justify-between">
+        <div className="flex min-h-0 flex-col justify-between gap-4 min-[900px]:gap-0 print:gap-0">
           {/* Empirical Prompt Plate */}
           <div className="pres-plate pres-plate--danger">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[480px]:gap-6 print:grid-cols-2 print:gap-6">
               {BACKGROUND_USERS_DATA.empiricalStats.map((stat, idx) => (
                 <div
                   key={stat.label}
-                  className={idx > 0 ? 'border-l border-[color:var(--pres-border)] pl-6' : ''}
+                  className={
+                    idx > 0
+                      ? 'border-t border-[color:var(--pres-border)] pt-4 min-[480px]:border-t-0 min-[480px]:border-l min-[480px]:pt-0 min-[480px]:pl-6 print:border-t-0 print:border-l print:pt-0 print:pl-6'
+                      : ''
+                  }
                 >
-                  <div className="pres-stat-num text-[42px] text-[color:var(--pres-danger)]">
+                  <div className="pres-stat-num text-[32px] text-[color:var(--pres-danger)] min-[900px]:text-[42px] print:text-[42px]">
                     {stat.value}
                   </div>
                   <div className="mt-1.5 text-[14px] font-bold text-[color:var(--pres-ink)]">
@@ -211,7 +215,7 @@ function BackgroundUsersSlide({ slideNumber, totalSlides }) {
         {/* Right: Unboxed Target User Roster + Supported Task/Decision */}
         <div className="pres-col-divider flex min-h-0 flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 min-[900px]:gap-3 print:gap-3">
               <h2 className="pres-kicker text-[12px]">Intended Users</h2>
               <span className="pres-tag text-[12px]">{BACKGROUND_USERS_DATA.clientBadge}</span>
             </div>
@@ -222,7 +226,7 @@ function BackgroundUsersSlide({ slideNumber, totalSlides }) {
             <div className="mt-3 divide-y divide-[color:var(--pres-border)] border-y border-[color:var(--pres-border-strong)]">
               {BACKGROUND_USERS_DATA.intendedUsers.map((user, idx) => (
                 <div key={user.group} className="py-3">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-baseline gap-2.5">
                       <span className="pres-mono text-[12px] font-bold text-[color:var(--pres-primary)]">
                         0{idx + 1}
@@ -241,7 +245,7 @@ function BackgroundUsersSlide({ slideNumber, totalSlides }) {
                       {user.tier}
                     </span>
                   </div>
-                  <p className="mt-1 pl-6 text-[13px] leading-[1.42] text-[color:var(--pres-ink-secondary)]">
+                  <p className="mt-1 pl-0 text-[13px] leading-[1.42] text-[color:var(--pres-ink-secondary)] min-[480px]:pl-6 print:pl-6">
                     {user.need}
                   </p>
                 </div>
@@ -277,11 +281,11 @@ function ProblemSlide({ slideNumber, totalSlides }) {
       subtitle={meta.subtitle}
       meta={DECK_META}
     >
-      <div className="pres-split-asymmetric h-full">
+      <div className="pres-split-asymmetric min-[900px]:h-full print:h-full">
         {/* Left (~58%): HijackScenarioDiagram Focal Stage + Workflow Contrast */}
-        <div className="flex min-h-0 flex-col justify-between">
+        <div className="flex min-h-0 min-w-0 flex-col justify-between gap-4 min-[900px]:gap-0 print:gap-0">
           <div>
-            <div className="mb-1.5 flex items-baseline justify-between gap-4 border-b border-[color:var(--pres-border)] pb-1.5">
+            <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-[color:var(--pres-border)] pb-1.5">
               <span className="pres-mono text-[12px] font-semibold text-[color:var(--pres-primary)]">
                 {PROBLEM_DATA.figureCaption}
               </span>
@@ -299,20 +303,20 @@ function ProblemSlide({ slideNumber, totalSlides }) {
               </strong>
               {PROBLEM_DATA.currentWorkflow}
             </p>
-            <div className="mt-2 grid grid-cols-2 gap-5 border-t border-[color:var(--pres-border)] pt-2">
+            <div className="mt-2 grid grid-cols-1 gap-3 border-t border-[color:var(--pres-border)] pt-2.5 min-[900px]:grid-cols-2 min-[900px]:gap-5 min-[900px]:pt-2 print:grid-cols-2 print:gap-5 print:pt-2">
               <div>
                 <div className="pres-kicker pres-kicker--success text-[12px]">
                   {PROBLEM_DATA.serverA.name} · {PROBLEM_DATA.serverA.status}
                 </div>
-                <p className="mt-0.5 text-[12px] leading-[1.36] text-[color:var(--pres-ink-secondary)]">
+                <p className="mt-0.5 text-[13px] leading-[1.4] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12px] min-[900px]:leading-[1.36] print:text-[12px] print:leading-[1.36]">
                   {PROBLEM_DATA.serverA.details}
                 </p>
               </div>
-              <div className="border-l border-[color:var(--pres-border)] pl-4">
+              <div className="border-t border-[color:var(--pres-border)] pt-3 min-[900px]:border-t-0 min-[900px]:border-l min-[900px]:pt-0 min-[900px]:pl-4 print:border-t-0 print:border-l print:pt-0 print:pl-4">
                 <div className="pres-kicker pres-kicker--danger text-[12px]">
                   {PROBLEM_DATA.serverB.name} · {PROBLEM_DATA.serverB.status}
                 </div>
-                <p className="mt-0.5 text-[12px] leading-[1.36] text-[color:var(--pres-ink-secondary)]">
+                <p className="mt-0.5 text-[13px] leading-[1.4] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12px] min-[900px]:leading-[1.36] print:text-[12px] print:leading-[1.36]">
                   {PROBLEM_DATA.serverB.details}
                 </p>
               </div>
@@ -321,17 +325,17 @@ function ProblemSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Right (~42%): Core Problem Thesis + Assumptions A1–A4 Verification Ledger */}
-        <div className="pres-col-divider flex min-h-0 flex-col justify-between">
+        <div className="pres-col-divider flex min-h-0 min-w-0 flex-col justify-between gap-4 min-[900px]:gap-0 print:gap-0">
           <div>
             <h2 className="pres-kicker text-[12px]">Core Security Gap</h2>
-            <p className="pres-display mt-1 text-[21px] font-bold leading-[1.2] tracking-[-0.015em] text-[color:var(--pres-ink)]">
+            <p className="pres-display mt-1 text-[19px] font-bold leading-[1.2] tracking-[-0.015em] text-[color:var(--pres-ink)] min-[900px]:text-[21px] print:text-[21px]">
               {PROBLEM_DATA.headline}
             </p>
             <p className="mt-2 text-[13px] leading-[1.42] text-[color:var(--pres-ink-secondary)]">
               {PROBLEM_DATA.difficulty}
             </p>
             <div className="pres-callout pres-callout--accent mt-2.5">
-              <p className="text-[12.5px] leading-[1.38] text-[color:var(--pres-ink)]">
+              <p className="text-[13px] leading-[1.42] text-[color:var(--pres-ink)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.38] print:text-[12.5px] print:leading-[1.38]">
                 <strong className="font-bold text-[color:var(--pres-accent)]">
                   Why Investigate:{' '}
                 </strong>
@@ -344,15 +348,15 @@ function ProblemSlide({ slideNumber, totalSlides }) {
             <h2 className="pres-kicker text-[12px]">Assumptions to Verify</h2>
             <div className="mt-1.5 divide-y divide-[color:var(--pres-border)] border-y-2 border-[color:var(--pres-rule-ink)]">
               {PROBLEM_DATA.assumptionsToVerify.map((item) => (
-                <div key={item.id} className="flex items-baseline gap-2.5 py-1.5">
+                <div key={item.id} className="flex items-baseline gap-2.5 py-2 min-[900px]:py-1.5 print:py-1.5">
                   <span className="pres-mono w-6 shrink-0 text-[12.5px] font-bold text-[color:var(--pres-primary)]">
                     {item.id}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12.5px] font-semibold leading-[1.3] text-[color:var(--pres-ink)]">
+                    <div className="text-[13px] font-semibold leading-[1.35] text-[color:var(--pres-ink)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.3] print:text-[12.5px] print:leading-[1.3]">
                       {item.assumption}
                     </div>
-                    <div className="pres-mono mt-0.5 text-[12px] text-[color:var(--pres-ink-muted)]">
+                    <div className="pres-mono mt-0.5 break-words text-[12px] text-[color:var(--pres-ink-muted)]">
                       Verify: {item.verifyHow}
                     </div>
                   </div>
@@ -383,11 +387,11 @@ function AimObjectivesSlide({ slideNumber, totalSlides }) {
       footnote={`${AIM_OBJECTIVES_DATA.dsrFooter}  ·  ${AIM_OBJECTIVES_DATA.planMeta}`}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-4 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Full-Width Sculptural One-Sentence Overall Aim */}
-        <div className="pres-callout px-6 py-4">
+        <div className="pres-callout px-4 py-3.5 min-[900px]:px-6 min-[900px]:py-4 print:px-6 print:py-4">
           <h2 className="pres-kicker text-[12px]">Overall Project Aim (One Sentence)</h2>
-          <blockquote className="pres-display mt-1.5 max-w-[1090px] text-[22px] font-semibold leading-[1.3] tracking-[-0.01em] text-[color:var(--pres-ink)]">
+          <blockquote className="pres-display mt-1.5 max-w-[1090px] text-[17px] font-semibold leading-[1.36] tracking-[-0.01em] text-[color:var(--pres-ink)] min-[900px]:text-[22px] min-[900px]:leading-[1.3] print:text-[22px] print:leading-[1.3]">
             {AIM_OBJECTIVES_DATA.overallAim}
           </blockquote>
         </div>
@@ -403,14 +407,14 @@ function AimObjectivesSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* 2x2 Unboxed DSR Objective Rails */}
-        <div className="grid grid-cols-2 gap-x-12 gap-y-5 border-t-2 border-[color:var(--pres-rule-ink)] pt-5">
+        <div className="grid grid-cols-1 gap-4 border-t-2 border-[color:var(--pres-rule-ink)] pt-4 min-[900px]:grid-cols-2 min-[900px]:gap-x-12 min-[900px]:gap-y-5 min-[900px]:pt-5 print:grid-cols-2 print:gap-x-12 print:gap-y-5 print:pt-5">
           {AIM_OBJECTIVES_DATA.objectives.map((obj) => (
-            <div key={obj.id} className="flex items-start gap-4">
+            <div key={obj.id} className="flex items-start gap-3 min-[900px]:gap-4 print:gap-4">
               <div className="pres-mono w-8 shrink-0 text-[22px] font-bold leading-none text-[color:var(--pres-primary)]">
                 {obj.id}
               </div>
               <div className="min-w-0 flex-1 border-l border-[color:var(--pres-border-strong)] pl-4">
-                <div className="flex items-baseline justify-between gap-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <span className="pres-kicker text-[12px]">{obj.category}</span>
                   <span className="pres-mono text-[12px] text-[color:var(--pres-ink-muted)]">
                     {obj.milestone}
@@ -465,46 +469,51 @@ function RelatedWorkSlide({ slideNumber, totalSlides }) {
       footnote={RELATED_WORK_DATA.progressOneNote}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between gap-3">
+      <div className="flex flex-col justify-between gap-4 min-[900px]:h-full min-[900px]:gap-3 print:h-full print:gap-3">
         {/* Full-Width Publication Comparative Booktabs Matrix */}
         <div className="min-h-0 flex-1">
-          <table className="pres-table pres-table--compact">
-            <thead>
-              <tr>
-                <th className="w-[88px]">Type</th>
-                <th className="w-[30%]">Study / System &amp; Citation</th>
-                <th className="w-[31%]">What It Addresses</th>
-                <th>What It Suggests for Proposal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.label}>
-                  <td>
-                    <span
-                      className={
-                        row.kind === 'Study'
-                          ? 'pres-tag pres-tag--accent text-[12px]'
-                          : 'pres-tag text-[12px]'
-                      }
-                    >
-                      {row.kind}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="font-bold text-[color:var(--pres-ink)]">{row.label}</span>
-                    {row.citation && (
-                      <span className="ml-1.5 text-[12px] text-[color:var(--pres-ink-muted)]">
-                        ({row.citation})
-                      </span>
-                    )}
-                  </td>
-                  <td className="text-[color:var(--pres-ink-secondary)]">{row.addresses}</td>
-                  <td className="font-medium text-[color:var(--pres-primary)]">{row.suggests}</td>
+          <div className="pres-pan-hint mb-1.5" aria-hidden="true">
+            Swipe horizontally to view full matrix →
+          </div>
+          <div className="pres-scroll-x" data-no-swipe="true">
+            <table className="pres-table pres-table--compact pres-table--wide">
+              <thead>
+                <tr>
+                  <th className="w-[88px]">Type</th>
+                  <th className="w-[30%]">Study / System &amp; Citation</th>
+                  <th className="w-[31%]">What It Addresses</th>
+                  <th>What It Suggests for Proposal</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.label}>
+                    <td>
+                      <span
+                        className={
+                          row.kind === 'Study'
+                            ? 'pres-tag pres-tag--accent text-[12px]'
+                            : 'pres-tag text-[12px]'
+                        }
+                      >
+                        {row.kind}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="font-bold text-[color:var(--pres-ink)]">{row.label}</span>
+                      {row.citation && (
+                        <span className="ml-1.5 text-[12px] text-[color:var(--pres-ink-muted)]">
+                          ({row.citation})
+                        </span>
+                      )}
+                    </td>
+                    <td className="text-[color:var(--pres-ink-secondary)]">{row.addresses}</td>
+                    <td className="font-medium text-[color:var(--pres-primary)]">{row.suggests}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Stark Crimson-Ruled Identified Gap Callout */}
@@ -538,9 +547,9 @@ function SolutionArchitectureSlide({ slideNumber, totalSlides }) {
       footnote={SOLUTION_ARCH_DATA.aliasNote}
       meta={DECK_META}
     >
-      <div className="grid h-full grid-cols-[1.45fr_1fr] gap-9">
+      <div className="grid grid-cols-1 gap-6 min-[900px]:h-full min-[900px]:grid-cols-[1.45fr_1fr] min-[900px]:gap-9 print:h-full print:grid-cols-[1.45fr_1fr] print:gap-9">
         {/* Left (~59%): Dominant GatewayArchitectureDiagram + User Benefit */}
-        <div className="flex min-h-0 flex-col justify-between">
+        <div className="flex min-h-0 min-w-0 flex-col justify-between gap-4 min-[900px]:gap-0 print:gap-0">
           <div>
             <div className="mb-1.5 border-b border-[color:var(--pres-border)] pb-1.5">
               <span className="pres-mono text-[12px] font-semibold text-[color:var(--pres-primary)]">
@@ -559,7 +568,7 @@ function SolutionArchitectureSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Right (~41%): Crisp Numbered 5 Core Functions Key */}
-        <div className="pres-col-divider flex min-h-0 flex-col">
+        <div className="pres-col-divider flex min-h-0 min-w-0 flex-col">
           <h2 className="pres-kicker text-[12px]">Five Core Gateway Functions</h2>
           <div className="mt-2.5 flex flex-1 flex-col justify-between divide-y divide-[color:var(--pres-border)] border-y-2 border-[color:var(--pres-rule-ink)]">
             {SOLUTION_ARCH_DATA.mainFunctions.map((fn) => (
@@ -601,10 +610,10 @@ function ProcessScopeSlide({ slideNumber, totalSlides }) {
       subtitle={meta.subtitle}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-4 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Top Full-Width 4-Stage Supported Process Blueprint */}
         <div>
-          <div className="mb-1.5 flex items-baseline justify-between gap-4">
+          <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 className="pres-kicker text-[12px]">{supportedProcess.title}</h2>
             <span className="pres-mono text-[12px] text-[color:var(--pres-ink-muted)]">
               {supportedProcess.figureCaption}
@@ -614,41 +623,45 @@ function ProcessScopeSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Bottom Asymmetric Split: Signed Manifest Schema + In/Out Scope Ledger */}
-        <div className="mt-3.5 grid min-h-0 flex-1 grid-cols-[1.02fr_1.18fr] gap-8 border-t-2 border-[color:var(--pres-rule-ink)] pt-3.5">
+        <div className="mt-1 grid min-h-0 flex-1 grid-cols-1 gap-6 border-t-2 border-[color:var(--pres-rule-ink)] pt-3.5 min-[900px]:mt-3.5 min-[900px]:grid-cols-[1.02fr_1.18fr] min-[900px]:gap-8 print:mt-3.5 print:grid-cols-[1.02fr_1.18fr] print:gap-8">
           {/* Left: Signed Task Approval Manifest Code Block (Proposal Sec 5.3) */}
-          <div className="flex flex-col justify-between">
+          <div className="flex min-w-0 flex-col justify-between">
             <div>
               <h2 className="pres-kicker text-[12px]">{manifestPreview.title}</h2>
-              <div className="pres-code-block mt-2">
-                <div className="text-[12px] leading-[1.38] text-[color:var(--pres-ink-muted)]">
-                  {'{'}
-                </div>
-                <div className="space-y-0.5 pl-4 text-[12px] leading-[1.38]">
-                  {manifestPreview.fields.map((field, idx) => (
-                    <div key={field.key}>
-                      <span className="font-semibold text-[color:var(--pres-primary)]">
-                        &quot;{field.key}&quot;
-                      </span>
-                      <span className="text-[color:var(--pres-ink-muted)]">: </span>
-                      <span className="text-[color:var(--pres-ink)]">{field.value}</span>
-                      {idx < manifestPreview.fields.length - 1 && (
-                        <span className="text-[color:var(--pres-ink-muted)]">,</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-[12px] leading-[1.38] text-[color:var(--pres-ink-muted)]">
-                  {'}'}
+              <div className="pres-scroll-x mt-2" data-no-swipe="true">
+                <div className="pres-code-block">
+                  <div className="text-[12px] leading-[1.38] text-[color:var(--pres-ink-muted)]">
+                    {'{'}
+                  </div>
+                  <div className="space-y-0.5 pl-4 text-[12px] leading-[1.38]">
+                    {manifestPreview.fields.map((field, idx) => (
+                      <div key={field.key}>
+                        <span className="font-semibold text-[color:var(--pres-primary)]">
+                          &quot;{field.key}&quot;
+                        </span>
+                        <span className="text-[color:var(--pres-ink-muted)]">: </span>
+                        <span className="[overflow-wrap:anywhere] text-[color:var(--pres-ink)]">
+                          {field.value}
+                        </span>
+                        {idx < manifestPreview.fields.length - 1 && (
+                          <span className="text-[color:var(--pres-ink-muted)]">,</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-[12px] leading-[1.38] text-[color:var(--pres-ink-muted)]">
+                    {'}'}
+                  </div>
                 </div>
               </div>
             </div>
-            <p className="mt-2 text-[12.5px] leading-[1.4] text-[color:var(--pres-ink-secondary)]">
+            <p className="mt-2 text-[13px] leading-[1.42] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.4] print:text-[12.5px] print:leading-[1.4]">
               {manifestPreview.securityNote}
             </p>
           </div>
 
           {/* Right: High-Contrast In-Scope vs Out-of-Scope Ledger (Sec 3.3) */}
-          <div className="pres-col-divider grid grid-cols-2 gap-6">
+          <div className="pres-col-divider grid min-w-0 grid-cols-1 gap-5 min-[900px]:grid-cols-2 min-[900px]:gap-6 print:grid-cols-2 print:gap-6">
             <div>
               <h2 className="pres-kicker pres-kicker--success text-[12px]">In Initial Scope</h2>
               <ul className="mt-2.5 space-y-2.5">
@@ -664,7 +677,7 @@ function ProcessScopeSlide({ slideNumber, totalSlides }) {
               </ul>
             </div>
 
-            <div className="border-l border-[color:var(--pres-border)] pl-5">
+            <div className="border-t border-[color:var(--pres-border)] pt-4 min-[900px]:border-t-0 min-[900px]:border-l min-[900px]:pt-0 min-[900px]:pl-5 print:border-t-0 print:border-l print:pt-0 print:pl-5">
               <h2 className="pres-kicker pres-kicker--danger text-[12px]">
                 Outside Initial Scope
               </h2>
@@ -672,7 +685,7 @@ function ProcessScopeSlide({ slideNumber, totalSlides }) {
                 {outOfScope.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-2.5 text-[12.5px] leading-[1.38] text-[color:var(--pres-ink-secondary)]"
+                    className="flex items-start gap-2.5 text-[13px] leading-[1.4] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.38] print:text-[12.5px] print:leading-[1.38]"
                   >
                     <ScopeCrossIcon />
                     <span>{item}</span>
@@ -704,7 +717,7 @@ function InvestigationPlanSlide({ slideNumber, totalSlides }) {
       footnote={INVESTIGATION_PLAN_DATA.stageNote}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-4 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* 3-Column Architectural Inquiry Rail: Whom | What | How */}
         <div className="pres-rail-3 min-h-0 flex-1">
           {/* Column 1: Whom to Consult */}
@@ -764,7 +777,7 @@ function InvestigationPlanSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Bottom Outreach Band */}
-        <div className="pres-callout mt-5">
+        <div className="pres-callout min-[900px]:mt-5 print:mt-5">
           <h2 className="pres-kicker text-[12px]">
             04 · Reaching Target Users Without a Named Client
           </h2>
@@ -795,9 +808,9 @@ function ApproachPlatformSlide({ slideNumber, totalSlides }) {
       subtitle={meta.subtitle}
       meta={DECK_META}
     >
-      <div className="grid h-full grid-cols-[0.92fr_1.18fr] gap-9">
+      <div className="grid grid-cols-1 gap-6 min-[900px]:h-full min-[900px]:grid-cols-[0.92fr_1.18fr] min-[900px]:gap-9 print:h-full print:grid-cols-[0.92fr_1.18fr] print:gap-9">
         {/* Left: Expected Deliverable + Platform & Consuming System Ledger */}
-        <div className="flex min-h-0 flex-col justify-center gap-6">
+        <div className="flex min-h-0 min-w-0 flex-col justify-center gap-5 min-[900px]:gap-6 print:gap-6">
           <div>
             <h2 className="pres-kicker text-[12px]">Expected Deliverable</h2>
             <h3 className="pres-display mt-1 text-[21px] font-bold leading-[1.2] text-[color:var(--pres-ink)]">
@@ -849,39 +862,44 @@ function ApproachPlatformSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Right: IterativeApproachDiagram + Proposal Table 1 Tools Rationale */}
-        <div className="pres-col-divider flex min-h-0 flex-col justify-between">
+        <div className="pres-col-divider flex min-h-0 min-w-0 flex-col justify-between gap-4 min-[900px]:gap-0 print:gap-0">
           <div>
-            <div className="mb-1.5 flex items-baseline justify-between gap-4 border-b border-[color:var(--pres-border)] pb-1">
+            <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-[color:var(--pres-border)] pb-1">
               <h2 className="pres-kicker shrink-0 text-[12px]">Development Approach</h2>
-              <span className="pres-mono whitespace-nowrap text-[12px] text-[color:var(--pres-ink-muted)]">
+              <span className="pres-mono pres-nowrap-desktop text-[12px] text-[color:var(--pres-ink-muted)] min-[900px]:whitespace-nowrap print:whitespace-nowrap">
                 {devApproach.figureCaption}
               </span>
             </div>
             <IterativeApproachDiagram />
           </div>
 
-          <div className="mt-2.5">
+          <div className="mt-1 min-[900px]:mt-2.5 print:mt-2.5">
             <h2 className="pres-kicker mb-1.5 text-[12px]">
               Key Frameworks &amp; Tools Rationale
             </h2>
-            <table className="pres-table pres-table--compact">
-              <thead>
-                <tr>
-                  <th className="w-[38%]">Tool / Framework</th>
-                  <th>Why It Suits the Project</th>
-                </tr>
-              </thead>
-              <tbody>
-                {toolsRationale.map((item) => (
-                  <tr key={item.tool}>
-                    <td className="pres-mono font-semibold text-[color:var(--pres-primary)]">
-                      {item.tool}
-                    </td>
-                    <td className="text-[color:var(--pres-ink)]">{item.rationale}</td>
+            <div className="pres-pan-hint mb-1" aria-hidden="true">
+              Swipe horizontally to view full table →
+            </div>
+            <div className="pres-scroll-x" data-no-swipe="true">
+              <table className="pres-table pres-table--compact">
+                <thead>
+                  <tr>
+                    <th className="w-[38%]">Tool / Framework</th>
+                    <th>Why It Suits the Project</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {toolsRationale.map((item) => (
+                    <tr key={item.tool}>
+                      <td className="pres-mono font-semibold text-[color:var(--pres-primary)]">
+                        {item.tool}
+                      </td>
+                      <td className="text-[color:var(--pres-ink)]">{item.rationale}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -906,14 +924,14 @@ function WorkPlanFeasibilitySlide({ slideNumber, totalSlides }) {
       subtitle={meta.subtitle}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-3.5 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Top: Full-Width 20-Week Booktabs Gantt Chart */}
-        <div className="w-full">
+        <div className="w-full min-w-0">
           <GanttChart data={GANTT_DATA} compact />
         </div>
 
         {/* Bottom Tier 1: Four Stage Expected Outputs Rail */}
-        <div className="pres-rail-4 mt-2 border-t-2 border-[color:var(--pres-rule-ink)] pt-2">
+        <div className="pres-rail-4 border-t-2 border-[color:var(--pres-rule-ink)] pt-2.5 min-[900px]:mt-2 min-[900px]:pt-2 print:mt-2 print:pt-2">
           {stageOutputs.map((item) => (
             <div key={item.stage} className="min-w-0">
               <div className="flex items-baseline justify-between gap-2">
@@ -924,7 +942,7 @@ function WorkPlanFeasibilitySlide({ slideNumber, totalSlides }) {
                   {item.weeks}
                 </span>
               </div>
-              <p className="truncate text-[12px] leading-[1.3] text-[color:var(--pres-ink)]">
+              <p className="text-[13px] leading-[1.35] text-[color:var(--pres-ink)] min-[900px]:truncate min-[900px]:text-[12px] min-[900px]:leading-[1.3] print:truncate print:text-[12px] print:leading-[1.3]">
                 {item.output}
               </p>
             </div>
@@ -932,14 +950,17 @@ function WorkPlanFeasibilitySlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Bottom Tier 2: Feasibility (Access/Time/Skills/Tools) + Key Risk Mitigation */}
-        <div className="mt-2 grid grid-cols-[1.06fr_1fr] gap-6 border-t border-[color:var(--pres-border)] pt-2">
+        <div className="grid grid-cols-1 gap-4 border-t border-[color:var(--pres-border)] pt-3 min-[900px]:mt-2 min-[900px]:grid-cols-[1.06fr_1fr] min-[900px]:gap-6 min-[900px]:pt-2 print:mt-2 print:grid-cols-[1.06fr_1fr] print:gap-6 print:pt-2">
           <div>
-            <h2 className="pres-kicker mb-1 text-[12px]">
+            <h2 className="pres-kicker mb-1.5 min-[900px]:mb-1 print:mb-1 text-[12px]">
               Feasibility: Access, Time, Skills &amp; Tools
             </h2>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-1">
+            <div className="grid grid-cols-1 gap-y-1.5 min-[540px]:grid-cols-2 min-[540px]:gap-x-5 min-[900px]:gap-y-1 print:grid-cols-2 print:gap-x-5 print:gap-y-1">
               {resources.map((res) => (
-                <div key={res.label} className="text-[12px] leading-[1.32]">
+                <div
+                  key={res.label}
+                  className="text-[13px] leading-[1.36] min-[900px]:text-[12px] min-[900px]:leading-[1.32] print:text-[12px] print:leading-[1.32]"
+                >
                   <span className="pres-mono font-bold text-[color:var(--pres-primary)]">
                     {res.label}:{' '}
                   </span>
@@ -949,14 +970,14 @@ function WorkPlanFeasibilitySlide({ slideNumber, totalSlides }) {
             </div>
           </div>
 
-          <div className="pres-callout pres-callout--danger px-3.5 py-2">
+          <div className="pres-callout pres-callout--danger px-3.5 py-2.5 min-[900px]:py-2 print:py-2">
             <div className="flex flex-wrap items-baseline gap-x-2">
               <span className="pres-kicker pres-kicker--danger text-[12px]">Key Risk:</span>
-              <span className="text-[12.5px] font-bold text-[color:var(--pres-ink)]">
+              <span className="text-[13px] font-bold text-[color:var(--pres-ink)] min-[900px]:text-[12.5px] print:text-[12.5px]">
                 {keyRisk.risk}
               </span>
             </div>
-            <p className="mt-0.5 text-[12px] leading-[1.32] text-[color:var(--pres-ink)]">
+            <p className="mt-0.5 text-[13px] leading-[1.38] text-[color:var(--pres-ink)] min-[900px]:text-[12px] min-[900px]:leading-[1.32] print:text-[12px] print:leading-[1.32]">
               <strong className="font-bold text-[color:var(--pres-success-ink)]">
                 Mitigation:{' '}
               </strong>
@@ -987,12 +1008,12 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
       footnote={systemBenchmarks.statsNote}
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-4 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Stream 1: Representative User Task Evaluation (KPI Trio) */}
         <div>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex flex-col gap-1 min-[900px]:flex-row min-[900px]:items-baseline min-[900px]:justify-between min-[900px]:gap-4 print:flex-row print:items-baseline print:justify-between print:gap-4">
             <h2 className="pres-kicker text-[12px]">Stream 1 · {userTaskAssessment.title}</h2>
-            <span className="text-[12.5px] text-[color:var(--pres-ink-secondary)]">
+            <span className="text-[13px] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] print:text-[12.5px]">
               {userTaskAssessment.howAssessed}
             </span>
           </div>
@@ -1009,7 +1030,7 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
                 <h3 className="mt-0.5 text-[15px] font-bold text-[color:var(--pres-ink)]">
                   {obs.metric}
                 </h3>
-                <p className="mt-1 text-[12.5px] leading-[1.38] text-[color:var(--pres-ink-secondary)]">
+                <p className="mt-1 text-[13px] leading-[1.4] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.38] print:text-[12.5px] print:leading-[1.38]">
                   {obs.detail}
                 </p>
               </div>
@@ -1018,17 +1039,17 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
         </div>
 
         {/* Stream 2: Controlled Experimental Matrix (Configs A–D) + Metrics Table */}
-        <div className="mt-4 flex min-h-0 flex-1 flex-col border-t-2 border-[color:var(--pres-rule-ink)] pt-3.5">
-          <div className="mb-2.5 flex items-baseline justify-between gap-4">
+        <div className="flex min-h-0 flex-1 flex-col border-t-2 border-[color:var(--pres-rule-ink)] pt-3.5 min-[900px]:mt-4 print:mt-4">
+          <div className="mb-2.5 flex flex-col gap-1 min-[900px]:flex-row min-[900px]:items-baseline min-[900px]:justify-between min-[900px]:gap-4 print:flex-row print:items-baseline print:justify-between print:gap-4">
             <h2 className="pres-kicker text-[12px]">Stream 2 · {systemBenchmarks.title}</h2>
-            <span className="text-[12.5px] text-[color:var(--pres-ink-secondary)]">
+            <span className="text-[13px] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] print:text-[12.5px]">
               {systemBenchmarks.howAssessed}
             </span>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-[0.95fr_1.35fr] gap-8">
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-5 min-[900px]:grid-cols-[0.95fr_1.35fr] min-[900px]:gap-8 print:grid-cols-[0.95fr_1.35fr] print:gap-8">
             {/* Left: Configs A–D Matrix (Highlighting Primary C vs D) */}
-            <div className="flex flex-col justify-between divide-y divide-[color:var(--pres-border)] border-y-2 border-[color:var(--pres-rule-ink)]">
+            <div className="flex min-w-0 flex-col justify-between divide-y divide-[color:var(--pres-border)] border-y-2 border-[color:var(--pres-rule-ink)]">
               {systemBenchmarks.configs.map((cfg) => (
                 <div
                   key={cfg.code}
@@ -1038,8 +1059,8 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
                       : 'px-3 py-2'
                   }
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-baseline gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-baseline gap-2">
                       <span className="pres-mono text-[13px] font-bold text-[color:var(--pres-primary)]">
                         Config {cfg.code}
                       </span>
@@ -1052,7 +1073,7 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
                       <span className="pres-tag pres-tag--accent text-[12px]">Control</span>
                     )}
                   </div>
-                  <p className="mt-0.5 text-[12.5px] leading-[1.34] text-[color:var(--pres-ink-secondary)]">
+                  <p className="mt-0.5 text-[13px] leading-[1.38] text-[color:var(--pres-ink-secondary)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.34] print:text-[12.5px] print:leading-[1.34]">
                     {cfg.controls}
                   </p>
                 </div>
@@ -1060,31 +1081,36 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
             </div>
 
             {/* Right: 5 Observable Security & Latency Benchmarks */}
-            <div className="pres-col-divider">
-              <table className="pres-table pres-table--compact">
-                <thead>
-                  <tr>
-                    <th className="w-[62px]">Code</th>
-                    <th className="w-[33%]">Metric</th>
-                    <th>Observable Evidence</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {systemBenchmarks.metrics.map((m) => (
-                    <tr key={m.code}>
-                      <td
-                        className={`pres-mono font-bold ${
-                          METRIC_CODE_TONE[m.code] || 'text-[color:var(--pres-primary)]'
-                        }`}
-                      >
-                        {m.code}
-                      </td>
-                      <td className="font-bold text-[color:var(--pres-ink)]">{m.name}</td>
-                      <td className="text-[color:var(--pres-ink-secondary)]">{m.observable}</td>
+            <div className="pres-col-divider min-w-0">
+              <div className="pres-pan-hint mb-1" aria-hidden="true">
+                Swipe horizontally to view full benchmarks →
+              </div>
+              <div className="pres-scroll-x" data-no-swipe="true">
+                <table className="pres-table pres-table--compact">
+                  <thead>
+                    <tr>
+                      <th className="w-[62px]">Code</th>
+                      <th className="w-[33%]">Metric</th>
+                      <th>Observable Evidence</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {systemBenchmarks.metrics.map((m) => (
+                      <tr key={m.code}>
+                        <td
+                          className={`pres-mono font-bold ${
+                            METRIC_CODE_TONE[m.code] || 'text-[color:var(--pres-primary)]'
+                          }`}
+                        >
+                          {m.code}
+                        </td>
+                        <td className="font-bold text-[color:var(--pres-ink)]">{m.name}</td>
+                        <td className="text-[color:var(--pres-ink-secondary)]">{m.observable}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -1099,7 +1125,7 @@ function SuccessMeasuresSlide({ slideNumber, totalSlides }) {
 
 function ReferenceEntry({ entry }) {
   return (
-    <p className="break-words pl-7 -indent-7 text-[12.5px] leading-[1.42] text-[color:var(--pres-ink)]">
+    <p className="break-words [overflow-wrap:anywhere] pl-7 -indent-7 text-[13px] leading-[1.45] text-[color:var(--pres-ink)] min-[900px]:text-[12.5px] min-[900px]:leading-[1.42] print:text-[12.5px] print:leading-[1.42]">
       <span className="pres-mono inline-block w-7 text-[12px] font-bold text-[color:var(--pres-primary)]">
         {entry.id}.
       </span>
@@ -1124,14 +1150,14 @@ function ReferencesSlide({ slideNumber, totalSlides }) {
       footnote={`${REFERENCES_META.heading}  ·  ${DECK_META.department}, ${DECK_META.faculty}, ${DECK_META.university}  ·  ${REFERENCES_LIST.length} Cited Sources`}
       meta={DECK_META}
     >
-      <div className="grid h-full grid-cols-2 gap-10 pt-1">
+      <div className="grid grid-cols-1 gap-3 pt-1 min-[900px]:h-full min-[900px]:grid-cols-2 min-[900px]:gap-10 print:h-full print:grid-cols-2 print:gap-10">
         <div className="flex flex-col justify-between gap-3">
           {leftRefs.map((ref) => (
             <ReferenceEntry key={ref.citeKey} entry={ref} />
           ))}
         </div>
 
-        <div className="pres-col-divider flex flex-col justify-between gap-3">
+        <div className="flex flex-col justify-between gap-3 min-[900px]:border-l min-[900px]:border-[color:var(--pres-border)] min-[900px]:pl-8 print:border-l print:border-[color:var(--pres-border)] print:pl-8">
           {rightRefs.map((ref) => (
             <ReferenceEntry key={ref.citeKey} entry={ref} />
           ))}
@@ -1156,9 +1182,9 @@ function ClosingSlide({ slideNumber, totalSlides }) {
       variant="closing"
       meta={DECK_META}
     >
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col justify-between gap-8 min-[900px]:h-full min-[900px]:gap-0 print:h-full print:gap-0">
         {/* Institutional Masthead */}
-        <div className="flex items-center justify-between gap-6">
+        <div className="flex flex-wrap items-start justify-between gap-3 min-[900px]:flex-nowrap min-[900px]:items-center min-[900px]:gap-6 print:flex-nowrap print:items-center print:gap-6">
           <p className="pres-kicker text-[12px]">
             {DECK_META.university} &nbsp;·&nbsp; {DECK_META.faculty} &nbsp;·&nbsp;{' '}
             {DECK_META.department}
@@ -1174,10 +1200,10 @@ function ClosingSlide({ slideNumber, totalSlides }) {
             className="mb-6 h-[3px] w-16 bg-[var(--pres-accent)]"
             aria-hidden="true"
           />
-          <h1 className="pres-display text-[56px] font-bold leading-[1.06] tracking-[-0.025em] text-[color:var(--pres-ink)]">
+          <h1 className="pres-display pres-closing-title text-[36px] font-bold leading-[1.06] tracking-[-0.025em] text-[color:var(--pres-ink)] min-[600px]:text-[44px] min-[900px]:text-[56px] print:text-[56px]">
             {meta.title}
           </h1>
-          <p className="mt-5 max-w-[660px] text-[16px] leading-[1.58] text-[color:var(--pres-ink-secondary)]">
+          <p className="mt-4 max-w-[660px] text-[15.5px] leading-[1.58] text-[color:var(--pres-ink-secondary)] min-[900px]:mt-5 min-[900px]:text-[16px] print:mt-5 print:text-[16px]">
             {DECK_META.closingSummary}
           </p>
         </div>

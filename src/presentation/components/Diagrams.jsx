@@ -77,6 +77,23 @@ function CrossGlyph({ x, y, stroke = 'var(--pres-danger)' }) {
   );
 }
 
+function ScrollableDiagramFrame({
+  minWidthClass,
+  hint = 'Swipe horizontally to view full diagram →',
+  children,
+}) {
+  return (
+    <div className="w-full">
+      <div className="pres-scroll-x" data-no-swipe="true">
+        <div className={minWidthClass}>{children}</div>
+      </div>
+      <div className="pres-pan-hint print:hidden" aria-hidden="true">
+        {hint}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Slide 03 — Metadata-Driven Cross-Server Tool-Selection Hijacking
  * Rebalanced warm-editorial SVG blueprint (viewBox 0 0 660 340, transparent root).
@@ -88,14 +105,15 @@ export function HijackScenarioDiagram() {
   const arrowDanger = `hs-${uid}-danger`;
 
   return (
-    <svg
-      viewBox="0 0 660 340"
-      width="100%"
-      role="img"
-      aria-label="Diagram of cross-server tool-selection hijacking: a local AI agent selects registered but task-unauthorized Server B over authorized Server A because of persuasive metadata, even though Ed25519 identity and SHA-256 hashes pass"
-      className="block w-full h-auto"
-      style={{ fontFamily: SANS_FONT, height: 'auto' }}
-    >
+    <ScrollableDiagramFrame minWidthClass="pres-diagram-minw-md">
+      <svg
+        viewBox="0 0 660 340"
+        width="100%"
+        role="img"
+        aria-label="Diagram of cross-server tool-selection hijacking: a local AI agent selects registered but task-unauthorized Server B over authorized Server A because of persuasive metadata, even though Ed25519 identity and SHA-256 hashes pass"
+        className="block w-full h-auto"
+        style={{ fontFamily: SANS_FONT, height: 'auto' }}
+      >
       <defs>
         <ArrowMarker id={arrowInk} fill="var(--pres-ink)" />
         <ArrowMarker id={arrowSuccess} fill="var(--pres-success)" />
@@ -493,6 +511,7 @@ export function HijackScenarioDiagram() {
         Runs without task approval
       </text>
     </svg>
+    </ScrollableDiagramFrame>
   );
 }
 
@@ -541,14 +560,15 @@ export function GatewayArchitectureDiagram() {
   ];
 
   return (
-    <svg
-      viewBox="0 0 740 390"
-      width="100%"
-      role="img"
-      aria-label="Directional architecture of the Python Security Gateway showing Host Policy Authority and Local AI Agent feeding five linked gateway modules that forward authorized calls to Server A and deny unauthorized calls to Server B"
-      className="block w-full h-auto"
-      style={{ fontFamily: SANS_FONT, height: 'auto' }}
-    >
+    <ScrollableDiagramFrame minWidthClass="pres-diagram-minw-lg">
+      <svg
+        viewBox="0 0 740 390"
+        width="100%"
+        role="img"
+        aria-label="Directional architecture of the Python Security Gateway showing Host Policy Authority and Local AI Agent feeding five linked gateway modules that forward authorized calls to Server A and deny unauthorized calls to Server B"
+        className="block w-full h-auto"
+        style={{ fontFamily: SANS_FONT, height: 'auto' }}
+      >
       <defs>
         <ArrowMarker id={arrowPrimary} fill="var(--pres-primary)" />
         <ArrowMarker id={arrowInk} fill="var(--pres-ink)" />
@@ -1044,6 +1064,7 @@ export function GatewayArchitectureDiagram() {
         DENIED &amp; LOGGED
       </text>
     </svg>
+    </ScrollableDiagramFrame>
   );
 }
 
@@ -1092,14 +1113,17 @@ export function ManifestLifecycleDiagram() {
   ];
 
   return (
-    <svg
-      viewBox="0 0 1160 164"
-      width="100%"
-      role="img"
-      aria-label="Four-stage process lifecycle for read_file on project/: 01 Host Declares and Signs, 02 Agent Requests Tool, 03 Gateway Verifies 4 Checks, 04 Route Server A or Deny Server B and Audit"
-      className="block w-full h-auto"
-      style={{ fontFamily: SANS_FONT, height: 'auto' }}
-    >
+    <div className="w-full">
+      {/* Desktop (>= 900px) & Print: Original full-width 4-stage horizontal SVG */}
+      <div className="hidden min-[900px]:block print:block">
+        <svg
+          viewBox="0 0 1160 164"
+          width="100%"
+          role="img"
+          aria-label="Four-stage process lifecycle for read_file on project/: 01 Host Declares and Signs, 02 Agent Requests Tool, 03 Gateway Verifies 4 Checks, 04 Route Server A or Deny Server B and Audit"
+          className="block w-full h-auto"
+          style={{ fontFamily: SANS_FONT, height: 'auto' }}
+        >
       <defs>
         <ArrowMarker id={arrowPrimary} fill="var(--pres-primary)" />
       </defs>
@@ -1242,7 +1266,179 @@ export function ManifestLifecycleDiagram() {
       <text x="937" y="136" fill="var(--pres-danger-ink)" fontSize="12.5" fontWeight="700">
         Mismatch → Deny B &amp; Audit
       </text>
-    </svg>
+        </svg>
+      </div>
+
+      {/* Mobile (< 900px): Crisp 4-step vertical editorial timeline (zero horizontal scroll) */}
+      <div
+        className="block min-[900px]:hidden print:hidden"
+        role="region"
+        aria-label="Four-stage process lifecycle for read_file on project/: 01 Host Declares and Signs, 02 Agent Requests Tool, 03 Gateway Verifies 4 Checks, 04 Route Server A or Deny Server B and Audit"
+        style={{ fontFamily: SANS_FONT }}
+      >
+        <ol className="m-0 flex list-none flex-col p-0">
+          {stages.map((stage) => (
+            <li key={stage.num} className="flex flex-col">
+              <div
+                style={{
+                  backgroundColor: 'var(--pres-surface-elevated)',
+                  border: '1.5px solid var(--pres-border-strong)',
+                  borderTop: '3px solid var(--pres-primary)',
+                  borderRadius: '3px',
+                  padding: '12px 14px',
+                }}
+              >
+                <div
+                  className="mb-2 flex items-center justify-between gap-2 pb-2"
+                  style={{ borderBottom: '1px solid var(--pres-border)' }}
+                >
+                  <span
+                    className="text-[12px] font-bold tracking-[0.05em]"
+                    style={{ color: 'var(--pres-primary)' }}
+                  >
+                    <span style={{ fontFamily: MONO_FONT }}>{stage.num}</span>
+                    <span style={{ color: 'var(--pres-ink-muted)', fontFamily: MONO_FONT }}>
+                      {' / '}
+                    </span>
+                    {stage.verb}
+                  </span>
+                  <span
+                    className="text-[12px] font-medium"
+                    style={{ color: 'var(--pres-ink-muted)', fontFamily: MONO_FONT }}
+                  >
+                    {stage.actor}
+                  </span>
+                </div>
+
+                <div
+                  className="mb-1.5 text-[14.5px] font-bold"
+                  style={{ color: 'var(--pres-ink)' }}
+                >
+                  {stage.title}
+                </div>
+
+                <ul className="m-0 flex list-none flex-col gap-1 p-0">
+                  {stage.bullets.map((line) => (
+                    <li
+                      key={line}
+                      className="text-[12.5px] leading-snug"
+                      style={{ color: 'var(--pres-ink-secondary)' }}
+                    >
+                      — {line}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex justify-center py-1" aria-hidden="true">
+                <svg width="14" height="18" viewBox="0 0 14 18" className="block">
+                  <line
+                    x1="7"
+                    y1="0"
+                    x2="7"
+                    y2="13"
+                    stroke="var(--pres-primary)"
+                    strokeWidth={STROKE.node}
+                  />
+                  <path d="M 3 10.5 L 7 17 L 11 10.5 z" fill="var(--pres-primary)" />
+                </svg>
+              </div>
+            </li>
+          ))}
+
+          <li>
+            <div
+              style={{
+                backgroundColor: 'var(--pres-surface-elevated)',
+                border: '1.5px solid var(--pres-rule-ink)',
+                borderTop: '3px solid var(--pres-rule-ink)',
+                borderRadius: '3px',
+                padding: '12px 14px',
+              }}
+            >
+              <div
+                className="mb-2 flex items-center justify-between gap-2 pb-2"
+                style={{ borderBottom: '1px solid var(--pres-border)' }}
+              >
+                <span
+                  className="text-[12px] font-bold tracking-[0.05em]"
+                  style={{ color: 'var(--pres-ink)' }}
+                >
+                  <span style={{ fontFamily: MONO_FONT }}>04</span>
+                  <span style={{ color: 'var(--pres-ink-muted)', fontFamily: MONO_FONT }}>
+                    {' / '}
+                  </span>
+                  ENFORCE &amp; AUDIT
+                </span>
+                <span
+                  className="text-[12px] font-medium"
+                  style={{ color: 'var(--pres-ink-muted)', fontFamily: MONO_FONT }}
+                >
+                  Outcome
+                </span>
+              </div>
+
+              <div
+                className="mb-2 text-[14.5px] font-bold"
+                style={{ color: 'var(--pres-ink)' }}
+              >
+                Route A / Deny B &amp; Log
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <div
+                  className="flex items-center gap-2 rounded-[2px] px-2.5 py-2"
+                  style={{
+                    backgroundColor: 'var(--pres-success-soft)',
+                    borderLeft: '3.5px solid var(--pres-success)',
+                  }}
+                >
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 10 10"
+                    className="shrink-0"
+                    aria-hidden="true"
+                  >
+                    <CheckGlyph x={0.4} y={0.5} stroke="var(--pres-success-ink)" />
+                  </svg>
+                  <span
+                    className="text-[12.5px] font-bold"
+                    style={{ color: 'var(--pres-success-ink)' }}
+                  >
+                    Match → Forward Server A
+                  </span>
+                </div>
+
+                <div
+                  className="flex items-center gap-2 rounded-[2px] px-2.5 py-2"
+                  style={{
+                    backgroundColor: 'var(--pres-danger-soft)',
+                    borderLeft: '3.5px solid var(--pres-danger)',
+                  }}
+                >
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 10 10"
+                    className="shrink-0"
+                    aria-hidden="true"
+                  >
+                    <CrossGlyph x={0.5} y={0.5} stroke="var(--pres-danger-ink)" />
+                  </svg>
+                  <span
+                    className="text-[12.5px] font-bold"
+                    style={{ color: 'var(--pres-danger-ink)' }}
+                  >
+                    Mismatch → Deny B &amp; Audit
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
   );
 }
 
@@ -1264,14 +1460,15 @@ export function IterativeApproachDiagram() {
   ];
 
   return (
-    <svg
-      viewBox="0 0 640 192"
-      width="100%"
-      role="img"
-      aria-label="Five-stage Design Science Research and Iterative Prototyping workflow: 01 Requirements, 02 Design, 03 Build, 04 Pytest, 05 Refine, with an iterative feedback loop returning from Refine to Design and Build"
-      className="block w-full h-auto"
-      style={{ fontFamily: SANS_FONT, height: 'auto' }}
-    >
+    <ScrollableDiagramFrame minWidthClass="pres-diagram-minw-md">
+      <svg
+        viewBox="0 0 640 192"
+        width="100%"
+        role="img"
+        aria-label="Five-stage Design Science Research and Iterative Prototyping workflow: 01 Requirements, 02 Design, 03 Build, 04 Pytest, 05 Refine, with an iterative feedback loop returning from Refine to Design and Build"
+        className="block w-full h-auto"
+        style={{ fontFamily: SANS_FONT, height: 'auto' }}
+      >
       <defs>
         <ArrowMarker id={arrowPrimary} fill="var(--pres-primary)" />
         <ArrowMarker id={arrowAccent} fill="var(--pres-accent)" />
@@ -1413,6 +1610,7 @@ export function IterativeApproachDiagram() {
         Iterative Feedback Cycle
       </text>
     </svg>
+    </ScrollableDiagramFrame>
   );
 }
 
@@ -1557,7 +1755,10 @@ export function GanttChart({ data, compact = false } = {}) {
       aria-label={`Project work plan Gantt chart across ${totalWeeks} weeks (${months.join(', ')})`}
     >
       {/* ── TOP EDITORIAL BAR: Schedule Caption + Phase Key ── */}
-      <div className="flex items-center justify-between mb-1.5" style={{ minHeight: '22px' }}>
+      <div
+        className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 mb-2 min-[900px]:mb-1.5 print:mb-1.5"
+        style={{ minHeight: '22px' }}
+      >
         <div
           className="text-[11.5px] font-bold uppercase tracking-[0.08em]"
           style={{ color: 'var(--pres-ink-muted)' }}
@@ -1565,7 +1766,7 @@ export function GanttChart({ data, compact = false } = {}) {
           Schedule · {months[0]} – {months[months.length - 1]} ({totalWeeks} Weeks)
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 min-[900px]:gap-5 print:gap-5">
           {PHASE_LEGEND_ORDER.map((key) => {
             const p = PHASE_PALETTE[key];
             return (
@@ -1589,7 +1790,12 @@ export function GanttChart({ data, compact = false } = {}) {
         </div>
       </div>
 
-      {/* ── MARKER CALLOUT STRIP (Edge-Clamped & Collision-Safe) ── */}
+      {/* ── TOUCH-SCROLLABLE GANTT GRID ON MOBILE (< 900px) ── */}
+      <ScrollableDiagramFrame
+        minWidthClass="pres-diagram-minw-xl"
+        hint="Swipe horizontally to view full 20-week schedule →"
+      >
+        {/* ── MARKER CALLOUT STRIP (Edge-Clamped & Collision-Safe) ── */}
       <div
         className="grid items-end"
         style={{
@@ -1886,6 +2092,7 @@ export function GanttChart({ data, compact = false } = {}) {
           )}
         </div>
       </div>
+      </ScrollableDiagramFrame>
     </div>
   );
 }

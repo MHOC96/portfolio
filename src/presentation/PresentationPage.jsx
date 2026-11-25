@@ -1135,7 +1135,7 @@ export default function PresentationPage() {
 
           <button
             type="button"
-            className={`present-btn ${showNotes ? 'present-btn--active' : ''}`}
+            className={`present-btn present-btn-notes ${showNotes ? 'present-btn--active' : ''}`}
             onClick={() => setShowNotes((prev) => !prev)}
             title="Toggle speaker notes & Q&A cues (N)"
             aria-label="Toggle speaker notes and Q&A cues"

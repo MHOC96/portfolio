@@ -1005,6 +1005,14 @@
   opacity: 1;
 }
 
+/* Hide non-essential chrome in fullscreen (Portfolio, ITC 4671, Overview, Timer, Notes, Print) */
+.present-root--fullscreen .present-toolbar .present-toolbar-left > *,
+.present-root--fullscreen .present-toolbar .present-toolbar-timer,
+.present-root--fullscreen .present-toolbar .present-btn-notes,
+.present-root--fullscreen .present-toolbar .present-btn-print {
+  display: none;
+}
+
 .present-toolbar-left {
   display: flex;
   align-items: center;
@@ -2029,7 +2037,7 @@
    ========================================================================== */
 
 @page {
-  size: 1280px 720px landscape;
+  size: 1280px 720px;
   margin: 0;
 }
 
@@ -2039,6 +2047,7 @@
   #root {
     width: 1280px !important;
     height: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #FAF8F4 !important;
@@ -2052,6 +2061,7 @@
     position: static !important;
     width: 1280px !important;
     height: auto !important;
+    min-height: 0 !important;
     background: #FAF8F4 !important;
     background-image: none !important;
     overflow: visible !important;
@@ -2078,6 +2088,7 @@
     height: 720px !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
     page-break-after: always;
     break-after: page;
   }

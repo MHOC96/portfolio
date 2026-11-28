@@ -1,10 +1,10 @@
 export const TIMELINE = [
   {
     year: 'TODAY',
-    title: 'Building the Future',
-    subtitle: 'Backend & AI Engineer',
+    title: 'AI Engineer Intern',
+    subtitle: 'Earrow',
     description:
-      'Bridging scalable microservices with purposeful AI agents to build software that is robust, impactful, and human-centered.',
+      'Working as an AI Engineer Intern at Earrow, building practical AI-driven solutions.',
     type: 'milestone',
   },
   {
